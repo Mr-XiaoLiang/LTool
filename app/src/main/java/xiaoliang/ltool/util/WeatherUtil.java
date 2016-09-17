@@ -1,8 +1,8 @@
 package xiaoliang.ltool.util;
 
-import org.dom4j.Document;
+import com.google.gson.JsonObject;
+
 import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import java.util.ArrayList;
@@ -74,5 +74,8 @@ public class WeatherUtil {
         return weatherBean;
     }
 
+    public static void get(String json){
+//        JsonObject jsonObject =
+    }
 
 }
