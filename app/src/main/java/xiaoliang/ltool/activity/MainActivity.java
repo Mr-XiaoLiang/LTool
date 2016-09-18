@@ -1,21 +1,23 @@
 package xiaoliang.ltool.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -26,7 +28,9 @@ import xiaoliang.ltool.R;
 import xiaoliang.ltool.bean.WeatherBean;
 import xiaoliang.ltool.bean.WeatherDayBean;
 import xiaoliang.ltool.constant.Constant;
+import xiaoliang.ltool.dialog.CityDialog;
 import xiaoliang.ltool.util.BlurBitmapRunnable;
+import xiaoliang.ltool.util.DialogUtil;
 import xiaoliang.ltool.util.HttpTaskRunnable;
 import xiaoliang.ltool.util.HttpUtil;
 import xiaoliang.ltool.util.NetTasks;
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         app = (LToolApplication) getApplicationContext();
         toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.activity_main_toolbar_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
@@ -65,6 +70,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         handler = new MyHandler();
         initWeatherView();
         getWeather();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_main_city:
+                DialogUtil.getCityDialog(this, new CityDialog.CitySelectedListener() {
+                    @Override
+                    public void citySelected(String name) {
+                        SharedPreferencesUtils.setCity(MainActivity.this,name);
+                        getWeather();
+                    }
+                });
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -107,7 +134,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.content_main_weather:
+                startActivity(new Intent(this,WeatherActivity.class));
+                break;
+        }
     }
 
     @Override
@@ -167,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getWeather(){
+        Log.d("城市",SharedPreferencesUtils.getCity(this));
         NetTasks.getEtouchWeather(new HttpTaskRunnable.CallBack() {
             @Override
             public void success(Object object) {
@@ -190,7 +222,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 handler.sendMessage(message);
                 Log.d("天气获取",msg);
             }
-        },"杭州");
+
+            @Override
+            public Object str2Obj(String str) {
+                return str;
+            }
+        },SharedPreferencesUtils.getCity(this));
     }
 
 

@@ -267,4 +267,18 @@ public class SharedPreferencesUtils {
         return now/Millis_Of_Day==last/Millis_Of_Day;
     }
 
+    public static String getCity(Context context){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE);
+        return mShareConfig.getString("City","杭州");
+    }
+
+    public static void setCity(Context context,String city){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE );
+        Editor conEdit = mShareConfig.edit();
+        conEdit.putString("City", city);
+        conEdit.commit();
+    }
+
 }

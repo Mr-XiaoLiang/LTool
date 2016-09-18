@@ -9,6 +9,15 @@ public class WeatherExponentBean {
     private String value;//等级
     private String detail;//建议
 
+    @Override
+    public String toString() {
+        return "WeatherExponentBean{" +
+                "detail='" + detail + '\'' +
+                ", name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
+
     public WeatherExponentBean() {
     }
 

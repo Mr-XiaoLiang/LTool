@@ -15,6 +15,20 @@ public class WeatherDayBean {
     private String nightWind;//风力
     private String nightWindDirection;//风向
 
+    @Override
+    public String toString() {
+        return "WeatherDayBean{" +
+                "date='" + date + '\'' +
+                ", high='" + high + '\'' +
+                ", low='" + low + '\'' +
+                ", daytype='" + daytype + '\'' +
+                ", dayWind='" + dayWind + '\'' +
+                ", dayWindDirection='" + dayWindDirection + '\'' +
+                ", nighttype='" + nighttype + '\'' +
+                ", nightWind='" + nightWind + '\'' +
+                ", nightWindDirection='" + nightWindDirection + '\'' +
+                '}';
+    }
 
     public WeatherDayBean() {
     }

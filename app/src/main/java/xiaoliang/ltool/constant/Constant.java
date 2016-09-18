@@ -16,6 +16,14 @@ public class Constant {
      * 采用的时候中华万年历的接口
      */
     public static final String etouch_WeatherApi = "http://wthrcdn.etouch.cn/WeatherApi?city=";
+    /**
+     * mob的appkey
+     */
+    public static final String MOB_APP_Key = "16f2114442598";
+    /**
+     * 获取城市列表的地址
+     */
+    public static final String MOB_Citys_url = "http://apicloud.mob.com/v1/weather/citys?key="+MOB_APP_Key;
 
     /**
      * 网络访问异常

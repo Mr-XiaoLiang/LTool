@@ -8,4 +8,5 @@
     <dimen name="cardview_elevation">5dp</dimen>
     <dimen name="cardview_padding">10dp</dimen>
     <dimen name="cardview_margin">10dp</dimen>
+    <dimen name="status_bar_height">24dp</dimen>
 </resources>

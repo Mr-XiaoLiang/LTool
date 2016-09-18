@@ -45,7 +45,7 @@ public class HttpTaskRunnable implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Object success = null;
+			String success = null;
 			switch (parameters.getAccessType()) {
 				case RequestParameters.ACCESS_TYPE_DOWNLOAD://下载
 					downFile(parameters.getUrl(), parameters.getDownloadPath());
@@ -61,7 +61,7 @@ public class HttpTaskRunnable implements Runnable {
 					}else{
 						success = HttpUtil.doGet(parameters.getUrl());
 					}
-					callBack.success(success);
+					callBack.success(callBack.str2Obj(success));
 					break;
 				case RequestParameters.ACCESS_TYPE_UPLOAD://上传
 					//TODO
@@ -138,8 +138,9 @@ public class HttpTaskRunnable implements Runnable {
 	 * 数据获取回调接口
 	 * @author LiuJ
 	 */
-	public interface CallBack{
-		public void success(Object object);
+	public interface CallBack<T>{
+		public void success(T object);
 		public void error(int code, String msg);
+		public T str2Obj(String str);
 	}
 }
