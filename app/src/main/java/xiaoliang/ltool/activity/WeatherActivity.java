@@ -127,14 +127,14 @@ public class WeatherActivity extends AppCompatActivity implements SwipeRefreshLa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_weather, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menu_main_city:
+            case R.id.menu_weather_city:
                 DialogUtil.getCityDialog(this, new CityDialog.CitySelectedListener() {
                     @Override
                     public void citySelected(String name) {
@@ -152,18 +152,13 @@ public class WeatherActivity extends AppCompatActivity implements SwipeRefreshLa
     }
     private void getWeather(){
         Log.d("城市",SharedPreferencesUtils.getCity(this));
-        NetTasks.getEtouchWeather(new HttpTaskRunnable.CallBack() {
+        NetTasks.getEtouchWeather(new HttpTaskRunnable.CallBack<WeatherBean>() {
+            Message message = new Message();
             @Override
-            public void success(Object object) {
-                Message message = new Message();
+            public void success(WeatherBean object) {
                 message.what = 201;
-                try {
-                    weatherBean = WeatherUtil.getEtouchWeather((String) object);
-                } catch (DocumentException e) {
-                    message.what = 202;
-                    message.obj = "抱歉！天气信息解析出错";
-                    e.printStackTrace();
-                }
+                if(object!=null)
+                    weatherBean = object;
                 handler.sendMessage(message);
             }
 
@@ -177,8 +172,16 @@ public class WeatherActivity extends AppCompatActivity implements SwipeRefreshLa
             }
 
             @Override
-            public Object str2Obj(String str) {
-                return str;
+            public WeatherBean str2Obj(String str) {
+                try {
+                    return WeatherUtil.getEtouchWeather(str);
+                } catch (DocumentException e) {
+                    message.what = 202;
+                    message.obj = "抱歉！天气信息解析出错";
+                    e.printStackTrace();
+                    handler.sendMessage(message);
+                    return null;
+                }
             }
         },SharedPreferencesUtils.getCity(this));
     }

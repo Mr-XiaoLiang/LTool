@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
+import com.amap.api.location.AMapLocation;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -243,6 +245,30 @@ public class SharedPreferencesUtils {
     }
 
     /**
+     * 是否加载网络图片
+     * @param context
+     * @return
+     */
+    public static boolean isOnlyWifi(Context context){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE);
+        return mShareConfig.getBoolean("isOnlyWifi",false);
+    }
+
+    /**
+     * 设置是否加载网络图片
+     * @param context
+     * @param value
+     */
+    public static void setIsOnlyWifi( Context context, boolean value ) {
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences( USER, Context.MODE_PRIVATE );
+        Editor conEdit = mShareConfig.edit();
+        conEdit.putBoolean( "isOnlyWifi", value );
+        conEdit.commit();
+    }
+
+    /**
      * 保存背景更新时间
      * @param context
      */
@@ -279,6 +305,24 @@ public class SharedPreferencesUtils {
         Editor conEdit = mShareConfig.edit();
         conEdit.putString("City", city);
         conEdit.commit();
+    }
+
+    public static void setAutoLocation(Context context,boolean auto){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE );
+        Editor conEdit = mShareConfig.edit();
+        conEdit.putBoolean("AutoLocation", auto);
+        conEdit.commit();
+    }
+
+    public static boolean getAutoLocation(Context context){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE);
+        return mShareConfig.getBoolean("AutoLocation",true);
+    }
+
+    public static void setAMapLocation(Context context,AMapLocation location){
+        setCity(context,location.getCity().replace("市",""));
     }
 
 }

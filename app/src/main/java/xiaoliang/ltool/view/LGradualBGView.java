@@ -34,10 +34,14 @@ public class LGradualBGView extends View {
     private boolean isAnimation = true;
     private int hours = 12;
     private Paint shadowPaint;
-    private static final int color_0 = Color.parseColor("#cceeff");
-    private static final int color_15 = Color.parseColor("#00eedd");
-    private static final int color_25 = Color.parseColor("#ff88bb");
-    private static final int color_35 = Color.parseColor("#ff2233");
+    private static final int color_1 = Color.parseColor("#cceeff");
+    private static final int color_2 = Color.parseColor("#00eedd");
+    private static final int color_3 = Color.parseColor("#ff88bb");
+    private static final int color_4 = Color.parseColor("#ff2233");
+    private static final float limit_1 = 0;
+    private static final float limit_2 = 15;
+    private static final float limit_3 = 28;
+    private static final float limit_4 = 35;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -65,33 +69,33 @@ public class LGradualBGView extends View {
         }
         oldCentreColor = newCentreColor;
         oldEdgeColor = newEdgeColor;
-        if(t<0){
+        if(t<limit_1){
             newCentreColor = Color.WHITE;
-            newEdgeColor = color_0;
-        }else if(t<15){
-            if(t/15.0f>0.5){
-                newEdgeColor = color_0;
+            newEdgeColor = color_1;
+        }else if(t<limit_2){
+            if((t-limit_1)/(limit_2-limit_1)>0.5){
+                newEdgeColor = color_1;
             }else{
-                newEdgeColor = color_15;
+                newEdgeColor = color_2;
             }
-            newCentreColor = getCentreColor(color_0,color_15,t/15.0f);
-        }else if(t<25){
-            if((t-15)/10F>0.5){
-                newEdgeColor = color_25;
+            newCentreColor = getCentreColor(color_1,color_2,(t-limit_1)/(limit_2-limit_1));
+        }else if(t<limit_3){
+            if((t-limit_2)/(limit_3-limit_2)>0.5){
+                newEdgeColor = color_3;
             }else{
-                newEdgeColor = color_15;
+                newEdgeColor = color_2;
             }
-            newCentreColor = getCentreColor(color_15,color_25,(t-15)/10F);
-        }else if(t<35){
-            if((t-25)/10F>0.5){
-                newEdgeColor = color_35;
+            newCentreColor = getCentreColor(color_2,color_3,(t-limit_2)/(limit_3-limit_2));
+        }else if(t<limit_4){
+            if((t-limit_3)/(limit_4-limit_3)>0.5){
+                newEdgeColor = color_4;
             }else{
-                newEdgeColor = color_25;
+                newEdgeColor = color_3;
             }
-            newCentreColor = getCentreColor(color_25,color_35,(t-15)/10F);
+            newCentreColor = getCentreColor(color_3,color_4,(t-limit_3)/(limit_4-limit_3));
         }else{
             newCentreColor = Color.RED;
-            newEdgeColor = color_35;
+            newEdgeColor = color_4;
         }
         invalidate();
     }

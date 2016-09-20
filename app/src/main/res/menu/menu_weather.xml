@@ -3,11 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="xiaoliang.ltool.MainActivity">
     <item
-        android:id="@+id/menu_main_city"
+        android:id="@+id/menu_weather_city"
         android:title="@string/menu_main_city_str"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/menu_main_setting"
-        android:title="@string/title_activity_setting"
         app:showAsAction="never" />
 </menu>

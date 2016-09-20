@@ -4,30 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="xiaoliang.ltool.activity.WeatherActivity">
+    android:fitsSystemWindows="true"
+    tools:context="xiaoliang.ltool.activity.SettingActivity">
 
-    <xiaoliang.ltool.view.LGradualBGView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/activity_weather_bg"/>
-    <include layout="@layout/content_weather" />
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/activity_weather_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0px">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/activity_weather_toolbar"
+            android:id="@+id/activity_setting_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_marginTop="@dimen/status_bar_height"
-            android:background="@android:color/transparent"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:titleTextColor="@android:color/white" />
+            app:title="@string/title_activity_setting" />
+
     </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_setting" />
 </android.support.design.widget.CoordinatorLayout>
