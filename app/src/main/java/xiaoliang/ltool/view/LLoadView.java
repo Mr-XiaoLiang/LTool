@@ -89,9 +89,9 @@ public class LLoadView extends View {
 	
 	public LLoadView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
-		color1 = Color.GREEN;
-		color2 = Color.RED;
-		color3 = Color.BLUE;
+		color1 = Color.parseColor("#4CBCD6");
+		color2 = Color.parseColor("#FF4081");
+		color3 = Color.parseColor("#7CCD7C");
 		arcPaint1 = new Paint();
 		arcPaint1.setAntiAlias(true);
 		arcPaint1.setStyle(Paint.Style.STROKE);

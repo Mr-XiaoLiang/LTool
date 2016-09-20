@@ -31,6 +31,10 @@ public class WeatherBean {
         return aqi;
     }
 
+    public String getQuickAqi() {
+        return aqi+"["+quality+"]";
+    }
+
     public void setAqi(String aqi) {
         this.aqi = aqi;
     }
@@ -58,6 +62,9 @@ public class WeatherBean {
     public ArrayList<WeatherDayBean> getDayBeen() {
         return dayBeen;
     }
+    public WeatherDayBean getDayBeen(int index) {
+        return dayBeen.get(index);
+    }
 
     public void setDayBeen(ArrayList<WeatherDayBean> dayBeen) {
         this.dayBeen = dayBeen;
@@ -65,6 +72,10 @@ public class WeatherBean {
 
     public ArrayList<WeatherExponentBean> getExponentBeen() {
         return exponentBeen;
+    }
+
+    public WeatherExponentBean getExponentBeen(int index) {
+        return exponentBeen.get(index);
     }
 
     public void setExponentBeen(ArrayList<WeatherExponentBean> exponentBeen) {

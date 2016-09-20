@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageLoader = ImageLoader.getInstance();
         handler = new MyHandler();
         initWeatherView();
-        getWeather();
+        loadImg();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         loadWebImg = SharedPreferencesUtils.isLoadWebImg(this);
-        loadImg();
+        getWeather();
     }
 
     private void setWeatherView(){

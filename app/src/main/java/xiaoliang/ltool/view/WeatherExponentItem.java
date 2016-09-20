@@ -34,6 +34,9 @@ public class WeatherExponentItem extends LinearLayout {
         name2 = (TextView) findViewById(R.id.item_weather_exponent_name2);
         value2 = (TextView) findViewById(R.id.item_weather_exponent_value2);
         msg2 = (TextView) findViewById(R.id.item_weather_exponent_msg2);
+    }
+
+    private void setData(){
         if(beans!=null&&beans.length>0){
             name1.setText(beans[0].getName());
             value1.setText(beans[0].getValue());
@@ -53,6 +56,8 @@ public class WeatherExponentItem extends LinearLayout {
     }
     public void setBeans(WeatherExponentBean... beans) {
         this.beans = beans;
+        if(cardView1!=null)
+            setData();
     }
     public WeatherExponentItem(Context context) {
         this(context,null);

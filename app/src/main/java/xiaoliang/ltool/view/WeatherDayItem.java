@@ -20,7 +20,7 @@ public class WeatherDayItem extends LinearLayout{
     private WeatherDayBean dayBean;
 
     private void init(){
-        LayoutInflater.from(context).inflate(R.layout.item_weather_exponent,
+        LayoutInflater.from(context).inflate(R.layout.item_weather_day,
                 this, true);
         date = (TextView) findViewById(R.id.item_weather_weather_day_date);
         temperature = (TextView) findViewById(R.id.item_weather_weather_day_temperature);
@@ -28,6 +28,10 @@ public class WeatherDayItem extends LinearLayout{
         dayWind = (TextView) findViewById(R.id.item_weather_weather_day_daywind);
         nightType = (TextView) findViewById(R.id.item_weather_weather_day_nighttype);
         nightWind = (TextView) findViewById(R.id.item_weather_weather_day_nightwind);
+        setData();
+    }
+
+    private void setData(){
         if(dayBean!=null){
             date.setText(dayBean.getDate());
             temperature.setText(dayBean.getQuickTemperature());
@@ -44,6 +48,8 @@ public class WeatherDayItem extends LinearLayout{
 
     public void setDayBean(WeatherDayBean dayBean) {
         this.dayBean = dayBean;
+        if(date!=null)
+            setData();
     }
 
     public WeatherDayItem(Context context) {
@@ -54,6 +60,7 @@ public class WeatherDayItem extends LinearLayout{
     }
     public WeatherDayItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.context = context;
         init();
     }
 }
