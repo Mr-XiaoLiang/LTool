@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(weatherBean==null)
             return;
         if(weatherBean.getDayBeen()!=null||weatherBean.getDayBeen().size()>0){
+            weather.setVisibility(View.VISIBLE);
             WeatherDayBean today = weatherBean.getDayBeen(0);
             weatherDate.setText(today.getDate());
             weatherTemperature.setText(today.getQuickTemperature());
@@ -166,14 +167,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         weatherNightType = (TextView) findViewById(R.id.content_main_weather_nighttype);
         weatherNightWind = (TextView) findViewById(R.id.content_main_weather_nightwind);
         weather = (CardView) findViewById(R.id.content_main_weather);
+        weather.setVisibility(View.GONE);
         weather.setOnClickListener(this);
     }
 
     private void loadImg(){
+        int networdType = OtherUtil.getNetworkType(this);
+        boolean onlyWifi = SharedPreferencesUtils.isOnlyWifi(this);
         loadWebImg = SharedPreferencesUtils.isLoadWebImg(this);
         imageLoader.displayImage(Constant.getBabkgroundPath(this),headImg,null,new MyImageLoadingListener(this,false));
-        if(loadWebImg&&!SharedPreferencesUtils.isGetBgEnd(this)){
-            imageLoader.displayImage(Constant.head_img_url_720,headImg,null,new MyImageLoadingListener(this,true));
+        if(networdType==Constant.NetWord_WIFI||(networdType==Constant.NetWord_MOBILE&&!onlyWifi)){
+            if(loadWebImg&&!SharedPreferencesUtils.isGetBgEnd(this)){
+                imageLoader.displayImage(Constant.head_img_url_720,headImg,null,new MyImageLoadingListener(this,true));
+            }
         }
     }
 

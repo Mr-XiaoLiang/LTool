@@ -63,4 +63,25 @@ public class Constant {
         return "file:///"+context.getFilesDir().getAbsolutePath()+"/bg/background.png";
     }
 
+    /**
+     * 网络类型
+     * 无网络
+     */
+    public static final int NetWord_NULL = 100000;
+    /**
+     * 网络类型
+     * wifi
+     */
+    public static final int NetWord_WIFI = 100001;
+    /**
+     * 网络类型
+     * 手机数控
+     */
+    public static final int NetWord_MOBILE= 100002;
+    /**
+     * 网络类型
+     * 其他
+     */
+    public static final int NetWord_Other= 100003;
+
 }
