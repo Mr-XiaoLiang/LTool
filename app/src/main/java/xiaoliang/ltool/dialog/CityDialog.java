@@ -106,7 +106,6 @@ public class CityDialog extends Dialog implements View.OnClickListener,LWheelVie
             message.obj = object;
             handler.sendMessage(message);
         }
-
         @Override
         public void error(int code, String msg) {
             Message message = new Message();
@@ -114,7 +113,6 @@ public class CityDialog extends Dialog implements View.OnClickListener,LWheelVie
             message.obj = msg;
             handler.sendMessage(message);
         }
-
         @Override
         public CityBean str2Obj(String str) {
             try {

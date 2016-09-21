@@ -1,7 +1,5 @@
 package xiaoliang.ltool.util;
 
-import android.util.Log;
-
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.json.JSONArray;
