@@ -3,4 +3,5 @@
     <string name="menu_main_city_str">城市切换</string>
     <string name="title_activity_weather">WeatherActivity</string>
     <string name="title_activity_setting">设置</string>
+    <string name="title_activity_qrcreate">二维码生成</string>
 </resources>

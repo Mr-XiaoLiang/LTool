@@ -34,7 +34,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/item_name"
                         android:id="@+id/content_main_weather_date"
                         android:textColor="@color/colorPrimary"/>
                     <TextView
@@ -56,7 +56,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="白天:"
-                        android:textSize="14dp"
+                        android:textSize="@dimen/item_detail"
                         android:gravity="center"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="夜晚:"
-                        android:textSize="14dp"
+                        android:textSize="@dimen/item_detail"
                         android:gravity="center"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -102,6 +102,63 @@
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <android.support.v7.widget.CardView
+                android:id="@+id/content_main_qrread"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:elevation="@dimen/cardview_elevation"
+                android:layout_margin="@dimen/cardview_margin"
+                android:background="?android:attr/selectableItemBackground">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/cardview_padding">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/item_name"
+                        android:textColor="@color/colorPrimary"
+                        android:text="二维码识别"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/item_detail"
+                        android:text="扫描或识别图片文件"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/content_main_qrcreate"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:elevation="@dimen/cardview_elevation"
+                android:layout_margin="@dimen/cardview_margin"
+                android:background="?android:attr/selectableItemBackground">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/cardview_padding">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/item_name"
+                        android:textColor="@color/colorPrimary"
+                        android:text="二维码生成"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/item_detail"
+                        android:text="个性化定制二维码"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

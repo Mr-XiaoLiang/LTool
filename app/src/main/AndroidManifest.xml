@@ -27,6 +27,13 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 更改设置 -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- 二维码 -->
+    <!-- 相机 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 震动 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- 手电筒 闪光灯 -->
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <application
         android:name=".activity.LToolApplication"
@@ -58,7 +65,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.SettingActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.QRCreateActivity"
+            android:label="@string/title_activity_qrcreate"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
