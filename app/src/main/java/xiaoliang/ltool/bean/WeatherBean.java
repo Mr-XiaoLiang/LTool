@@ -45,10 +45,10 @@ public class WeatherBean {
 
     public String getTitle(){
         String title = "";
-        if(getCity()!=null&&getCity().equals("null")){
+        if(getCity()!=null&&!getCity().equals("null")){
             title+=(getCity()+" ");
         }
-        if(getNowTemperature()!=null&&getNowTemperature().equals("null")){
+        if(getNowTemperature()!=null&&!getNowTemperature().equals("null")){
             title+=(getNowTemperature()+"℃");
         }
         return title;

@@ -1,13 +1,18 @@
 package xiaoliang.ltool.util;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
+import android.graphics.SweepGradient;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
@@ -36,7 +41,124 @@ public class QRUtil {
         return createQRImage(getQRPixels(str,width),width);
     }
 
+    /**
+     * 获取一个线性渲染的bitmap
+     * @param str 文字
+     * @param width 宽度
+     * @param r 旋转角
+     * @param colors 颜色
+     * @param isBg 是否渲染背景
+     * @param otherColor 其他色，当isBg=true的时候，渲染背景，本颜色作为前景色。
+     *                   当isBg=false时，渲染前景，本颜色作为背景色。
+     * @return 返回二维码图片
+     */
+    public static Bitmap getLinearGradientQRImg(String str,int width,float r,int[] colors,boolean isBg,int otherColor){
+        LinearGradient linearGradient = new LinearGradient(0,0,width,width,colors,null, Shader.TileMode.CLAMP);
+        return getShaderQRImg(str,width,linearGradient,r+45,isBg,otherColor);
+    }
 
+    /**
+     * 获取一个环形渲染的二维码
+     * @param str 内容
+     * @param width 宽度
+     * @param colors 颜色
+     * @param isBg 是否背景渲染
+     * @param otherColor 其他补色
+     * @return 图片
+     */
+    public static Bitmap getRadialGradientQRImg(String str,int width,int[] colors,boolean isBg,int otherColor){
+        RadialGradient radialGradient = new RadialGradient(width/2,width/2,(float) Math.sqrt((width/2)*(width/2)*2),colors,null, Shader.TileMode.CLAMP);
+        return getShaderQRImg(str,width,radialGradient,0,isBg,otherColor);
+    }
+
+    /**
+     * 获取一个梯度渲染的二维码
+     * @param str 内容
+     * @param width 宽度
+     * @param r 旋转角
+     * @param colors 颜色
+     * @param isBg 是否背景渲染
+     * @param otherColor 其他补色
+     * @return 图片
+     */
+    public static Bitmap getSweepGradientQRImg(String str,int width,int r,int[] colors,boolean isBg,int otherColor){
+        SweepGradient sweepGradient = new SweepGradient(width/2,width/2,colors,null);
+        return getShaderQRImg(str,width,sweepGradient,r,isBg,otherColor);
+    }
+
+    /**
+     * 获取一个图片渲染的二维码图
+     * @param str 内容
+     * @param width 宽度
+     * @param r 旋转角度
+     * @param bitmap 图片
+     * @param isBg 是否渲染为背景
+     * @param otherColor 补色
+     * @return 图片
+     */
+    public static Bitmap getBitmapShaderQRImg(String str,int width,int r,Bitmap bitmap,boolean isBg,int otherColor){
+        // 将bmp作为着色器，就是在指定区域内绘制bmp
+        BitmapShader bitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        float radius = (float) Math.sqrt(width*width*2);
+        // 如果图片的宽或者高与view的宽高不匹配，计算出需要缩放的比例；缩放后的图片的宽高，一定要大于我们view的宽高；所以我们这里取大值；
+        float scale = Math.max(radius / bitmap.getWidth(), radius / bitmap.getHeight());
+        Matrix matrix = new Matrix();
+        // shader的变换矩阵，我们这里主要用于放大或者缩小
+        matrix.setScale(scale, scale);
+        // 设置变换矩阵
+        bitmapShader.setLocalMatrix(matrix);
+        return getShaderQRImg(str,width,bitmapShader,r,isBg,otherColor);
+    }
+
+    /**
+     * 生成一个渲染的二维码图片
+     * @param str 内容
+     * @param width 宽度
+     * @param shader 渲染
+     * @param r 旋转角度
+     * @param isBg 是否背景渲染
+     * @param otherColor 其他补色
+     * @return 图片
+     */
+    public static Bitmap getShaderQRImg(String str,int width,Shader shader,float r,boolean isBg,int otherColor){
+        int[] pixels = getQRPixels(str,width);
+        Bitmap bitmap = Bitmap.createBitmap(width, width, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setDither(true);
+        paint.setShader(shader);
+        canvas.save();
+        canvas.rotate(r,width/2,width/2);
+        canvas.drawCircle(width/2,width/2, (float) Math.sqrt((width/2)*(width/2)*2),paint);
+        canvas.restore();
+        int changeColor = BLACK;
+        if(isBg)
+            changeColor = TRANSPARENT;
+        changeQRColor(pixels,width,bitmap,changeColor,otherColor);
+        return createQRImage(pixels,width);
+
+    }
+
+    /**
+     * 修改二维码颜色
+     * @param pixels 二维码颜色数组
+     * @param width 图片宽度
+     * @param bitmap 渲染的模板图片
+     * @param changeColor 修改的颜色
+     * @param otherColor 替补颜色
+     */
+    public static void changeQRColor(int[] pixels,int width,Bitmap bitmap,int changeColor,int otherColor){
+        for (int y = 0; y < width; y++) {
+            for (int x = 0; x < width; x++) {
+                if(pixels[y * width + x] == changeColor){
+                    pixels[y * width + x] = bitmap.getPixel(x,y);
+                }else{
+                    pixels[y * width + x] = otherColor;
+                }
+            }
+        }
+    }
 
 
     /**

@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             app.T("天气数据获取出错\n可能是无此地区\n请手动选择地区");
         }
         weatherTime.setText(weatherBean.getUpdateTime());
-        if(!"".equals(weatherBean.getTitle()))
+        if(weatherBean.getTitle()!=null&&!"".equals(weatherBean.getTitle()))
             toolbarLayout.setTitle(weatherBean.getTitle());
     }
 

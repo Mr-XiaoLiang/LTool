@@ -9,6 +9,8 @@
     tools:context="xiaoliang.ltool.activity.QRCreateActivity"
     tools:showIn="@layout/activity_qr_create">
     <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -27,32 +29,278 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_launcher"/>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/activity_qr_create_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入内容"/>
+        </android.support.design.widget.TextInputLayout>
         <LinearLayout
-            android:gravity="bottom"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/activity_qr_create_edit"
-                    android:layout_width="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/cardview_padding">
+
+                <LinearLayout
+                    android:layout_width="0px"
                     android:layout_height="wrap_content"
-                    android:hint="请输入内容"/>
-            </android.support.design.widget.TextInputLayout>
-            <Button
-                android:onClick="onClick"
-                android:id="@+id/activity_qr_create_create"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/black"
+                        android:text="高级定制"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="进入高级定制模式"/>
+                </LinearLayout>
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/activity_qr_create_open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <View
+                android:layout_marginTop="@dimen/cardview_padding"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/activity_qr_create_type_layout"
+            android:layout_marginTop="@dimen/cardview_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="生成"
-                android:textColor="@color/colorAccent"
-                android:background="?android:attr/selectableItemBackground"/>
+                android:text="渲染类型"/>
+            <RadioGroup
+                android:id="@+id/activity_qr_create_type_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/activity_qr_create_type_linear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="线性"/>
+                <RadioButton
+                    android:id="@+id/activity_qr_create_type_radial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="环形"/>
+                <RadioButton
+                    android:id="@+id/activity_qr_create_type_sweep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="扇形"/>
+                <RadioButton
+                    android:id="@+id/activity_qr_create_type_bitmap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="图片"/>
+            </RadioGroup>
+            <View
+                android:layout_marginTop="@dimen/cardview_padding"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorPrimary"/>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/activity_qr_create_rotate_layout"
+            android:layout_marginTop="@dimen/cardview_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/activity_qr_create_rotate_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="旋转角度"/>
+            <SeekBar
+                android:id="@+id/activity_qr_create_rotate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="360"/>
+            <View
+                android:layout_marginTop="@dimen/cardview_padding"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/activity_qr_create_isbg_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/cardview_padding">
+
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/black"
+                        android:text="渲染背景"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="对背景进行渲染，而不是前景"/>
+                </LinearLayout>
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/activity_qr_create_isbg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <View
+                android:layout_marginTop="@dimen/cardview_padding"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/activity_qr_create_other_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/cardview_padding">
+
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/black"
+                        android:text="补色"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="渲染相对的对比色"/>
+                </LinearLayout>
+                <ImageView
+                    android:id="@+id/activity_qr_create_other"
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:src="#f00"/>
+            </LinearLayout>
+            <View
+                android:layout_marginTop="@dimen/cardview_padding"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/activity_qr_create_colors_layout"
+            android:layout_marginTop="@dimen/cardview_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="渲染色彩"/>
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+                <LinearLayout
+                    android:id="@+id/activity_qr_create_colors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:orientation="horizontal">
+                </LinearLayout>
+            </HorizontalScrollView>
+            <View
+                android:layout_marginTop="@dimen/cardview_padding"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/activity_qr_create_bitmap_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/cardview_padding">
+
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/black"
+                        android:text="渲染图片"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="用来渲染的图片"/>
+                </LinearLayout>
+                <ImageView
+                    android:id="@+id/activity_qr_create_bitmap"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="#f00"/>
+            </LinearLayout>
+            <View
+                android:layout_marginTop="@dimen/cardview_padding"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+        <Button
+            android:layout_marginTop="@dimen/cardview_padding"
+            android:onClick="onClick"
+            android:id="@+id/activity_qr_create_create"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="生成"
+            android:textColor="@color/colorAccent"/>
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
