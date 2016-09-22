@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean autoLocation = true;
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
+    //二维码部分
+    private CardView qrRead;
+    private CardView qrCreate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +98,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         headImg = (ImageView) findViewById(R.id.activity_main_headimg);
         headText = (TextView) findViewById(R.id.activity_main_headtext);
         backgroundImg = (ImageView) findViewById(R.id.activity_main_bg);
+        qrRead = (CardView) findViewById(R.id.content_main_qrread);
+        qrCreate = (CardView) findViewById(R.id.content_main_qrcreate);
         imageLoader = ImageLoader.getInstance();
         handler = new MyHandler();
+        qrCreate.setOnClickListener(this);
+        qrRead.setOnClickListener(this);
     }
 
     @Override
@@ -188,6 +195,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.content_main_weather:
                 startActivity(new Intent(this,WeatherActivity.class));
+                break;
+            case R.id.content_main_qrcreate:
+                startActivity(new Intent(this,QRCreateActivity.class));
+                break;
+            case R.id.content_main_qrread:
+//                startActivity(new Intent(this,QRCreateActivity.class));
                 break;
         }
     }
