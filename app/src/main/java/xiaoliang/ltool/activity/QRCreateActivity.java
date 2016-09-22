@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import xiaoliang.ltool.R;
+import xiaoliang.ltool.util.QRUtil;
 
 public class QRCreateActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,6 +45,7 @@ public class QRCreateActivity extends AppCompatActivity implements View.OnClickL
         if(text==null||text.length()<1){
             editText.setError("请输入内容");
         }
+        imageView.setImageBitmap(QRUtil.createQRImage(text,imageView.getWidth()));
     }
 
     @Override

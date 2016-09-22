@@ -149,9 +149,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setWeatherView(){
-        if(weatherBean==null)
+        if(weatherBean==null||!weatherBean.isSeccess()){
+            app.T("天气数据获取出错\n可能是无此地区\n请手动选择地区");
             return;
-        if(weatherBean.getDayBeen()!=null||weatherBean.getDayBeen().size()>0){
+        }
+        if(weatherBean.getDayBeen()!=null&&weatherBean.getDayBeen().size()>0){
             weather.setVisibility(View.VISIBLE);
             WeatherDayBean today = weatherBean.getDayBeen(0);
             weatherDate.setText(today.getDate());
@@ -160,9 +162,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             weatherDayWind.setText(today.getQuickDayWind());
             weatherNightType.setText(today.getNighttype());
             weatherNightWind.setText(today.getQuickNightWind());
+        }else{
+            app.T("天气数据获取出错\n可能是无此地区\n请手动选择地区");
         }
         weatherTime.setText(weatherBean.getUpdateTime());
-        toolbarLayout.setTitle(weatherBean.getTitle());
+        if(!"".equals(weatherBean.getTitle()))
+            toolbarLayout.setTitle(weatherBean.getTitle());
     }
 
     private void initWeatherView(){
@@ -267,10 +272,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Message message = new Message();
             @Override
             public void success(WeatherBean object) {
-                message.what = 201;
-                if(object!=null)
+                if(object!=null){
                     weatherBean = object;
-                handler.sendMessage(message);
+                    message.what = 201;
+                    handler.sendMessage(message);
+                }
             }
 
             @Override

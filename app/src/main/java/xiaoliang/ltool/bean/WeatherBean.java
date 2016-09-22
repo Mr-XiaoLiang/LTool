@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * 天气信息的Bean
  */
 public class WeatherBean {
-    private boolean type;
+    private boolean seccess;
     private String msg;
     private String city;//城市
     private String updateTime;//更新时间
@@ -24,7 +24,7 @@ public class WeatherBean {
     private ArrayList<WeatherExponentBean> exponentBeen;//天气指数
 
     public WeatherBean() {
-        type = true;
+        seccess = true;
     }
 
     public String getAqi() {
@@ -44,7 +44,14 @@ public class WeatherBean {
     }
 
     public String getTitle(){
-        return getCity()+" "+getNowTemperature()+"℃";
+        String title = "";
+        if(getCity()!=null&&getCity().equals("null")){
+            title+=(getCity()+" ");
+        }
+        if(getNowTemperature()!=null&&getNowTemperature().equals("null")){
+            title+=(getNowTemperature()+"℃");
+        }
+        return title;
     }
 
     public void setCity(String city) {
@@ -154,11 +161,11 @@ public class WeatherBean {
         this.msg = msg;
     }
 
-    public boolean isType() {
-        return type;
+    public boolean isSeccess() {
+        return seccess;
     }
 
-    public void setType(boolean type) {
-        this.type = type;
+    public void setSeccess(boolean seccess) {
+        this.seccess = seccess;
     }
 }

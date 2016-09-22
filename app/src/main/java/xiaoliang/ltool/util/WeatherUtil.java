@@ -33,7 +33,7 @@ public class WeatherUtil {
         XMLUtil util = new XMLUtil(xml);
         Element error = util.getElement("error");
         if(error!=null){
-            weatherBean.setType(false);
+            weatherBean.setSeccess(false);
             weatherBean.setMsg(error.getText());
             return weatherBean;
         }
