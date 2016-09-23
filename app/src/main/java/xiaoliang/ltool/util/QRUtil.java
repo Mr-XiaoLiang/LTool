@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class QRUtil {
 
-    private static final int TRANSPARENT = Color.TRANSPARENT;
+//    private static final int TRANSPARENT = Color.TRANSPARENT;
     private static final int WHITE = Color.WHITE;
     private static final int BLACK = Color.BLACK;
 
@@ -39,6 +39,10 @@ public class QRUtil {
      */
     public static Bitmap getQuickQRImage(String str,int width){
         return createQRImage(getQRPixels(str,width),width);
+    }
+
+    public static Bitmap getQuickQRImage(String str,int width,Bitmap logo){
+        return addLogo(getQuickQRImage(str,width),logo);
     }
 
     /**
@@ -57,6 +61,10 @@ public class QRUtil {
         return getShaderQRImg(str,width,linearGradient,r+45,isBg,otherColor);
     }
 
+    public static Bitmap getLinearGradientQRImg(String str,int width,float r,int[] colors,boolean isBg,int otherColor,Bitmap logo){
+        return addLogo(getLinearGradientQRImg(str,width,r,colors,isBg,otherColor),logo);
+    }
+
     /**
      * 获取一个环形渲染的二维码
      * @param str 内容
@@ -69,6 +77,10 @@ public class QRUtil {
     public static Bitmap getRadialGradientQRImg(String str,int width,int[] colors,boolean isBg,int otherColor){
         RadialGradient radialGradient = new RadialGradient(width/2,width/2,(float) Math.sqrt((width/2)*(width/2)*2),colors,null, Shader.TileMode.CLAMP);
         return getShaderQRImg(str,width,radialGradient,0,isBg,otherColor);
+    }
+
+    public static Bitmap getRadialGradientQRImg(String str,int width,int[] colors,boolean isBg,int otherColor,Bitmap logo){
+        return addLogo(getRadialGradientQRImg(str,width,colors,isBg,otherColor),logo);
     }
 
     /**
@@ -84,6 +96,10 @@ public class QRUtil {
     public static Bitmap getSweepGradientQRImg(String str,int width,int r,int[] colors,boolean isBg,int otherColor){
         SweepGradient sweepGradient = new SweepGradient(width/2,width/2,colors,null);
         return getShaderQRImg(str,width,sweepGradient,r,isBg,otherColor);
+    }
+
+    public static Bitmap getSweepGradientQRImg(String str,int width,int r,int[] colors,boolean isBg,int otherColor,Bitmap logo){
+        return addLogo(getSweepGradientQRImg(str,width,r,colors,isBg,otherColor),logo);
     }
 
     /**
@@ -110,6 +126,10 @@ public class QRUtil {
         return getShaderQRImg(str,width,bitmapShader,r,isBg,otherColor);
     }
 
+    public static Bitmap getBitmapShaderQRImg(String str,int width,int r,Bitmap bitmap,boolean isBg,int otherColor,Bitmap logo){
+        return addLogo(getBitmapShaderQRImg(str,width,r,bitmap,isBg,otherColor),logo);
+    }
+
     /**
      * 生成一个渲染的二维码图片
      * @param str 内容
@@ -134,7 +154,7 @@ public class QRUtil {
         canvas.restore();
         int changeColor = BLACK;
         if(isBg)
-            changeColor = TRANSPARENT;
+            changeColor = WHITE;
         changeQRColor(pixels,width,bitmap,changeColor,otherColor);
         return createQRImage(pixels,width);
 
@@ -203,7 +223,7 @@ public class QRUtil {
                     if (bitMatrix.get(x, y)) {
                         pixels[y * widthPix + x] = BLACK;
                     } else {
-                        pixels[y * widthPix + x] = TRANSPARENT;
+                        pixels[y * widthPix + x] = WHITE;
                     }
                 }
             }
@@ -237,18 +257,17 @@ public class QRUtil {
         }
         //logo大小为二维码整体大小的1/5
         float scaleFactor = srcWidth * 1.0f / 5 / logoWidth;
-        Bitmap bitmap = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
+//        Bitmap bitmap = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
         try {
-            Canvas canvas = new Canvas(bitmap);
-            canvas.drawBitmap(src, 0, 0, null);
+            Canvas canvas = new Canvas(src);
             canvas.scale(scaleFactor, scaleFactor, srcWidth / 2, srcHeight / 2);
             canvas.drawBitmap(logo, (srcWidth - logoWidth) / 2, (srcHeight - logoHeight) / 2, null);
             canvas.save(Canvas.ALL_SAVE_FLAG);
             canvas.restore();
         } catch (Exception e) {
-            bitmap = null;
+            src = null;
             e.getStackTrace();
         }
-        return bitmap;
+        return src;
     }
 }

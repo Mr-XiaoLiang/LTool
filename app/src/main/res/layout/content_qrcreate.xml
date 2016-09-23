@@ -68,6 +68,7 @@
                         android:text="进入高级定制模式"/>
                 </LinearLayout>
                 <android.support.v7.widget.SwitchCompat
+                    android:checked="false"
                     android:id="@+id/activity_qr_create_open"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -94,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <RadioButton
+                    android:checked="true"
                     android:id="@+id/activity_qr_create_type_linear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -130,7 +132,7 @@
                 android:id="@+id/activity_qr_create_rotate_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="旋转角度"/>
+                android:text="旋转角度 0°"/>
             <SeekBar
                 android:id="@+id/activity_qr_create_rotate"
                 android:layout_width="match_parent"
@@ -211,13 +213,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
-                        android:text="渲染相对的对比色"/>
+                        android:text="渲染相对的对比色，点击修改"/>
                 </LinearLayout>
                 <ImageView
                     android:id="@+id/activity_qr_create_other"
                     android:layout_width="40dp"
-                    android:layout_height="20dp"
-                    android:src="#f00"/>
+                    android:layout_height="40dp"
+                    android:background="#fff"/>
             </LinearLayout>
             <View
                 android:layout_marginTop="@dimen/cardview_padding"
@@ -234,7 +236,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="渲染色彩"/>
+                android:text="渲染色彩，点击修改"/>
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="30dp">
@@ -252,12 +254,12 @@
                 android:background="@color/colorPrimary"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/activity_qr_create_bitmap_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/activity_qr_create_bitmap_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -279,13 +281,53 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
-                        android:text="用来渲染的图片"/>
+                        android:text="用来渲染的图片，点击修改"/>
                 </LinearLayout>
                 <ImageView
                     android:id="@+id/activity_qr_create_bitmap"
                     android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="#f00"/>
+                    android:layout_height="40dp"/>
+            </LinearLayout>
+            <View
+                android:layout_marginTop="@dimen/cardview_padding"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/activity_qr_create_logo_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/cardview_padding">
+
+                <LinearLayout
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/black"
+                        android:text="LOGO图片"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="二维码中心的LOGO，点击修改"/>
+                </LinearLayout>
+                <ImageView
+                    android:id="@+id/activity_qr_create_logo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"/>
             </LinearLayout>
             <View
                 android:layout_marginTop="@dimen/cardview_padding"

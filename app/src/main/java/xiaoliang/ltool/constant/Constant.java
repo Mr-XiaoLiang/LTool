@@ -83,5 +83,12 @@ public class Constant {
      * 其他
      */
     public static final int NetWord_Other= 100003;
+    /**
+     * gank.io的福利图
+     * http://gank.io/api/data/%E7%A6%8F%E5%88%A9/10/2
+     * 10：每页数量
+     * 2：页码
+     */
+    public static final String meizi_url = "http://gank.io/api/data/%E7%A6%8F%E5%88%A9/";
 
 }
