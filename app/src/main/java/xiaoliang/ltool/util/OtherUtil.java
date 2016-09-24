@@ -94,13 +94,21 @@ public class OtherUtil {
 
 	}
 
+	public static String getAppImgPath(Context context){
+		return context.getFilesDir().getAbsolutePath()+"/img";
+	}
+
+	public static String getSDImgPath(){
+		return Environment.getExternalStorageDirectory()+"/LTool/img";
+	}
+
 	/**
 	 * 保存到SD卡
 	 * @param bm
 	 * @param picName
      */
 	public static void saveBitmapToSD(Bitmap bm,String picName){
-			saveBitmap(bm,picName,Environment.getExternalStorageDirectory()+"/LTool/img");
+			saveBitmap(bm,picName,getSDImgPath());
 	}
 
 	/**
@@ -110,7 +118,7 @@ public class OtherUtil {
 	 * @param picName
      */
 	public static void saveBitmapToApp(Context context,Bitmap bm,String picName){
-		saveBitmap(bm,picName,context.getFilesDir().getAbsolutePath()+"/img");
+		saveBitmap(bm,picName,getAppImgPath(context));
 	}
 
 	/**

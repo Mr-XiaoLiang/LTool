@@ -1,13 +1,23 @@
 package xiaoliang.ltool.activity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -23,13 +33,17 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.dialog.ColorsDialog;
 import xiaoliang.ltool.dialog.LoadDialog;
 import xiaoliang.ltool.util.DensityUtil;
 import xiaoliang.ltool.util.DialogUtil;
+import xiaoliang.ltool.util.OtherUtil;
 import xiaoliang.ltool.util.QRCreateRunnable;
 import xiaoliang.ltool.util.QRTask;
 
@@ -46,6 +60,7 @@ public class QRCreateActivity extends AppCompatActivity implements
     private LToolApplication app;
     private NestedScrollView scrollView;
     private LoadDialog loadDialog;
+    private QRHandler handler;
     //定制按钮
     private LinearLayout typeLayout,rotateLayout,bgLayout,otherLayout,colorsLayout,bitmapLayout,logoLayout;
     private SwitchCompat openSwitch,isBgSwitch;
@@ -56,11 +71,11 @@ public class QRCreateActivity extends AppCompatActivity implements
     private LinearLayout colorGroup;
     private TextView rotateText;
     //定制值
-    private final int TYPE_LINEAR = 0;
-    private final int TYPE_RADIAL = 1;
-    private final int TYPE_SWEEP = 2;
-    private final int TYPE_BITMAP = 3;
-    private final int TYPE_QUICK = 4;
+    private static final int TYPE_LINEAR = 0;
+    private static final int TYPE_RADIAL = 1;
+    private static final int TYPE_SWEEP = 2;
+    private static final int TYPE_BITMAP = 3;
+    private static final int TYPE_QUICK = 4;
     private boolean open = false;
     private int type = TYPE_LINEAR;//定制类型
     private int rotate = 0;//旋转角度
@@ -70,6 +85,13 @@ public class QRCreateActivity extends AppCompatActivity implements
     private Bitmap bitmap;//渲染资源
     private Bitmap logo;//logo资源
     private Bitmap qRBitmap;//二维码图片
+    private static final int GET_BITMAP_CAMERA = 987;
+    private static final int GET_BITMAP_PHOTO = 986;
+    private static final int GET_BITMAP_CLIPPING = 985;
+    private static final int GET_LOGO_CAMERA = 984;
+    private static final int GET_LOGO_PHOTO = 983;
+    private static final int GET_LOGO_CLIPPING = 982;
+    private static final int PERMISSON_REQUESTCODE = 981;
 
 
     @Override
@@ -81,6 +103,7 @@ public class QRCreateActivity extends AppCompatActivity implements
         if(getSupportActionBar()!=null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         app = (LToolApplication) getApplicationContext();
+        handler = new QRHandler();
         initView();
         openMade();
     }
@@ -184,9 +207,6 @@ public class QRCreateActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * 创建二维码
-     */
     private void createQR(){
         InputMethodManager imm =  (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         if(imm != null) {
@@ -236,6 +256,121 @@ public class QRCreateActivity extends AppCompatActivity implements
         }
     }
 
+    private void getImage(final boolean isLogo){
+
+        DialogUtil.getAlertDialog(this, "图片来源", "请选择你需要的图片来源",
+                "相机",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        checkCameraPermission(isLogo);
+                    }
+                },
+                "相册",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_PICK, null);
+                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+                        if(isLogo)
+                            startActivityForResult(intent, GET_LOGO_PHOTO);
+                        else
+                            startActivityForResult(intent, GET_BITMAP_PHOTO);
+                    }
+                }
+        );
+    }
+
+    private void checkCameraPermission(final boolean isLogo){
+        String perm = Manifest.permission.CAMERA;
+        if(ContextCompat.checkSelfPermission(this,perm)
+                == PackageManager.PERMISSION_GRANTED){
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // 指定调用相机拍照后照片的储存路径
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoName());
+            if(isLogo)
+                startActivityForResult(intent, GET_LOGO_CAMERA);
+            else
+                startActivityForResult(intent, GET_BITMAP_CAMERA);
+        }else if (ContextCompat.checkSelfPermission(this,perm)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.shouldShowRequestPermissionRationale(
+                this, perm)) {
+            ActivityCompat.requestPermissions(this,new String[]{perm},PERMISSON_REQUESTCODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] paramArrayOfInt) {
+        if (requestCode == PERMISSON_REQUESTCODE) {
+            if (!verifyPermissions(paramArrayOfInt)) {
+                showMissingPermissionDialog();
+            }
+        }
+    }
+
+    /**
+     * 显示提示信息
+     *
+     * @since 2.5.0
+     *
+     */
+    private void showMissingPermissionDialog() {
+        DialogUtil.getAlertDialog(this, "权限获取", "您选择了从相机获取图片，为此，我们需要您对我们授权使用摄像头，否则操作无法进行。",
+                "拒绝授权",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                },
+                "同意授权",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startAppSettings();
+                    }
+                }
+        );
+    }
+
+    /**
+     *  启动应用的设置
+     *
+     * @since 2.5.0
+     *
+     */
+    private void startAppSettings() {
+        Intent intent = new Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:" + getPackageName()));
+        startActivity(intent);
+    }
+
+    /**
+     * 检测是否说有的权限都已经授权
+     * @param grantResults
+     * @return
+     * @since 2.5.0
+     *
+     */
+    private boolean verifyPermissions(int[] grantResults) {
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Uri getPhotoName(){
+        File name = new File(
+                OtherUtil.getAppImgPath(this),
+                OtherUtil.formatTimeByMilliSecond(System.currentTimeMillis())+".png");
+        return Uri.fromFile(name);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -260,6 +395,10 @@ public class QRCreateActivity extends AppCompatActivity implements
                 DialogUtil.getColorDialog(this,colorsList,233,this);
                 break;
             case R.id.activity_qr_create_bitmap_layout:
+                getImage(false);
+                break;
+            case R.id.activity_qr_create_logo_layout:
+                getImage(true);
                 break;
         }
     }
@@ -322,15 +461,13 @@ public class QRCreateActivity extends AppCompatActivity implements
         }
     }
 
-//    private class QRImgCallBack implements QRCreateRunnable.QRCallBack{
         @Override
-        public void obtainQR(Bitmap bitmap) {
-            qRBitmap = bitmap;
-            handler.sendEmptyMessage(200);
-        }
-//    }
+    public void obtainQR(Bitmap bitmap) {
+        qRBitmap = bitmap;
+        handler.sendEmptyMessage(200);
+    }
 
-    private Handler handler = new Handler() {
+    private class QRHandler extends Handler{
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
@@ -344,6 +481,6 @@ public class QRCreateActivity extends AppCompatActivity implements
             }
             super.handleMessage(msg);
         }
-    };
+    }
 
 }
