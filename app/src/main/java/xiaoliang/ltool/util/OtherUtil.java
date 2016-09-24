@@ -91,7 +91,6 @@ public class OtherUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public static String getAppImgPath(Context context){
@@ -206,5 +205,12 @@ public class OtherUtil {
 		return strNetworkType;
 	}
 
+	public static void seveBitmapOnBackground(String path, String name, Bitmap bitmap,SaveBitmapRunnable.SaveBitmapCallBack callBack){
+		HttpUtil.getThread(new SaveBitmapRunnable(path,name,bitmap,callBack));
+	}
+
+	public static void seveBitmapToSDOnBackground(String name, Bitmap bitmap,SaveBitmapRunnable.SaveBitmapCallBack callBack){
+		seveBitmapOnBackground(getSDImgPath(),name,bitmap,callBack);
+	}
 
 }

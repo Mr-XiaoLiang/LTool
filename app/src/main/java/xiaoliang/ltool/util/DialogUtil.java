@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -17,6 +18,7 @@ import xiaoliang.ltool.bean.CityBean;
 import xiaoliang.ltool.dialog.CityDialog;
 import xiaoliang.ltool.dialog.ColorsDialog;
 import xiaoliang.ltool.dialog.LoadDialog;
+import xiaoliang.ltool.dialog.QRWidthDialog;
 
 /**
  * dialog调用类
@@ -92,7 +94,23 @@ public class DialogUtil {
         Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
         WindowManager.LayoutParams p = window.getAttributes(); // 获取对话框当前的参数值
         p.height = (int) (d.getHeight() * 0.5);
-        p.width = (int) (d.getWidth() * 0.7);
+        p.width = (int) (d.getWidth() * 0.8);
+        dialog.onWindowAttributesChanged(p);
+        window.setAttributes(p);
+        return dialog;
+    }
+
+    public static QRWidthDialog getQRWidthDialog(Activity context, int width, QRWidthDialog.QRWidthDialogListener listener){
+        QRWidthDialog dialog = new QRWidthDialog(context,width,listener);
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER); // 此处可以设置dialog显示的位置
+        dialog.setCancelable(true);
+        dialog.show();
+        WindowManager m = context.getWindowManager();
+        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
+        WindowManager.LayoutParams p = window.getAttributes(); // 获取对话框当前的参数值
+//        p.height = (int) (d.getHeight() * 0.5);
+        p.width = (int) (d.getWidth() * 0.8);
         dialog.onWindowAttributesChanged(p);
         window.setAttributes(p);
         return dialog;
@@ -125,6 +143,38 @@ public class DialogUtil {
             String leftName, DialogInterface.OnClickListener leftBtn,
             String rightName, DialogInterface.OnClickListener rightBtn) {
         AlertDialog dialog = new AlertDialog.Builder(context).setIcon(R.mipmap.ic_launcher).setTitle(title).setMessage(msg).setNegativeButton(leftName, leftBtn).setPositiveButton(rightName, rightBtn).create();
+        dialog.show();
+        return dialog;
+    }
+
+    public static AlertDialog getAlertDialog(
+            Activity context, String title, String msg,View view,
+            String leftName, DialogInterface.OnClickListener leftBtn,
+            String rightName, DialogInterface.OnClickListener rightBtn) {
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setIcon(R.mipmap.ic_launcher)
+                .setTitle(title)
+                .setMessage(msg)
+                .setView(view)
+                .setNegativeButton(leftName, leftBtn)
+                .setPositiveButton(rightName, rightBtn)
+                .create();
+        dialog.show();
+        return dialog;
+    }
+
+    public static AlertDialog getAlertDialog(
+            Activity context, String title, String msg,int view,
+            String leftName, DialogInterface.OnClickListener leftBtn,
+            String rightName, DialogInterface.OnClickListener rightBtn) {
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setIcon(R.mipmap.ic_launcher)
+                .setTitle(title)
+                .setMessage(msg)
+                .setView(view)
+                .setNegativeButton(leftName, leftBtn)
+                .setPositiveButton(rightName, rightBtn)
+                .create();
         dialog.show();
         return dialog;
     }

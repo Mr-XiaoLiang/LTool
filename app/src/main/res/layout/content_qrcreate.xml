@@ -343,6 +343,13 @@
             android:layout_height="wrap_content"
             android:text="生成"
             android:textColor="@color/colorAccent"/>
-
+        <Button
+            android:layout_marginTop="@dimen/cardview_padding"
+            android:onClick="onClick"
+            android:id="@+id/activity_qr_create_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="保存"
+            android:textColor="@color/colorAccent"/>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

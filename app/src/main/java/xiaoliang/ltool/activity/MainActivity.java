@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private WeatherBean weatherBean;
     //定位部分
     private boolean autoLocation = true;
+    private boolean isGetLocation = false;
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
     //二维码部分
@@ -140,8 +141,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(autoLocation){
             List<String> needRequestPermissonList = findDeniedPermissions(needPermissions);
             if(needRequestPermissonList==null||needRequestPermissonList.size()<1){
-                //初始化定位
-                initLocation();
+                if(!isGetLocation){
+                    //初始化定位
+                    initLocation();
+                    isGetLocation = true;
+                }
             }else if(isNeedCheck){
                 checkPermissions(needPermissions);
             }
@@ -267,7 +271,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getWeather(){
-        Log.d("城市",SharedPreferencesUtils.getCity(this));
+        String city = SharedPreferencesUtils.getCity(this);
+        Log.d("城市",city);
+//        app.T("当前城市："+city);
+        if(city==null||"".equals(city.trim()))
+            return;
         NetTasks.getEtouchWeather(new HttpTaskRunnable.CallBack<WeatherBean>() {
             Message message = new Message();
             @Override
@@ -299,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return null;
                 }
             }
-        },SharedPreferencesUtils.getCity(this));
+        },city);
     }
 
     /****************权限检查代码块开始*******************/
@@ -484,7 +492,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AMapLocationListener locationListener = new AMapLocationListener() {
         @Override
         public void onLocationChanged(AMapLocation loc) {
-            if (null != loc) {
+            if (null != loc&&!"".equals(loc.getCity().trim())) {
                 //解析定位结果
                 setCity(loc);
             } else {
@@ -499,6 +507,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void setCity(AMapLocation loc){
         SharedPreferencesUtils.setAMapLocation(this,loc);
+        app.T("自动定位结果："+loc.getCity());
         //定位后重新刷新天气
         getWeather();
     }

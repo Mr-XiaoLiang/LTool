@@ -115,9 +115,11 @@ public class QRUtil {
     public static Bitmap getBitmapShaderQRImg(String str,int width,int r,Bitmap bitmap,boolean isBg,int otherColor){
         // 将bmp作为着色器，就是在指定区域内绘制bmp
         BitmapShader bitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        float radius = (float) Math.sqrt(width*width*2);
+//        float radius = (float) Math.sqrt(width*width*2);
+        float radius = width;
         // 如果图片的宽或者高与view的宽高不匹配，计算出需要缩放的比例；缩放后的图片的宽高，一定要大于我们view的宽高；所以我们这里取大值；
-        float scale = Math.max(radius / bitmap.getWidth(), radius / bitmap.getHeight());
+//        float scale = Math.max(radius / bitmap.getWidth(), radius / bitmap.getHeight());
+        float scale = radius / bitmap.getWidth();
         Matrix matrix = new Matrix();
         // shader的变换矩阵，我们这里主要用于放大或者缩小
         matrix.setScale(scale, scale);
