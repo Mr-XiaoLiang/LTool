@@ -157,7 +157,10 @@ public class QRUtil {
         int changeColor = BLACK;
         if(isBg)
             changeColor = WHITE;
-        changeQRColor(pixels,width,bitmap,changeColor,otherColor);
+//        changeQRColor(pixels,width,bitmap,changeColor,otherColor);
+        int[] bmpPixels = new int[width*width];
+        bitmap.getPixels(bmpPixels,0,width,0,0,width,width);
+        changeQRColor(pixels,width,bmpPixels,changeColor,otherColor);
         return createQRImage(pixels,width);
 
     }
@@ -182,6 +185,25 @@ public class QRUtil {
         }
     }
 
+    /**
+     * 修改二维码颜色
+     * @param pixels 二维码颜色数组
+     * @param width 图片宽度
+     * @param bitmap 渲染的模板图片
+     * @param changeColor 修改的颜色
+     * @param otherColor 替补颜色
+     */
+    public static void changeQRColor(int[] pixels,int width,int[] bitmap,int changeColor,int otherColor){
+        for (int y = 0; y < width; y++) {
+            for (int x = 0; x < width; x++) {
+                if(pixels[y * width + x] == changeColor){
+                    pixels[y * width + x] = bitmap[y * width + x];
+                }else{
+                    pixels[y * width + x] = otherColor;
+                }
+            }
+        }
+    }
 
     /**
      * 生成二维码Bitmap
