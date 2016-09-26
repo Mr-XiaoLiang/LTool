@@ -50,7 +50,8 @@
                     android:layout_width="40dp"
                     android:layout_height="match_parent"/>
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/dialog_colors_edit"
@@ -60,6 +61,14 @@
                         android:maxLength="6"
                         android:lines="1"/>
                 </android.support.design.widget.TextInputLayout>
+                <TextView
+                    android:id="@+id/dialog_colors_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/cardview_padding"
+                    android:text="生成"
+                    android:gravity="center"
+                    android:textColor="@color/colorAccent"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

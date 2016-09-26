@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +27,11 @@ import xiaoliang.ltool.R;
  * 颜色选择的dialog
  */
 
-public class ColorsDialog extends Dialog implements AdapterView.OnItemClickListener,TextWatcher,SeekBar.OnSeekBarChangeListener,View.OnClickListener {
+public class ColorsDialog extends Dialog implements AdapterView.OnItemClickListener,SeekBar.OnSeekBarChangeListener,View.OnClickListener {
 
     private boolean onlyOne = true;
 
-    private TextView leftBtn,rightBtn;
+    private TextView leftBtn,rightBtn,editBtn;
     private View show;
     private TextInputEditText editText;
     private SeekBar redBar,greenBar,blueBar;
@@ -54,26 +55,23 @@ public class ColorsDialog extends Dialog implements AdapterView.OnItemClickListe
         greenBar = (SeekBar) findViewById(R.id.dialog_colors_green);
         blueBar = (SeekBar) findViewById(R.id.dialog_colors_blue);
         listView = (ListView) findViewById(R.id.dialog_colors_list);
+        editBtn = (TextView) findViewById(R.id.dialog_colors_btn);
         addLayout = (LinearLayout) findViewById(R.id.dialog_colors_addlayout);
-        editText.addTextChangedListener(this);
         redBar.setOnSeekBarChangeListener(this);
         greenBar.setOnSeekBarChangeListener(this);
         blueBar.setOnSeekBarChangeListener(this);
         leftBtn.setOnClickListener(this);
         rightBtn.setOnClickListener(this);
+        editBtn.setOnClickListener(this);
         if(onlyOne){
             addLayout.setVisibility(View.VISIBLE);
             initView();
-            colorToStr();
         }else{
             addLayout.setVisibility(View.GONE);
             initList();
         }
     }
 
-    private void colorToStr(){
-        editText.setText(Integer.toHexString(thisColor).substring(2));
-    }
 
     private void initView(){
         int r = Color.red(thisColor);
@@ -83,6 +81,7 @@ public class ColorsDialog extends Dialog implements AdapterView.OnItemClickListe
         greenBar.setProgress(g);
         blueBar.setProgress(b);
         show.setBackgroundColor(thisColor);
+        editText.setText(Integer.toHexString(thisColor).substring(2));
     }
 
     private void initList(){
@@ -120,23 +119,8 @@ public class ColorsDialog extends Dialog implements AdapterView.OnItemClickListe
         thisColor = colors.get(position);
         addLayout.setVisibility(View.VISIBLE);
         initView();
-        colorToStr();
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        String str = s.toString().replaceAll("[^(0-9 | a-f | A-F)]","");
-        if(str.length()==3&&str.length()==6){
-            thisColor = Color.parseColor(str);
-            initView();
-        }
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {}
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -154,7 +138,6 @@ public class ColorsDialog extends Dialog implements AdapterView.OnItemClickListe
                 break;
         }
         initView();
-        colorToStr();
     }
 
     @Override
@@ -197,8 +180,16 @@ public class ColorsDialog extends Dialog implements AdapterView.OnItemClickListe
                             colors = new ArrayList<>();
                         addLayout.setVisibility(View.VISIBLE);
                         initView();
-                        editText.setText(Integer.toHexString(thisColor));
                     }
+                }
+                break;
+            case R.id.dialog_colors_btn:
+                String str = editText.getText().toString().replaceAll("[^(0-9 | a-f | A-F)]","");
+                if(str.length()==6){
+                    thisColor = Color.parseColor("#"+str);
+                    initView();
+                }else{
+                    editText.setError("请输入正确的色值");
                 }
                 break;
         }

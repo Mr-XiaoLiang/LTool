@@ -77,7 +77,7 @@ public class DialogUtil {
         Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
         WindowManager.LayoutParams p = window.getAttributes(); // 获取对话框当前的参数值
         p.height = (int) (d.getHeight() * 0.5);
-        p.width = (int) (d.getWidth() * 0.7);
+        p.width = (int) (d.getWidth() * 0.9);
         dialog.onWindowAttributesChanged(p);
         window.setAttributes(p);
         return dialog;
