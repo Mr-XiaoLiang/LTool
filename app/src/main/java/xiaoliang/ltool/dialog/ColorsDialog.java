@@ -31,8 +31,6 @@ public class ColorsDialog extends Dialog implements AdapterView.OnItemClickListe
 
     private boolean onlyOne = true;
 
-    //Test
-
     private TextView leftBtn,rightBtn,editBtn;
     private View show;
     private TextInputEditText editText;
