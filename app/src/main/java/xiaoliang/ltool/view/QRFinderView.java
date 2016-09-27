@@ -108,12 +108,32 @@ public class QRFinderView extends View {
     private Collection<ResultPoint> possibleResultPoints;
     private Collection<ResultPoint> lastPossibleResultPoints;
 
+    private boolean isFirst = false;
+
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         width = getWidth();
         height = getHeight();
+        color = getResources().getColor(R.color.colorPrimary);
+        resultColor = Color.WHITE;
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setDither(true);
+        paint.setShadowLayer(10,0,0,color);
+        blackPaint = new Paint();
+        blackPaint.setAntiAlias(true);
+        blackPaint.setDither(true);
+        blackPaint.setColor(Color.BLACK);
+        blackPaint.setAlpha(128);
+        possibleResultPoints = new HashSet<ResultPoint>(5);
+        init();
+    }
+
+    private void init(){
         frame = CameraManager.get().getFramingRect();
+        if(frame==null)
+            return;
         scanWidth = frame.width();
         scanHeight = frame.height();
         scanTop = frame.top;
@@ -121,18 +141,7 @@ public class QRFinderView extends View {
         angleLength = (int) (scanWidth*0.1);
         angleWidth = (int) (angleLength*0.1);
         stepLength = scanHeight*0.01f;
-        color = getResources().getColor(R.color.colorPrimary);
-        resultColor = Color.WHITE;
-        paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setDither(true);
-        paint.setShadowLayer(10,0,0,color);
         paint.setStrokeWidth(angleWidth);
-        blackPaint = new Paint();
-        blackPaint.setAntiAlias(true);
-        blackPaint.setDither(true);
-        blackPaint.setColor(Color.BLACK);
-        blackPaint.setAlpha(128);
         scanBox = new Path();
         scanBox.moveTo(scanLeft,scanTop);
         scanBox.lineTo(scanLeft+angleLength,scanTop);
@@ -152,11 +161,16 @@ public class QRFinderView extends View {
                 new int[]{Color.TRANSPARENT,color,Color.TRANSPARENT},
                 null, Shader.TileMode.CLAMP);
         paint.setShader(linearGradient);
-        possibleResultPoints = new HashSet<ResultPoint>(5);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if(!isFirst){
+            isFirst = true;
+            init();
+            if(frame==null)
+                return;
+        }
         paint.setColor(resultBitmap==null?color:resultColor);
         canvas.drawRect(0,0,width,scanTop,blackPaint);//上
         canvas.drawRect(0,scanTop,scanLeft,scanTop+scanHeight,blackPaint);//左
@@ -165,7 +179,8 @@ public class QRFinderView extends View {
         if(resultBitmap!=null){
             canvas.drawBitmap(resultBitmap,scanLeft,scanTop,paint);
         }else{
-            canvas.drawPath(scanBox,paint);//画框
+            if(scanBox!=null)
+                canvas.drawPath(scanBox,paint);//画框
             canvas.drawRect(scanLeft+10,scanTop+stepLength*step,scanLeft+scanWidth-10,scanTop+stepLength*step+scanWidth,paint);//画扫描线
 
             Collection<ResultPoint> currentPossible = possibleResultPoints;
@@ -206,4 +221,26 @@ public class QRFinderView extends View {
     public QRFinderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+
+    public void drawViewfinder() {
+        resultBitmap = null;
+        invalidate();
+    }
+
+    /**
+     * Draw a bitmap with the result points highlighted instead of the live
+     * scanning display.
+     *
+     * @param barcode
+     *            An image of the decoded barcode.
+     */
+    public void drawResultBitmap(Bitmap barcode) {
+        resultBitmap = barcode;
+        invalidate();
+    }
+
+    public void addPossibleResultPoint(ResultPoint point) {
+        possibleResultPoints.add(point);
+    }
+
 }

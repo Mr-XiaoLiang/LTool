@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         handler = new MyHandler();
         qrCreate.setOnClickListener(this);
         qrRead.setOnClickListener(this);
-        qrRead.setVisibility(View.GONE);
     }
 
     @Override
@@ -210,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this,QRCreateActivity.class));
                 break;
             case R.id.content_main_qrread:
-//                startActivity(new Intent(this,QRCreateActivity.class));
+                startActivity(new Intent(this,QRReadActivity.class));
                 break;
         }
     }

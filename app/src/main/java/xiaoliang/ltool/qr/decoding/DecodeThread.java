@@ -23,10 +23,11 @@ import java.util.concurrent.CountDownLatch;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.example.qr_codescan.MipcaActivityCapture;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
+
+import xiaoliang.ltool.activity.QRReadActivity;
 
 /**
  * This thread does all the heavy lifting of decoding the images.
@@ -35,12 +36,12 @@ import com.google.zxing.ResultPointCallback;
 final class DecodeThread extends Thread {
 
   public static final String BARCODE_BITMAP = "barcode_bitmap";
-  private final MipcaActivityCapture activity;
+  private final QRReadActivity activity;
   private final Hashtable<DecodeHintType, Object> hints;
   private Handler handler;
   private final CountDownLatch handlerInitLatch;
 
-  DecodeThread(MipcaActivityCapture activity,
+  DecodeThread(QRReadActivity activity,
                Vector<BarcodeFormat> decodeFormats,
                String characterSet,
                ResultPointCallback resultPointCallback) {
@@ -48,7 +49,7 @@ final class DecodeThread extends Thread {
     this.activity = activity;
     handlerInitLatch = new CountDownLatch(1);
 
-    hints = new Hashtable<DecodeHintType, Object>(3);
+    hints = new Hashtable<>(3);
 
     if (decodeFormats == null || decodeFormats.isEmpty()) {
     	 decodeFormats = new Vector<BarcodeFormat>();
