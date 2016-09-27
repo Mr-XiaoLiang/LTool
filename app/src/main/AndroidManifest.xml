@@ -69,6 +69,10 @@
         <activity
             android:name=".activity.QRCreateActivity"
             android:label="@string/title_activity_qrcreate"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.QRReadActivity"
+            android:label="@string/title_activity_qrread"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
