@@ -18,6 +18,7 @@ package xiaoliang.ltool.qr.decoding;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
@@ -30,6 +31,7 @@ import com.google.zxing.common.HybridBinarizer;
 
 import java.util.Hashtable;
 
+import xiaoliang.ltool.R;
 import xiaoliang.ltool.activity.QRReadActivity;
 import xiaoliang.ltool.qr.camera.CameraManager;
 import xiaoliang.ltool.qr.camera.PlanarYUVLuminanceSource;
@@ -50,13 +52,12 @@ final class DecodeHandler extends Handler {
   @Override
   public void handleMessage(Message message) {
     switch (message.what) {
-//      case R.id.decode:
-//        //Log.d(TAG, "Got decode message");
-//        decode((byte[]) message.obj, message.arg1, message.arg2);
-//        break;
-//      case R.id.quit:
-//        Looper.myLooper().quit();
-//        break;
+      case R.id.decode:
+        decode((byte[]) message.obj, message.arg1, message.arg2);
+        break;
+      case R.id.quit:
+        Looper.myLooper().quit();
+        break;
     }
   }
 
@@ -95,15 +96,15 @@ final class DecodeHandler extends Handler {
     if (rawResult != null) {
       long end = System.currentTimeMillis();
       Log.d(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
-//      Message message = Message.obtain(activity.getHandler(), R.id.decode_succeeded, rawResult);
-//      Bundle bundle = new Bundle();
-//      bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
-//      message.setData(bundle);
-//      //Log.d(TAG, "Sending decode succeeded message...");
-//      message.sendToTarget();
+      Message message = Message.obtain(activity.getHandler(), R.id.decode_succeeded, rawResult);
+      Bundle bundle = new Bundle();
+      bundle.putParcelable(DecodeThread.BARCODE_BITMAP, source.renderCroppedGreyscaleBitmap());
+      message.setData(bundle);
+      //Log.d(TAG, "Sending decode succeeded message...");
+      message.sendToTarget();
     } else {
-//      Message message = Message.obtain(activity.getHandler(), R.id.decode_failed);
-//      message.sendToTarget();
+      Message message = Message.obtain(activity.getHandler(), R.id.decode_failed);
+      message.sendToTarget();
     }
   }
 

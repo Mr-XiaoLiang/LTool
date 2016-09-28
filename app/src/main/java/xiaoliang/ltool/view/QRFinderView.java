@@ -11,7 +11,9 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.zxing.ResultPoint;
 
@@ -69,6 +71,14 @@ public class QRFinderView extends View {
      */
     private int scanLeft;
     /**
+     * 扫描框头部
+     */
+    private int scanRight;
+    /**
+     * 扫描框左侧
+     */
+    private int scanBottom;
+    /**
      * 扫描框宽度
      */
     private int scanWidth;
@@ -101,14 +111,16 @@ public class QRFinderView extends View {
      */
     private Paint blackPaint;
     /**
-     * 外框
+     * 黑色画笔
      */
-    private Path scanBox;
+    private Paint boxPaint;
+    /**
+     * 透明色
+     */
+    private int TRANSPARENT = Color.argb(0,255,255,255);
 
     private Collection<ResultPoint> possibleResultPoints;
     private Collection<ResultPoint> lastPossibleResultPoints;
-
-    private boolean isFirst = false;
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -126,63 +138,78 @@ public class QRFinderView extends View {
         blackPaint.setDither(true);
         blackPaint.setColor(Color.BLACK);
         blackPaint.setAlpha(128);
-        possibleResultPoints = new HashSet<ResultPoint>(5);
+        boxPaint = new Paint();
+        boxPaint.setAntiAlias(true);
+        boxPaint.setDither(true);
+        boxPaint.setColor(color);
+        possibleResultPoints = new HashSet<>(5);
         init();
     }
 
     private void init(){
-        frame = CameraManager.get().getFramingRect();
-        if(frame==null)
-            return;
+//        if(CameraManager.get()==null)
+//            return;
+//        frame = CameraManager.get().getFramingRect();
+        if(frame==null){
+            initFrame();
+        }
         scanWidth = frame.width();
         scanHeight = frame.height();
         scanTop = frame.top;
         scanLeft = frame.left;
+        scanRight = frame.right;
+        scanBottom = frame.bottom;
         angleLength = (int) (scanWidth*0.1);
         angleWidth = (int) (angleLength*0.1);
         stepLength = scanHeight*0.01f;
         paint.setStrokeWidth(angleWidth);
-        scanBox = new Path();
-        scanBox.moveTo(scanLeft,scanTop);
-        scanBox.lineTo(scanLeft+angleLength,scanTop);
-        scanBox.moveTo(scanLeft+scanWidth-angleLength,scanTop);
-        scanBox.lineTo(scanLeft+scanWidth,scanTop);
-        scanBox.lineTo(scanLeft+scanWidth,scanTop+angleLength);
-        scanBox.moveTo(scanLeft+scanWidth,scanTop+scanHeight-angleLength);
-        scanBox.lineTo(scanLeft+scanWidth,scanTop+scanHeight);
-        scanBox.lineTo(scanLeft+scanWidth-angleLength,scanTop+scanHeight);
-        scanBox.moveTo(scanLeft+angleLength,scanTop+scanHeight);
-        scanBox.lineTo(scanLeft,scanTop+scanHeight);
-        scanBox.lineTo(scanLeft,scanTop+scanHeight-angleLength);
-        scanBox.moveTo(scanLeft,scanTop-angleLength);
-        scanBox.close();
         LinearGradient linearGradient = new LinearGradient(
                 scanLeft,scanTop,scanLeft+scanWidth,scanTop,
-                new int[]{Color.TRANSPARENT,color,Color.TRANSPARENT},
+                new int[]{TRANSPARENT,color,TRANSPARENT},
                 null, Shader.TileMode.CLAMP);
         paint.setShader(linearGradient);
     }
 
+    private void initFrame(){
+        int w = width * 3 / 5;
+        if (w < CameraManager.MIN_FRAME_WIDTH) {
+            w = CameraManager.MIN_FRAME_WIDTH;
+        } else if (w > CameraManager.MAX_FRAME_WIDTH) {
+            w = CameraManager.MAX_FRAME_WIDTH;
+        }
+        int h = height * 3 / 5;
+        if (h < CameraManager.MIN_FRAME_HEIGHT) {
+            h = CameraManager.MIN_FRAME_HEIGHT;
+        } else if (h > CameraManager.MAX_FRAME_HEIGHT) {
+            h = CameraManager.MAX_FRAME_HEIGHT;
+        }
+        int leftOffset = (width - w) / 2;
+        int topOffset = (height - h) / 2;
+        frame = new Rect(leftOffset, topOffset, leftOffset + w, topOffset + h);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        if(!isFirst){
-            isFirst = true;
-            init();
-            if(frame==null)
-                return;
-        }
+        if(frame==null)
+            return;
         paint.setColor(resultBitmap==null?color:resultColor);
         canvas.drawRect(0,0,width,scanTop,blackPaint);//上
-        canvas.drawRect(0,scanTop,scanLeft,scanTop+scanHeight,blackPaint);//左
-        canvas.drawRect(scanLeft+scanWidth,scanTop,width,scanTop+scanHeight,blackPaint);//右
-        canvas.drawRect(0,scanTop+scanHeight,width,height,blackPaint);//下
+        canvas.drawRect(0,scanTop,scanLeft,scanBottom,blackPaint);//左
+        canvas.drawRect(scanRight,scanTop,width,scanBottom,blackPaint);//右
+        canvas.drawRect(0,scanBottom,width,height,blackPaint);//下
         if(resultBitmap!=null){
             canvas.drawBitmap(resultBitmap,scanLeft,scanTop,paint);
         }else{
-            if(scanBox!=null)
-                canvas.drawPath(scanBox,paint);//画框
-            canvas.drawRect(scanLeft+10,scanTop+stepLength*step,scanLeft+scanWidth-10,scanTop+stepLength*step+scanWidth,paint);//画扫描线
+            canvas.drawRect(scanLeft,scanTop,scanLeft+angleLength,scanTop+angleWidth,boxPaint);
+            canvas.drawRect(scanLeft,scanTop,scanLeft+angleWidth,scanTop+angleLength,boxPaint);
+            canvas.drawRect(scanRight-angleLength,scanTop,scanRight,scanTop+angleWidth,boxPaint);
+            canvas.drawRect(scanRight-angleWidth,scanTop,scanRight,scanTop+angleLength,boxPaint);
+            canvas.drawRect(scanLeft,scanBottom-angleWidth,scanLeft+angleLength,scanBottom,boxPaint);
+            canvas.drawRect(scanLeft,scanBottom-angleLength,scanLeft+angleWidth,scanBottom,boxPaint);
+            canvas.drawRect(scanRight-angleWidth,scanBottom-angleLength,scanRight,scanBottom,boxPaint);
+            canvas.drawRect(scanRight-angleLength,scanBottom-angleWidth,scanRight,scanBottom,boxPaint);
 
+            canvas.drawRect(scanLeft,scanTop+stepLength*step,scanLeft+scanWidth,scanTop+stepLength*step+angleWidth,paint);//画扫描线
             Collection<ResultPoint> currentPossible = possibleResultPoints;
             Collection<ResultPoint> currentLast = lastPossibleResultPoints;
             if (currentPossible.isEmpty()) {
@@ -192,13 +219,13 @@ public class QRFinderView extends View {
                 lastPossibleResultPoints = currentPossible;
                 for (ResultPoint point : currentPossible) {
                     canvas.drawCircle(scanLeft + point.getX(), scanTop
-                            + point.getY(), 6.0f, paint);
+                            + point.getY(), 6.0f, boxPaint);
                 }
             }
             if (currentLast != null) {
                 for (ResultPoint point : currentLast) {
                     canvas.drawCircle(frame.left + point.getX(), frame.top
-                            + point.getY(), 3.0f, paint);
+                            + point.getY(), 3.0f, boxPaint);
                 }
             }
             if(scanDirection){
@@ -209,6 +236,9 @@ public class QRFinderView extends View {
             if(step==100||step==0){
                 scanDirection = !scanDirection;
             }
+            //只刷新扫描框的内容，其他地方不刷新
+            postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top,
+                    frame.right, frame.bottom);
         }
     }
 
@@ -236,6 +266,19 @@ public class QRFinderView extends View {
      */
     public void drawResultBitmap(Bitmap barcode) {
         resultBitmap = barcode;
+        invalidate();
+    }
+
+    public void setFrame(Rect frame) {
+        this.frame = frame;
+        init();
+    }
+
+    public void setSize(int w,int h) {
+        width = w;
+        height = h;
+        initFrame();
+        init();
         invalidate();
     }
 

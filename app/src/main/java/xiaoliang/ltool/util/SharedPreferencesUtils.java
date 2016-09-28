@@ -178,7 +178,7 @@ public class SharedPreferencesUtils {
                     byteArrayOutputStream.close();
                 }
             }catch (Exception e){
-                e.printStackTrace();;
+                e.printStackTrace();
             }
         }
 
@@ -252,7 +252,7 @@ public class SharedPreferencesUtils {
     public static boolean isOnlyWifi(Context context){
         SharedPreferences mShareConfig =
                 context.getSharedPreferences(USER, Context.MODE_PRIVATE);
-        return mShareConfig.getBoolean("isOnlyWifi",false);
+        return mShareConfig.getBoolean("isOnlyWifi",true);
     }
 
     /**
@@ -318,7 +318,7 @@ public class SharedPreferencesUtils {
     public static boolean getAutoLocation(Context context){
         SharedPreferences mShareConfig =
                 context.getSharedPreferences(USER, Context.MODE_PRIVATE);
-        return mShareConfig.getBoolean("AutoLocation",true);
+        return mShareConfig.getBoolean("AutoLocation",false);
     }
 
     public static void setAMapLocation(Context context,AMapLocation location){

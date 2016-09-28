@@ -17,14 +17,17 @@
 package xiaoliang.ltool.qr.camera;
 
 import java.io.IOException;
+import java.util.List;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -38,10 +41,10 @@ public final class CameraManager {
 
   private static final String TAG = CameraManager.class.getSimpleName();
 
-  private static final int MIN_FRAME_WIDTH = 240;
-  private static final int MIN_FRAME_HEIGHT = 240;
-  private static final int MAX_FRAME_WIDTH = 480;
-  private static final int MAX_FRAME_HEIGHT = 360;
+  public static final int MIN_FRAME_WIDTH = 240;
+  public static final int MIN_FRAME_HEIGHT = 240;
+  public static final int MAX_FRAME_WIDTH = 720;
+  public static final int MAX_FRAME_HEIGHT = 720;
 
   private static CameraManager cameraManager;
 
@@ -122,16 +125,19 @@ public final class CameraManager {
         throw new IOException();
       }
       camera.setPreviewDisplay(holder);
-
       if (!initialized) {
         initialized = true;
         configManager.initFromCameraParameters(camera);
       }
+//      camera.setDisplayOrientation(90);
       configManager.setDesiredCameraParameters(camera);
-
+//      onViewChange();
+      int[] size = new int[2];
+      getCameraSize(size);
+      holder.setFixedSize(size[0],size[1]);
       //FIXME
- //     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-      //�Ƿ�ʹ��ǰ��
+//      SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+      //是否使用前灯
 //      if (prefs.getBoolean(PreferencesActivity.KEY_FRONT_LIGHT, false)) {
 //        FlashlightManager.enableFlashlight();
 //      }
@@ -236,7 +242,6 @@ public final class CameraManager {
       int leftOffset = (screenResolution.x - width) / 2;
       int topOffset = (screenResolution.y - height) / 2;
       framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
-      Log.d(TAG, "Calculated framing rect: " + framingRect);
     }
     return framingRect;
   }
@@ -322,5 +327,52 @@ public final class CameraManager {
 	public Context getContext() {
 		return context;
 	}
+
+  public Camera getCamera() {
+    return camera;
+  }
+
+  public void onViewChange(){
+    Camera.Parameters parameters = camera.getParameters();// 获取mCamera的参数对象
+    Camera.Size largestSize = getBestSupportedSize(parameters
+            .getSupportedPreviewSizes());
+    parameters.setPreviewSize(largestSize.width, largestSize.height);// 设置预览图片尺寸
+    largestSize = getBestSupportedSize(parameters
+            .getSupportedPictureSizes());// 设置捕捉图片尺寸
+    parameters.setPictureSize(largestSize.width, largestSize.height);
+    camera.setParameters(parameters);
+    camera.setDisplayOrientation(90);
+    try {
+      camera.startPreview();
+    } catch (Exception e) {
+      if (camera != null) {
+        camera.release();
+        camera = null;
+      }
+    }
+  }
+
+  public void getCameraSize(int[] size){
+    if(camera!=null){
+      Camera.Size cs = camera.getParameters().getPreviewSize();
+      size[0] = cs.width;
+      size[1] = cs.height;
+    }
+
+  }
+
+  private Camera.Size getBestSupportedSize(List<Camera.Size> sizes) {
+    // 取能适用的最大的SIZE
+    Camera.Size largestSize = sizes.get(0);
+    int largestArea = sizes.get(0).height * sizes.get(0).width;
+    for (Camera.Size s : sizes) {
+      int area = s.width * s.height;
+      if (area > largestArea) {
+        largestArea = area;
+        largestSize = s;
+      }
+    }
+    return largestSize;
+  }
 
 }

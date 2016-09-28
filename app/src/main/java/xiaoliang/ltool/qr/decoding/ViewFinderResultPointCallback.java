@@ -1,7 +1,5 @@
 package xiaoliang.ltool.qr.decoding;
 
-import android.graphics.Bitmap;
-
 import com.google.zxing.ResultPoint;
 import com.google.zxing.ResultPointCallback;
 

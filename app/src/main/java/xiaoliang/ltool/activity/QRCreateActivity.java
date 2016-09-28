@@ -646,7 +646,7 @@ public class QRCreateActivity extends AppCompatActivity implements
                     System.gc();//调用内存清理，防止溢出
                     break;
                 case 201://保存成功
-                    app.T("保存成功，图片位于："+OtherUtil.getSDImgPath());
+                    app.T("保存成功，图片位于：/LTool/img");
                     break;
                 case 202://保存失败
                     app.T("保存失败");

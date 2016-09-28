@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this,QRCreateActivity.class));
                 break;
             case R.id.content_main_qrread:
-                startActivity(new Intent(this,QRReadActivity.class));
+                checkCameraPermission();
                 break;
         }
     }
@@ -322,7 +322,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Manifest.permission.READ_PHONE_STATE
     };
 
-    private static final int PERMISSON_REQUESTCODE = 0;
+    private static final int LOCATION_PERMISSON_REQUESTCODE = 0;
+    private static final int CAMERA_PERMISSON_REQUESTCODE = 1;
 
     /**
      * 判断是否需要检测，防止不停的弹框
@@ -342,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ActivityCompat.requestPermissions(this,
                     needRequestPermissonList.toArray(
                             new String[needRequestPermissonList.size()]),
-                    PERMISSON_REQUESTCODE);
+                    LOCATION_PERMISSON_REQUESTCODE);
         }
     }
 
@@ -386,10 +387,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] paramArrayOfInt) {
-        if (requestCode == PERMISSON_REQUESTCODE) {
+        if (requestCode == LOCATION_PERMISSON_REQUESTCODE) {
             if (!verifyPermissions(paramArrayOfInt)) {
                 showMissingPermissionDialog();
                 isNeedCheck = false;
+            }
+        }
+        if (requestCode == CAMERA_PERMISSON_REQUESTCODE) {
+            if (!verifyPermissions(paramArrayOfInt)) {
+                showCameraMissingPermissionDialog();
             }
         }
     }
@@ -428,6 +434,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
+     * 设置不再自动定位
+     */
+    private void setAuto(){
+        SharedPreferencesUtils.setAutoLocation(this,false);
+    }
+
+    /****************摄像头权限检查开始*****************/
+
+    /**
      *  启动应用的设置
      *
      * @since 2.5.0
@@ -441,11 +456,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * 设置不再自动定位
+     * 显示提示信息
+     *
+     * @since 2.5.0
+     *
      */
-    private void setAuto(){
-        SharedPreferencesUtils.setAutoLocation(this,false);
+    private void showCameraMissingPermissionDialog() {
+        DialogUtil.getAlertDialog(this, "权限获取", "您选择了二维码识别，为此，需要您对我们授权使用摄像头，否则操作无法进行。",
+                "拒绝授权",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                },
+                "同意授权",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startAppSettings();
+                    }
+                }
+        );
     }
+
+
+    private void checkCameraPermission(){
+        String perm = Manifest.permission.CAMERA;
+        if(ContextCompat.checkSelfPermission(this,perm)
+                == PackageManager.PERMISSION_GRANTED){
+            startActivity(new Intent(this,QRReadActivity.class));
+        }else
+        if (ContextCompat.checkSelfPermission(this,perm)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.shouldShowRequestPermissionRationale(
+                this, perm)) {
+            ActivityCompat.requestPermissions(this,new String[]{perm},CAMERA_PERMISSON_REQUESTCODE);
+        }
+    }
+
+    /****************摄像头权限检查结束*****************/
+
     /****************权限检查代码块结束*******************/
     /****************定位代码块开始*******************/
 

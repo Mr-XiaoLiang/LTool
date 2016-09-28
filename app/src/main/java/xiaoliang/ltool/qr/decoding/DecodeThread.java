@@ -31,7 +31,7 @@ import xiaoliang.ltool.activity.QRReadActivity;
 
 /**
  * This thread does all the heavy lifting of decoding the images.
- * �����߳�
+ * 解码线程
  */
 final class DecodeThread extends Thread {
 
@@ -52,7 +52,7 @@ final class DecodeThread extends Thread {
     hints = new Hashtable<>(3);
 
     if (decodeFormats == null || decodeFormats.isEmpty()) {
-    	 decodeFormats = new Vector<BarcodeFormat>();
+    	 decodeFormats = new Vector<>();
     	 decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);
     	 decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
     	 decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
