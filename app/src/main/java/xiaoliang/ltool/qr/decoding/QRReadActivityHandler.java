@@ -57,10 +57,24 @@ public final class QRReadActivityHandler extends Handler {
     decodeThread = new DecodeThread(activity, decodeFormats, characterSet,
         new ViewFinderResultPointCallback(activity.getQrFinderView()));
     decodeThread.start();
+    start();
+  }
+
+  public void start(){
+    Log.d("QRReadActivityHandler","onStart------------");
     state = State.SUCCESS;
     // Start ourselves capturing previews and decoding.
     CameraManager.get().startPreview();
     restartPreviewAndDecode();
+  }
+
+  public void stop(){
+    Log.d("QRReadActivityHandler","onStop------------");
+    state = State.DONE;
+    CameraManager.get().stopPreview();
+    //移除所有队列中的消息
+    removeMessages(R.id.decode_succeeded);
+    removeMessages(R.id.decode_failed);
   }
 
   @Override
@@ -108,6 +122,7 @@ public final class QRReadActivityHandler extends Handler {
   }
 
   public void quitSynchronously() {
+    Log.d("QRReadActivityHandler","onQuit------------");
     state = State.DONE;
     CameraManager.get().stopPreview();
     Message quit = Message.obtain(decodeThread.getHandler(), R.id.quit);

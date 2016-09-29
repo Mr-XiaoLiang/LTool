@@ -99,10 +99,6 @@ public class QRFinderView extends View {
      */
     private int color;
     /**
-     * 返回时的颜色
-     */
-    private int resultColor;
-    /**
      * 绘制返回的Bitmap
      */
     private Bitmap resultBitmap;
@@ -122,34 +118,11 @@ public class QRFinderView extends View {
     private Collection<ResultPoint> possibleResultPoints;
     private Collection<ResultPoint> lastPossibleResultPoints;
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        width = getWidth();
-        height = getHeight();
-        color = getResources().getColor(R.color.colorPrimary);
-        resultColor = Color.WHITE;
-        paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setDither(true);
-        paint.setShadowLayer(10,0,0,color);
-        blackPaint = new Paint();
-        blackPaint.setAntiAlias(true);
-        blackPaint.setDither(true);
-        blackPaint.setColor(Color.BLACK);
-        blackPaint.setAlpha(128);
-        boxPaint = new Paint();
-        boxPaint.setAntiAlias(true);
-        boxPaint.setDither(true);
-        boxPaint.setColor(color);
-        possibleResultPoints = new HashSet<>(5);
-        init();
-    }
-
     private void init(){
-//        if(CameraManager.get()==null)
-//            return;
-//        frame = CameraManager.get().getFramingRect();
+        if(CameraManager.get()==null)
+            return;
+        frame = CameraManager.get().getFramingRectInPreview();
+        createPaint();
         if(frame==null){
             initFrame();
         }
@@ -164,10 +137,30 @@ public class QRFinderView extends View {
         stepLength = scanHeight*0.01f;
         paint.setStrokeWidth(angleWidth);
         LinearGradient linearGradient = new LinearGradient(
-                scanLeft,scanTop,scanLeft+scanWidth,scanTop,
+                scanLeft,scanTop,scanRight,scanTop,
                 new int[]{TRANSPARENT,color,TRANSPARENT},
                 null, Shader.TileMode.CLAMP);
         paint.setShader(linearGradient);
+    }
+
+    private void createPaint(){
+        width = getWidth();
+        height = getHeight();
+        color = getResources().getColor(R.color.colorPrimary);
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setDither(true);
+        paint.setShadowLayer(10,0,0,color);
+        blackPaint = new Paint();
+        blackPaint.setAntiAlias(true);
+        blackPaint.setDither(true);
+        blackPaint.setColor(Color.BLACK);
+        blackPaint.setAlpha(128);
+        boxPaint = new Paint();
+        boxPaint.setAntiAlias(true);
+        boxPaint.setDither(true);
+        boxPaint.setColor(color);
+        possibleResultPoints = new HashSet<>(5);
     }
 
     private void initFrame(){
@@ -190,9 +183,9 @@ public class QRFinderView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(frame==null)
-            return;
-        paint.setColor(resultBitmap==null?color:resultColor);
+        if(frame==null){
+            init();
+        }
         canvas.drawRect(0,0,width,scanTop,blackPaint);//上
         canvas.drawRect(0,scanTop,scanLeft,scanBottom,blackPaint);//左
         canvas.drawRect(scanRight,scanTop,width,scanBottom,blackPaint);//右
@@ -200,6 +193,8 @@ public class QRFinderView extends View {
         if(resultBitmap!=null){
             canvas.drawBitmap(resultBitmap,scanLeft,scanTop,paint);
         }else{
+            canvas.drawRect(scanLeft,scanTop+stepLength*step,scanRight,scanTop+stepLength*step+angleWidth,paint);//画扫描线
+
             canvas.drawRect(scanLeft,scanTop,scanLeft+angleLength,scanTop+angleWidth,boxPaint);
             canvas.drawRect(scanLeft,scanTop,scanLeft+angleWidth,scanTop+angleLength,boxPaint);
             canvas.drawRect(scanRight-angleLength,scanTop,scanRight,scanTop+angleWidth,boxPaint);
@@ -209,7 +204,6 @@ public class QRFinderView extends View {
             canvas.drawRect(scanRight-angleWidth,scanBottom-angleLength,scanRight,scanBottom,boxPaint);
             canvas.drawRect(scanRight-angleLength,scanBottom-angleWidth,scanRight,scanBottom,boxPaint);
 
-            canvas.drawRect(scanLeft,scanTop+stepLength*step,scanLeft+scanWidth,scanTop+stepLength*step+angleWidth,paint);//画扫描线
             Collection<ResultPoint> currentPossible = possibleResultPoints;
             Collection<ResultPoint> currentLast = lastPossibleResultPoints;
             if (currentPossible.isEmpty()) {
@@ -218,14 +212,14 @@ public class QRFinderView extends View {
                 possibleResultPoints = new HashSet<>(5);
                 lastPossibleResultPoints = currentPossible;
                 for (ResultPoint point : currentPossible) {
-                    canvas.drawCircle(scanLeft + point.getX(), scanTop
-                            + point.getY(), 6.0f, boxPaint);
+                        canvas.drawCircle(scanLeft + point.getX(), scanTop
+                                + point.getY(), 6.0f, boxPaint);
                 }
             }
             if (currentLast != null) {
                 for (ResultPoint point : currentLast) {
-                    canvas.drawCircle(frame.left + point.getX(), frame.top
-                            + point.getY(), 3.0f, boxPaint);
+                        canvas.drawCircle(scanLeft + point.getX(), scanTop
+                                + point.getY(), 3.0f, boxPaint);
                 }
             }
             if(scanDirection){
@@ -237,8 +231,8 @@ public class QRFinderView extends View {
                 scanDirection = !scanDirection;
             }
             //只刷新扫描框的内容，其他地方不刷新
-            postInvalidateDelayed(ANIMATION_DELAY, frame.left, frame.top,
-                    frame.right, frame.bottom);
+            postInvalidateDelayed(ANIMATION_DELAY, scanLeft, scanTop,
+                    scanRight, scanBottom);
         }
     }
 

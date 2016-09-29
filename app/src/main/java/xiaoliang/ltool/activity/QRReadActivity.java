@@ -80,6 +80,19 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     protected void onResume() {
         super.onResume();
+        if(handler==null)
+            initializeReader();
+        if(handler!=null)
+            handler.start();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initializeReader();
+    }
+
+    private void initializeReader(){
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
         if (hasSurface) {
             initCamera(surfaceHolder);
@@ -124,6 +137,11 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
 
     @Override
     protected void onDestroy() {
+        if (handler != null) {
+            handler.quitSynchronously();
+            handler = null;
+        }
+        CameraManager.get().closeDriver();
         inactivityTimer.shutdown();
         super.onDestroy();
     }
@@ -131,11 +149,6 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     protected void onPause() {
         super.onPause();
-        if (handler != null) {
-            handler.quitSynchronously();
-            handler = null;
-        }
-        CameraManager.get().closeDriver();
     }
 
     private void initCamera(SurfaceHolder surfaceHolder) {
@@ -205,7 +218,7 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        qrFinderView.setSize(width,height);
+        qrFinderView.setLayoutParams(new FrameLayout.LayoutParams(width,height));
     }
 
     @Override
@@ -214,6 +227,8 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     }
 
     public void onScanEnd(final String result, Bitmap bmp){
+//        if(handler!=null)
+//            handler.stop();
         DialogUtil.getAlertDialog(this, "扫描结果", result, "复制", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

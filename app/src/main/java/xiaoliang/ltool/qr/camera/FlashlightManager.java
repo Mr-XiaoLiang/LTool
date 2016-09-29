@@ -54,11 +54,10 @@ final class FlashlightManager {
   }
 
   /**
-   * �����������ƿ���
+   * 开启闪光灯
    */
-  //FIXME
   static void enableFlashlight() {
-    setFlashlight(false);
+    setFlashlight(true);
   }
 
   static void disableFlashlight() {

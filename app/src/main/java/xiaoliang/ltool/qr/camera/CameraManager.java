@@ -16,26 +16,22 @@
 
 package xiaoliang.ltool.qr.camera;
 
-import java.io.IOException;
-import java.util.List;
-
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.SurfaceHolder;
+
+import java.io.IOException;
 
 /**
  * This object wraps the Camera service object and expects to be the only one talking to it. The
  * implementation encapsulates the steps needed to take preview-sized images, which are used for
  * both preview and decoding.
- *
+ * 这是一个相机管理器,在这里进行处理相机相关的事情
  */
 public final class CameraManager {
 
@@ -59,11 +55,15 @@ public final class CameraManager {
     }
     SDK_INT = sdkInt;
   }
-
+  //上下文
   private final Context context;
+  //一个相机管理器的参数配置类
   private final CameraConfigurationManager configManager;
+  //相机对象，因为需要兼容5.0以下设备，所以这里放弃使用Camera2
   private Camera camera;
+  //扫描框的大小
   private Rect framingRect;
+  //扫描框的预览大小
   private Rect framingRectInPreview;
   private boolean initialized;
   private boolean previewing;
@@ -129,19 +129,10 @@ public final class CameraManager {
         initialized = true;
         configManager.initFromCameraParameters(camera);
       }
-//      camera.setDisplayOrientation(90);
       configManager.setDesiredCameraParameters(camera);
-//      onViewChange();
       int[] size = new int[2];
       getCameraSize(size);
       holder.setFixedSize(size[0],size[1]);
-      //FIXME
-//      SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-      //是否使用前灯
-//      if (prefs.getBoolean(PreferencesActivity.KEY_FRONT_LIGHT, false)) {
-//        FlashlightManager.enableFlashlight();
-//      }
-      FlashlightManager.enableFlashlight();
     }
   }
 
@@ -332,26 +323,6 @@ public final class CameraManager {
     return camera;
   }
 
-  public void onViewChange(){
-    Camera.Parameters parameters = camera.getParameters();// 获取mCamera的参数对象
-    Camera.Size largestSize = getBestSupportedSize(parameters
-            .getSupportedPreviewSizes());
-    parameters.setPreviewSize(largestSize.width, largestSize.height);// 设置预览图片尺寸
-    largestSize = getBestSupportedSize(parameters
-            .getSupportedPictureSizes());// 设置捕捉图片尺寸
-    parameters.setPictureSize(largestSize.width, largestSize.height);
-    camera.setParameters(parameters);
-    camera.setDisplayOrientation(90);
-    try {
-      camera.startPreview();
-    } catch (Exception e) {
-      if (camera != null) {
-        camera.release();
-        camera = null;
-      }
-    }
-  }
-
   public void getCameraSize(int[] size){
     if(camera!=null){
       Camera.Size cs = camera.getParameters().getPreviewSize();
@@ -359,20 +330,6 @@ public final class CameraManager {
       size[1] = cs.height;
     }
 
-  }
-
-  private Camera.Size getBestSupportedSize(List<Camera.Size> sizes) {
-    // 取能适用的最大的SIZE
-    Camera.Size largestSize = sizes.get(0);
-    int largestArea = sizes.get(0).height * sizes.get(0).width;
-    for (Camera.Size s : sizes) {
-      int area = s.width * s.height;
-      if (area > largestArea) {
-        largestArea = area;
-        largestSize = s;
-      }
-    }
-    return largestSize;
   }
 
 }
