@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -80,15 +81,6 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     protected void onResume() {
         super.onResume();
-        if(handler==null)
-            initializeReader();
-        if(handler!=null)
-            handler.start();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         initializeReader();
     }
 
@@ -227,13 +219,17 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     }
 
     public void onScanEnd(final String result, Bitmap bmp){
-//        if(handler!=null)
-//            handler.stop();
-        DialogUtil.getAlertDialog(this, "扫描结果", result, "复制", new DialogInterface.OnClickListener() {
+        AlertDialog dialog = DialogUtil.getAlertDialog(this, "扫描结果", result, "复制", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 myClip = ClipData.newPlainText("text", result);
                 myClipboard.setPrimaryClip(myClip);
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                handler.start();
             }
         });
     }
