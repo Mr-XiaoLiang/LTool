@@ -16,6 +16,7 @@
 
 package xiaoliang.ltool.qr.decoding;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,7 +25,9 @@ import android.util.Log;
 
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
+import com.google.zxing.LuminanceSource;
 import com.google.zxing.MultiFormatReader;
+import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
@@ -55,6 +58,9 @@ final class DecodeHandler extends Handler {
       case R.id.decode:
         decode((byte[]) message.obj, message.arg1, message.arg2);
         break;
+      case R.id.decode_photo:
+        decodePhoto((Bitmap) message.obj);
+        break;
       case R.id.quit:
         Looper.myLooper().quit();
         break;
@@ -71,8 +77,8 @@ final class DecodeHandler extends Handler {
    */
   private void decode(byte[] data, int width, int height) {
     long start = System.currentTimeMillis();
-    Result rawResult = null;
-    
+    Result rawResult;
+
     //modify here
     byte[] rotatedData = new byte[data.length];
     for (int y = 0; y < height; y++) {
@@ -82,16 +88,9 @@ final class DecodeHandler extends Handler {
     int tmp = width; // Here we are swapping, that's the difference to #11
     width = height;
     height = tmp;
-    
+
     PlanarYUVLuminanceSource source = CameraManager.get().buildLuminanceSource(rotatedData, width, height);
-    BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-    try {
-      rawResult = multiFormatReader.decodeWithState(bitmap);
-    } catch (ReaderException re) {
-      // continue
-    } finally {
-      multiFormatReader.reset();
-    }
+    rawResult = decodeQR(source);
 
     if (rawResult != null) {
       long end = System.currentTimeMillis();
@@ -106,6 +105,50 @@ final class DecodeHandler extends Handler {
       Message message = Message.obtain(activity.getHandler(), R.id.decode_failed);
       message.sendToTarget();
     }
+  }
+
+  private void decodePhoto(Bitmap bitmap){
+    long start = System.currentTimeMillis();
+    try{
+      if(bitmap==null){
+        Message message = Message.obtain(activity.getHandler(), R.id.decode_failed);
+        message.sendToTarget();
+      }
+      int[] pixels = new int[bitmap.getHeight()*bitmap.getWidth()];
+      bitmap.getPixels(pixels,0,bitmap.getWidth(),0,0,bitmap.getWidth(),bitmap.getHeight());
+      RGBLuminanceSource source = new RGBLuminanceSource(bitmap.getWidth(),bitmap.getHeight(),pixels);
+      Result rawResult = decodeQR(source);
+
+      if (rawResult != null) {
+        long end = System.currentTimeMillis();
+        Log.d(TAG, "Found barcode (" + (end - start) + " ms):\n" + rawResult.toString());
+        Message message = Message.obtain(activity.getHandler(), R.id.decode_succeeded, rawResult);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(DecodeThread.BARCODE_BITMAP, bitmap);
+        message.setData(bundle);
+        //Log.d(TAG, "Sending decode succeeded message...");
+        message.sendToTarget();
+      } else {
+        Message message = Message.obtain(activity.getHandler(), R.id.decode_failed);
+        message.sendToTarget();
+      }
+    }catch (Exception e){
+      Message message = Message.obtain(activity.getHandler(), R.id.decode_failed);
+      message.sendToTarget();
+    }
+  }
+
+  private Result decodeQR(LuminanceSource source){
+    Result rawResult = null;
+    BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+    try {
+      rawResult = multiFormatReader.decodeWithState(bitmap);
+    } catch (ReaderException re) {
+      // continue
+    } finally {
+      multiFormatReader.reset();
+    }
+    return rawResult;
   }
 
 }

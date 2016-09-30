@@ -36,6 +36,7 @@ import java.lang.reflect.Method;
  */
 final class FlashlightManager {
 
+  private static boolean isOpen = false;
   private static final String TAG = FlashlightManager.class.getSimpleName();
 
   private static final Object iHardwareService;
@@ -58,10 +59,16 @@ final class FlashlightManager {
    */
   static void enableFlashlight() {
     setFlashlight(true);
+    isOpen = true;
+  }
+
+  static boolean isOpen(){
+    return isOpen;
   }
 
   static void disableFlashlight() {
     setFlashlight(false);
+    isOpen = false;
   }
 
   private static Object getHardwareService() {

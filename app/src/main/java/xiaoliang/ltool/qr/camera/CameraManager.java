@@ -329,7 +329,21 @@ public final class CameraManager {
       size[0] = cs.width;
       size[1] = cs.height;
     }
+  }
 
+  private boolean isFlashOn = false;
+
+  public void enableFlashlight() {
+    if(camera!=null){
+      Camera.Parameters mParameters = camera.getParameters();
+      if(isFlashOn){
+        mParameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);//打开Camera.Parameters.FLASH_MODE_OFF则为关闭
+      }else{
+        mParameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);//打开Camera.Parameters.FLASH_MODE_OFF则为关闭
+      }
+      isFlashOn = !isFlashOn;
+      camera.setParameters(mParameters);
+    }
   }
 
 }

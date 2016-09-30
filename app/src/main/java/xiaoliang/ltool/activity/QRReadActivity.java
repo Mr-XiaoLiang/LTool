@@ -1,5 +1,6 @@
 package xiaoliang.ltool.activity;
 
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
@@ -8,8 +9,10 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +20,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -30,9 +35,10 @@ import xiaoliang.ltool.qr.camera.CameraManager;
 import xiaoliang.ltool.qr.decoding.InactivityTimer;
 import xiaoliang.ltool.qr.decoding.QRReadActivityHandler;
 import xiaoliang.ltool.util.DialogUtil;
+import xiaoliang.ltool.view.LWavesView;
 import xiaoliang.ltool.view.QRFinderView;
 
-public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.Callback {
+public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.Callback,View.OnClickListener {
 
     private QRReadActivityHandler handler;
     private QRFinderView qrFinderView;
@@ -49,6 +55,10 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     private LToolApplication app;
     private ClipData myClip;
     private ClipboardManager myClipboard;
+    private LWavesView wavesView;
+    private View flashBtn,photoBtn;
+    private static final int GET_PHOTO = 986;
+    private Dialog loadDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +76,12 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
         CameraManager.init(app);
         qrFinderView = (QRFinderView) findViewById(R.id.activity_qrread_finder);
         surfaceView = (SurfaceView) findViewById(R.id.activity_qrread_surface);
+        wavesView = (LWavesView) findViewById(R.id.activity_qrread_waves);
+        flashBtn = findViewById(R.id.activity_qrread_flash);
+        photoBtn = findViewById(R.id.activity_qrread_photo);
+        flashBtn.setOnClickListener(this);
+        photoBtn.setOnClickListener(this);
+        qrFinderView.setWavesView(wavesView);
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
         myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
@@ -141,12 +157,14 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     protected void onPause() {
         super.onPause();
+        if(handler!=null){
+            handler.stop();
+        }
     }
 
     private void initCamera(SurfaceHolder surfaceHolder) {
         try {
             CameraManager.get().openDriver(surfaceHolder);
-//            qrFinderView.setFrame(CameraManager.get().getFramingRect());
         } catch (Exception e) {
             return;
         }
@@ -210,7 +228,8 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        qrFinderView.setLayoutParams(new FrameLayout.LayoutParams(width,height));
+        qrFinderView.setLayoutParams(new LinearLayout.LayoutParams(width,height));
+        wavesView.setTranslationY(height-wavesView.getHeight()/2);
     }
 
     @Override
@@ -219,7 +238,16 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     }
 
     public void onScanEnd(final String result, Bitmap bmp){
-        AlertDialog dialog = DialogUtil.getAlertDialog(this, "扫描结果", result, "复制", new DialogInterface.OnClickListener() {
+        if(loadDialog!=null)
+            loadDialog.dismiss();
+        AlertDialog dialog = DialogUtil.getAlertDialog(this, "扫描结果", result, "打开", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Uri uri = Uri.parse(result);
+                Intent it = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(it);
+            }
+        }, "复制", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 myClip = ClipData.newPlainText("text", result);
@@ -239,6 +267,56 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
             Bundle bundle = data.getExtras();
             onScanEnd(bundle.getString("result"),(Bitmap) data.getParcelableExtra("bitmap"));
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.activity_qrread_flash:
+                CameraManager.get().enableFlashlight();
+                break;
+            case R.id.activity_qrread_photo:
+                Intent intent = new Intent(Intent.ACTION_PICK, null);
+                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+                startActivityForResult(intent, GET_PHOTO);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case GET_PHOTO:
+                try{
+                    if (data != null){
+                        Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());//显得到bitmap图片
+                        if(bmp==null){
+                            app.T("图片获取失败");
+                            return;
+                        }
+                        if(handler!=null){
+                            loadDialog = DialogUtil.getLoadDialog(this);
+                            handler.decodeImage(bmp);
+                        }else{
+                            app.T("解码器获取失败");
+                            return;
+                        }
+                    }else{
+                        app.T("图片获取失败");
+                        return;
+                    }
+                }catch (Exception e){
+                    Log.d("QRCreate-->saveImage",e.getMessage());
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void decodeImgFailed(){
+        if(loadDialog!=null)
+            loadDialog.dismiss();
+        app.T("解码失败");
     }
 
 }

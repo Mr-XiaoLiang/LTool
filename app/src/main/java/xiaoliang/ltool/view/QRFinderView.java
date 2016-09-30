@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.util.AttributeSet;
@@ -114,6 +115,11 @@ public class QRFinderView extends View {
      * 透明色
      */
     private int TRANSPARENT = Color.argb(0,255,255,255);
+    /**
+     * 波浪View
+     * 用来关联动画
+     */
+    private LWavesView wavesView;
 
     private Collection<ResultPoint> possibleResultPoints;
     private Collection<ResultPoint> lastPossibleResultPoints;
@@ -126,6 +132,7 @@ public class QRFinderView extends View {
         if(frame==null){
             initFrame();
         }
+
         scanWidth = frame.width();
         scanHeight = frame.height();
         scanTop = frame.top;
@@ -141,6 +148,10 @@ public class QRFinderView extends View {
                 new int[]{TRANSPARENT,color,TRANSPARENT},
                 null, Shader.TileMode.CLAMP);
         paint.setShader(linearGradient);
+        if(wavesView!=null){
+            wavesView.setOffX(scanLeft);
+            wavesView.setProportionY(wavesView.getHeight()*1.0f/scanHeight);
+        }
     }
 
     private void createPaint(){
@@ -278,6 +289,11 @@ public class QRFinderView extends View {
 
     public void addPossibleResultPoint(ResultPoint point) {
         possibleResultPoints.add(point);
+        if(wavesView!=null)
+            wavesView.addPoint(new Point((int)point.getX(),(int)point.getY()));
     }
 
+    public void setWavesView(LWavesView wavesView) {
+        this.wavesView = wavesView;
+    }
 }

@@ -113,6 +113,9 @@ public final class QRReadActivityHandler extends Handler {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         activity.startActivity(intent);
         break;
+      case R.id.encode_img_failed:
+        activity.decodeImgFailed();
+        break;
     }
   }
 
@@ -144,6 +147,11 @@ public final class QRReadActivityHandler extends Handler {
       CameraManager.get().requestAutoFocus(this, R.id.auto_focus);
       activity.drawViewfinder();
     }
+  }
+
+  public void decodeImage(Bitmap bitmap){
+    stop();
+    decodeThread.getHandler().obtainMessage(R.id.decode_photo, bitmap);
   }
 
 }

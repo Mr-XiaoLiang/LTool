@@ -3,6 +3,7 @@ package xiaoliang.ltool.qr.decoding;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.ResultPointCallback;
 
+import xiaoliang.ltool.view.LWavesView;
 import xiaoliang.ltool.view.QRFinderView;
 
 /**

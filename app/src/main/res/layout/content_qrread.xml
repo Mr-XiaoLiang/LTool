@@ -13,9 +13,57 @@
         android:id="@+id/activity_qrread_surface"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <xiaoliang.ltool.view.QRFinderView
-        android:id="@+id/activity_qrread_finder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <xiaoliang.ltool.view.QRFinderView
+            android:id="@+id/activity_qrread_finder"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@android:color/white">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/activity_qrread_flash"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:text="闪光"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/circular_btn"/>
+            </LinearLayout>
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/activity_qrread_photo"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:text="相册"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/circular_btn"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <xiaoliang.ltool.view.LWavesView
+            android:id="@+id/activity_qrread_waves"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+    </LinearLayout>
 </FrameLayout>
