@@ -76,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //二维码部分
     private CardView qrRead;
     private CardView qrCreate;
+    //图片部分
+    private CardView meizi;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +104,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         backgroundImg = (ImageView) findViewById(R.id.activity_main_bg);
         qrRead = (CardView) findViewById(R.id.content_main_qrread);
         qrCreate = (CardView) findViewById(R.id.content_main_qrcreate);
+        meizi = (CardView) findViewById(R.id.content_main_meizhi);
         imageLoader = ImageLoader.getInstance();
         handler = new MyHandler();
         qrCreate.setOnClickListener(this);
         qrRead.setOnClickListener(this);
+        meizi.setOnClickListener(this);
     }
 
     @Override
@@ -210,6 +215,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.content_main_qrread:
                 checkCameraPermission();
+                break;
+            case R.id.content_main_meizhi:
+                startActivity(new Intent(this,MeizhiActivity.class));
                 break;
         }
     }

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/cardview_margin"
     android:id="@+id/item_weather_weather_day"
-    android:background="?android:attr/selectableItemBackground"
+    android:foreground="?attr/selectableItemBackground"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout

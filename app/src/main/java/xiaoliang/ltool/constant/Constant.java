@@ -8,10 +8,6 @@ import android.content.Context;
  */
 public class Constant {
     /**
-     * 高德定位用的kay
-     */
-    public static final String amap_location_kay = "ad90d9a285507b7be97a91a7883a39ca";
-    /**
      * 今日天气访问接口
      * 采用的时候中华万年历的接口
      */
@@ -89,6 +85,6 @@ public class Constant {
      * 10：每页数量
      * 2：页码
      */
-    public static final String meizi_url = "http://gank.io/api/data/%E7%A6%8F%E5%88%A9/";
+    public static final String Gank_Meizi_Url = "http://gank.io/api/data/%E7%A6%8F%E5%88%A9/";
 
 }

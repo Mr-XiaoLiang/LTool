@@ -9,7 +9,9 @@ import xiaoliang.ltool.bean.StringNameValueBean;
 public class RequestParameters {
 	/**
 	 * 直接返回字符串
+	 * 本属性已废弃，使用ACCESS_TYPE_OBJECT
 	 */
+	@Deprecated
 	public static final int ACCESS_TYPE_STRING = 0;
 	/**
 	 * 返回对象
