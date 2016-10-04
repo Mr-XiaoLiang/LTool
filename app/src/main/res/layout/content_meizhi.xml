@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_meizhi"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="xiaoliang.ltool.activity.MeizhiActivity"
-    tools:showIn="@layout/activity_meizhi">
-
-    <android.support.v4.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:id="@+id/activity_meizhi_swiperefreshlayout"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:id="@+id/activity_meizhi_swiperefreshlayout"
-        android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/activity_meizhi_recyclerview"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
-</FrameLayout>
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/activity_meizhi_recyclerview"/>
+</android.support.v4.widget.SwipeRefreshLayout>

@@ -127,6 +127,7 @@ public class OtherUtil {
      */
 	public static void saveBabkground(Context context,Bitmap bm){
 		saveBitmap(bm,"background.png",context.getFilesDir().getAbsolutePath()+"/bg");
+//		saveBitmapToSD(bm,"background.png");
 	}
 
 	/**

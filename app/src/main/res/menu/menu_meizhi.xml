@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="xiaoliang.ltool.MainActivity">
+    <item
+        android:icon="@drawable/ic_back_to_top"
+        android:id="@+id/menu_meizhi_top"
+        android:title="@string/back_to_top"
+        app:showAsAction="always" />
+</menu>

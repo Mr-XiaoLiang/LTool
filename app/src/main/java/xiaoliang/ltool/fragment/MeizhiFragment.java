@@ -1,27 +1,30 @@
 package xiaoliang.ltool.fragment;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.logging.Handler;
 
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.activity.LToolApplication;
 import xiaoliang.ltool.constant.Constant;
-import xiaoliang.ltool.util.HttpTaskRunnable;
-import xiaoliang.ltool.util.MeizhiUtil;
-import xiaoliang.ltool.util.NetTasks;
+import xiaoliang.ltool.constant.MeizhiType;
+import xiaoliang.ltool.view.RatioImageView;
 
 /**
  * 妹纸图片分页
@@ -37,6 +40,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private int page = 0;
     private LToolApplication app;
     private MeizhiAdapter adapter;
+    private StaggeredGridLayoutManager layoutManager;
 
     public MeizhiFragment() {
         // Required empty public constructor
@@ -57,27 +61,24 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.content_meizhi,container);
+        View root = inflater.inflate(R.layout.content_meizhi,container,false);
         app = (LToolApplication) getActivity().getApplicationContext();
         swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.activity_meizhi_swiperefreshlayout);
         recyclerView = (RecyclerView) root.findViewById(R.id.activity_meizhi_recyclerview);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,R.color.colorPrimary);
         //设置layoutManager
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        recyclerView.setLayoutManager(layoutManager);
         //设置adapter
-        recyclerView.setAdapter(adapter = new MeizhiAdapter(ImageLoader.getInstance()));
+        recyclerView.setAdapter(adapter = new MeizhiAdapter());
         //设置滑动监听器
         recyclerView.addOnScrollListener(new OnScrollDownListener());
         return root;
     }
 
     private class MeizhiAdapter extends RecyclerView.Adapter<MeizhiAdapter.MeizhiHolder>{
-
-        private ImageLoader imageLoader;
-
-         MeizhiAdapter(ImageLoader imageLoader) {
-            this.imageLoader = imageLoader;
-        }
 
         @Override
         public MeizhiHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -88,6 +89,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         @Override
         public void onBindViewHolder(MeizhiHolder holder, int position) {
             holder.onBind(getItem(position));
+
         }
 
         @Override
@@ -101,11 +103,13 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         class MeizhiHolder extends RecyclerView.ViewHolder{
 
-            private ImageView img;
+            private RatioImageView img;
+            private CardView cardView;
 
              void onBind(final String url){
-                imageLoader.displayImage(url,img);
-                img.setOnClickListener(new View.OnClickListener() {
+//                imageLoader.displayImage(url,img);
+                 Glide.with(MeizhiFragment.this).load(url).centerCrop().into(img);
+                 cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onButtonPressed(url);
@@ -115,7 +119,8 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
              MeizhiHolder(View itemView) {
                 super(itemView);
-                img = (ImageView) itemView.findViewById(R.id.item_meizhi_img);
+                 cardView = (CardView) itemView.findViewById(R.id.item_meizhi_card);
+                 img = (RatioImageView) itemView.findViewById(R.id.item_meizhi_img);
             }
         }
     }
@@ -132,7 +137,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         String url = "";
         switch (type){
             case GANK:
-                url = Constant.Gank_Meizi_Url+"10/"+page;
+                url = Constant.Gank_Meizi_Url+"20/"+page;
                 break;
             case DOUBAN_ALL:break;
             case DOUBAN_LIAN:break;
@@ -146,7 +151,9 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return url;
     }
 
-    public void setData(ArrayList<String> data){
+    public synchronized void setData(ArrayList<String> data){
+        isLoading = false;
+        swipeRefreshLayout.setRefreshing(false);
         if(page==0){
             urlList.clear();
         }
@@ -192,6 +199,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            layoutManager.invalidateSpanAssignments();
             StaggeredGridLayoutManager manager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
             // 当不滚动时
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -267,7 +275,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onRefresh() {
         if(!isLoading){
             isLoading = true;
-            page = 0;
+            page = 1;
             mListener.onLoad(this,getUrl());
         }
     }
@@ -283,53 +291,41 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onCardClick(Fragment fragment,String uri);
-        void onError(Fragment fragment,String msg);
-        void onLoad(Fragment fragment,String url);
+        void onCardClick(MeizhiFragment fragment,String uri);
+        void onError(MeizhiFragment fragment,String msg);
+        void onLoad(MeizhiFragment fragment,String url);
     }
 
-    /**
-     * 加载类型
-     * 这里使用了enum
-     * 更加构造时传入的类型来选择性加载内容
-     */
-    public enum MeizhiType{
-        NULL(-1),
-        GANK(0),
-        DOUBAN_ALL(1),
-        DOUBAN_XIONG(2),
-        DOUBAN_TUN(3),
-        DOUBAN_SIWA(4),
-        DOUBAN_TUI(5),
-        DOUBAN_LIAN(6),
-        DOUBAN_OTHER(7);
-        private int value;
-        MeizhiType(int value) {
-            this.value = value;
+    public MeizhiType getType() {
+        return type;
+    }
+
+    public void LoadImage(View view){
+        new DownloadImageTask().execute("http://yourimageurl.png");
+    }
+    private class DownloadImageTask extends AsyncTask<String,Void,String>
+    {
+        protected String doInBackground(String...urls){
+            return loadImageFromNetwork(urls[0]);
         }
-        public int getValue(){
-            return value;
+        protected void onPostExecute(String result){
         }
-        public static MeizhiType getType(int i){
-            switch (i){
-                case 0:
-                    return GANK;
-                case 1:
-                    return DOUBAN_ALL;
-                case 2:
-                    return DOUBAN_XIONG;
-                case 3:
-                    return DOUBAN_TUN;
-                case 4:
-                    return DOUBAN_SIWA;
-                case 5:
-                    return DOUBAN_TUI;
-                case 6:
-                    return DOUBAN_LIAN;
-                case 7:
-                    return DOUBAN_OTHER;
-            }
-            return NULL;
+    }
+    private String loadImageFromNetwork(String url){
+        try {
+            URL m_url=new URL(url);
+            HttpURLConnection con=(HttpURLConnection)m_url.openConnection();
+            InputStream in=con.getInputStream();
+            BitmapFactory.Options options=new BitmapFactory.Options();
+            options.inJustDecodeBounds=true;
+            BitmapFactory.decodeStream(in,null,options);
+            int height=options.outHeight;
+            int width=options.outWidth;
+            String s="高度是" + height + "宽度是" + width;
+            return s;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
 

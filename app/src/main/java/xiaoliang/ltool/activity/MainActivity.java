@@ -1,7 +1,6 @@
 package xiaoliang.ltool.activity;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -31,8 +30,9 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import org.dom4j.DocumentException;
 
@@ -55,7 +55,6 @@ import xiaoliang.ltool.util.WeatherUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,View.OnLongClickListener {
     /*主要控件*/
-    private ImageLoader imageLoader;
     private CollapsingToolbarLayout toolbarLayout;
     private FloatingActionButton fab;
     private ImageView headImg;
@@ -105,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         qrRead = (CardView) findViewById(R.id.content_main_qrread);
         qrCreate = (CardView) findViewById(R.id.content_main_qrcreate);
         meizi = (CardView) findViewById(R.id.content_main_meizhi);
-        imageLoader = ImageLoader.getInstance();
         handler = new MyHandler();
         qrCreate.setOnClickListener(this);
         qrRead.setOnClickListener(this);
@@ -196,10 +194,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int networdType = OtherUtil.getNetworkType(this);
         boolean onlyWifi = SharedPreferencesUtils.isOnlyWifi(this);
         loadWebImg = SharedPreferencesUtils.isLoadWebImg(this);
-        imageLoader.displayImage(Constant.getBabkgroundPath(this),headImg,null,new MyImageLoadingListener(this,false));
+        Glide.with(this).load(Constant.getBabkgroundPath(this)).asBitmap().into(new SimpleTarget<Bitmap>(){
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                Log.d("onResourceReady",resource.toString()+"---"+resource.getWidth()+"x"+resource.getHeight());
+                headImg.setImageBitmap(resource);
+                onHeadImgLoaded(false,resource);
+            }
+        });
         if(networdType==Constant.NetWord_WIFI||(networdType==Constant.NetWord_MOBILE&&!onlyWifi)){
             if(loadWebImg&&!SharedPreferencesUtils.isGetBgEnd(this)){
-                imageLoader.displayImage(Constant.head_img_url_720,headImg,null,new MyImageLoadingListener(this,true));
+                Glide.with(this).load(Constant.head_img_url_720).asBitmap().into(new SimpleTarget<Bitmap>(){
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        Log.d("onResourceReady-Net",resource.toString()+"---"+resource.getWidth()+"x"+resource.getHeight());
+                        headImg.setImageBitmap(resource);
+                        onHeadImgLoaded(true,resource);
+                    }
+                });
             }
         }
     }
@@ -227,28 +239,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    private class MyImageLoadingListener extends SimpleImageLoadingListener{
-        private Context context;
-        private boolean isSave;
-        public MyImageLoadingListener(Context context,boolean isSave) {
-            this.context = context;
-            this.isSave = isSave;
+    private void onHeadImgLoaded(boolean isSave,Bitmap loadedImage){
+        if(isSave){
+            OtherUtil.saveBabkground(this,loadedImage);
+            SharedPreferencesUtils.setGetBgTime(this);
         }
-        @Override
-        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            if(isSave){
-                OtherUtil.saveBabkground(context,loadedImage);
-                SharedPreferencesUtils.setGetBgTime(context);
-            }
-            setBackground(loadedImage);
-        }
+        setBackground(loadedImage);
     }
 
     /**
      * 异步对图片进行高斯模糊
      * @param bitmap
      */
-    private void setBackground(Bitmap bitmap){
+    private void setBackground(final Bitmap bitmap){
+        Log.d("setBackground",bitmap.toString()+"---"+bitmap.getWidth()+"x"+bitmap.getHeight());
         HttpUtil.getThread(new BlurBitmapRunnable(bitmap,this,new BlurBitmapRunnable.BlurBitmapListener(){
             @Override
             public void onBlur(Bitmap bitmap) {

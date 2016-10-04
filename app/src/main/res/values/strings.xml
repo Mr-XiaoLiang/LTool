@@ -6,9 +6,6 @@
     <string name="title_activity_qrcreate">二维码生成</string>
     <string name="qr_hint">不建议输入过长的内容，越复杂的二维码识别越困难。\n对于复杂的二维码不建议进行过度的定制，这样会增加识别的难度。</string>
     <string name="title_activity_qrread">二维码识别</string>
-    <string name="title_activity_camera">CameraActivity</string>
-    <string name="title_activity_meizhi">MeizhiActivity</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_meizhi">妹纸图</string>
+    <string name="back_to_top">回到顶部</string>
 </resources>
