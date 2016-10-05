@@ -1,6 +1,7 @@
 package xiaoliang.ltool.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -194,24 +195,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int networdType = OtherUtil.getNetworkType(this);
         boolean onlyWifi = SharedPreferencesUtils.isOnlyWifi(this);
         loadWebImg = SharedPreferencesUtils.isLoadWebImg(this);
-        Glide.with(this).load(Constant.getBabkgroundPath(this)).asBitmap().into(new SimpleTarget<Bitmap>(){
-            @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                Log.d("onResourceReady",resource.toString()+"---"+resource.getWidth()+"x"+resource.getHeight());
-                headImg.setImageBitmap(resource);
-                onHeadImgLoaded(false,resource);
-            }
-        });
+        Glide.with(this).load(Constant.getBabkgroundPath(this)).asBitmap().into(new onHeadImgLoaded(this,false));
         if(networdType==Constant.NetWord_WIFI||(networdType==Constant.NetWord_MOBILE&&!onlyWifi)){
             if(loadWebImg&&!SharedPreferencesUtils.isGetBgEnd(this)){
-                Glide.with(this).load(Constant.head_img_url_720).asBitmap().into(new SimpleTarget<Bitmap>(){
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        Log.d("onResourceReady-Net",resource.toString()+"---"+resource.getWidth()+"x"+resource.getHeight());
-                        headImg.setImageBitmap(resource);
-                        onHeadImgLoaded(true,resource);
-                    }
-                });
+                Glide.with(this).load(Constant.head_img_url_720).asBitmap().into(new onHeadImgLoaded(this,true));
             }
         }
     }
@@ -239,29 +226,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    private void onHeadImgLoaded(boolean isSave,Bitmap loadedImage){
-        if(isSave){
-            OtherUtil.saveBabkground(this,loadedImage);
-            SharedPreferencesUtils.setGetBgTime(this);
-        }
-        setBackground(loadedImage);
-    }
+    private class onHeadImgLoaded extends SimpleTarget<Bitmap>{
 
-    /**
-     * 异步对图片进行高斯模糊
-     * @param bitmap
-     */
-    private void setBackground(final Bitmap bitmap){
-        Log.d("setBackground",bitmap.toString()+"---"+bitmap.getWidth()+"x"+bitmap.getHeight());
-        HttpUtil.getThread(new BlurBitmapRunnable(bitmap,this,new BlurBitmapRunnable.BlurBitmapListener(){
-            @Override
-            public void onBlur(Bitmap bitmap) {
-                Message message = new Message();
-                message.what = 200;
-                message.obj = bitmap;
-                handler.sendMessage(message);
+        boolean isSave;
+        Context context;
+
+        public onHeadImgLoaded(Context context, boolean isSave) {
+            this.context = context;
+            this.isSave = isSave;
+        }
+
+        @Override
+        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+            headImg.setImageBitmap(resource);
+            if(isSave){
+                OtherUtil.saveBabkground(context,resource);
+                SharedPreferencesUtils.setGetBgTime(context);
             }
-        }));
+            //异步对图片进行高斯模糊
+            HttpUtil.getThread(new BlurBitmapRunnable(resource,context,new BlurBitmapRunnable.BlurBitmapListener(){
+                @Override
+                public void onBlur(Bitmap bitmap) {
+                    Message message = new Message();
+                    message.what = 200;
+                    message.obj = bitmap;
+                    handler.sendMessage(message);
+                }
+            }));
+        }
     }
 
     private class MyHandler extends Handler{

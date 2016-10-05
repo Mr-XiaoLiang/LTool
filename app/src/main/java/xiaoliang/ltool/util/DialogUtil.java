@@ -18,6 +18,7 @@ import xiaoliang.ltool.bean.CityBean;
 import xiaoliang.ltool.dialog.CityDialog;
 import xiaoliang.ltool.dialog.ColorsDialog;
 import xiaoliang.ltool.dialog.LoadDialog;
+import xiaoliang.ltool.dialog.LoadDialog2;
 import xiaoliang.ltool.dialog.QRWidthDialog;
 
 /**
@@ -52,6 +53,22 @@ public class DialogUtil {
 
     public static LoadDialog getLoadDialog(Activity context) {
         LoadDialog dialog = new LoadDialog(context);
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER); // 此处可以设置dialog显示的位置
+//		window.setWindowAnimations(R.style.dialogstyle_vertical); // 添加动画
+        dialog.setCancelable(true);
+        dialog.show();
+        WindowManager m = context.getWindowManager();
+        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
+        WindowManager.LayoutParams p = window.getAttributes(); // 获取对话框当前的参数值
+        p.width = p.height = (int) (d.getWidth() * 0.3);
+        dialog.onWindowAttributesChanged(p);
+        window.setAttributes(p);
+        return dialog;
+    }
+
+    public static LoadDialog2 getLoadDialog2(Activity context) {
+        LoadDialog2 dialog = new LoadDialog2(context);
         Window window = dialog.getWindow();
         window.setGravity(Gravity.CENTER); // 此处可以设置dialog显示的位置
 //		window.setWindowAnimations(R.style.dialogstyle_vertical); // 添加动画

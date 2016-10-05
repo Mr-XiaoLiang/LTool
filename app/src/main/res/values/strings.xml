@@ -8,4 +8,5 @@
     <string name="title_activity_qrread">二维码识别</string>
     <string name="title_activity_meizhi">妹纸图</string>
     <string name="back_to_top">回到顶部</string>
+    <string name="title_activity_meizhi_detailed">妹纸图</string>
 </resources>

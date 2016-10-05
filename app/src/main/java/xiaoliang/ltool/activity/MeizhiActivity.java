@@ -1,5 +1,6 @@
 package xiaoliang.ltool.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -94,17 +95,19 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
 
     @Override
     public void onCardClick(MeizhiFragment fragment, String uri) {
-
+        Intent intent = new Intent(this,MeizhiDetailedActivity.class);
+        intent.putExtra("url",uri);
+        startActivity(intent);
     }
 
     @Override
     public void onError(MeizhiFragment fragment, String msg) {
-
+        DialogUtil.getAlertDialog(this,"Sorry，出现错误：\n"+msg);
     }
 
     @Override
     public synchronized void onLoad(final MeizhiFragment fragment, String url) {
-        loadDialog = DialogUtil.getLoadDialog(this);
+//        loadDialog = DialogUtil.getLoadDialog(this);
         Log.d("onLoad",url);
         final int fIndex = viewPager.getCurrentItem();
         NetTasks.getSimpleData(url, new HttpTaskRunnable.CallBack<ArrayList<String>>(){
@@ -147,11 +150,11 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            if(loadDialog!=null){
+                loadDialog.dismiss();
+            }
             switch (msg.what){
                 case 200:
-                    if(loadDialog!=null){
-                        loadDialog.dismiss();
-                    }
                     if(msg.arg1 == fragments.get(msg.arg2).getType().getValue()){
                         Log.d("Handler","返回数据");
                         fragments.get(msg.arg2).setData((ArrayList<String>) msg.obj);

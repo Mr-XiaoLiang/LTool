@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,8 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private LToolApplication app;
     private MeizhiAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
+    private static final int startPage= 1;
+    private boolean isAuto = true;
 
     public MeizhiFragment() {
         // Required empty public constructor
@@ -125,6 +129,18 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
+    @Override
+    public void onPause() {
+        isAuto = false;
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isAuto = true;
+    }
+
     private void onMore(){
         if(!isLoading){
             isLoading = true;
@@ -137,7 +153,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         String url = "";
         switch (type){
             case GANK:
-                url = Constant.Gank_Meizi_Url+"20/"+page;
+                url = Constant.Gank_Meizi_Url+"30/"+page;
                 break;
             case DOUBAN_ALL:break;
             case DOUBAN_LIAN:break;
@@ -154,11 +170,13 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public synchronized void setData(ArrayList<String> data){
         isLoading = false;
         swipeRefreshLayout.setRefreshing(false);
-        if(page==0){
+        if(page==startPage){
             urlList.clear();
         }
         urlList.addAll(data);
         adapter.notifyDataSetChanged();
+//        if(isAuto)
+//            onMore();//在这里循环的去主动获取数据
     }
 
     public String getTitle(){
@@ -181,13 +199,6 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return title;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        //在这里加载数据
-        onRefresh();
-    }
-
     public void selectedToTop(){
         if(recyclerView!=null)
             recyclerView.smoothScrollToPosition(0);
@@ -196,37 +207,55 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private class OnScrollDownListener extends RecyclerView.OnScrollListener{
         //用来标记是否正在向最后一个滑动，既是否向下滑动
         boolean isSlidingToLast = false;
+        StaggeredGridLayoutManager manager;
+
+        public OnScrollDownListener() {
+            manager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+        }
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             layoutManager.invalidateSpanAssignments();
-            StaggeredGridLayoutManager manager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
             // 当不滚动时
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                //获取最后一个完全显示的ItemPosition
-                int[] lastVisiblePositions = manager.findLastVisibleItemPositions(new int[manager.getSpanCount()]);
-                int lastVisiblePos = getMaxElem(lastVisiblePositions);
-                int totalItemCount = manager.getItemCount();
-
-                // 判断是否滚动到底部
-                if (lastVisiblePos == (totalItemCount -1) && isSlidingToLast) {
-                    //加载更多功能的代码
-                    onMore();
-                }
+//                //获取最后一个完全显示的ItemPosition
+//                int[] lastVisiblePositions = manager.findLastVisibleItemPositions(new int[manager.getSpanCount()]);
+//                int lastVisiblePos = getMaxElem(lastVisiblePositions);
+//                int totalItemCount = manager.getItemCount();
+//                // 判断是否滚动到底部
+//                if (lastVisiblePos > (totalItemCount -5) && isSlidingToLast) {
+//                    //加载更多功能的代码
+//                    onMore();
+//                }
+//                //加载很多数据后，停止自动加载
+//                if(lastVisiblePos<(totalItemCount - 30)){
+//                    isAuto = false;
+//                }else{
+//                    isAuto = true;
+//                }
+//                Log.d("onScrollStateChanged","ItemCount-----------------"+totalItemCount);
             }
         }
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            //dx用来判断横向滑动方向，dy用来判断纵向滑动方向
-//            if(dy > 0){
-//                //大于0表示，正在向下滚动
-//                isSlidingToLast = true;
-//            }else{
-//                //小于等于0 表示停止或向上滚动
-//                isSlidingToLast = false;
-//            }
             isSlidingToLast = dy>0;
+            //获取最后一个完全显示的ItemPosition
+            int[] lastVisiblePositions = manager.findLastVisibleItemPositions(new int[manager.getSpanCount()]);
+            int lastVisiblePos = getMaxElem(lastVisiblePositions);
+            int totalItemCount = manager.getItemCount();
+            // 判断是否滚动到底部
+            if (lastVisiblePos > (totalItemCount -5) && isSlidingToLast) {
+                //加载更多功能的代码
+                onMore();
+            }
+            //加载很多数据后，停止自动加载
+            if(lastVisiblePos<(totalItemCount - 30)){
+                isAuto = false;
+            }else{
+                isAuto = true;
+            }
+            Log.d("onScrollStateChanged","ItemCount-----------------"+totalItemCount);
         }
     }
 
@@ -272,10 +301,19 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if(urlList==null)
+            urlList = new ArrayList<>();
+        if(urlList.size()<1)
+            onRefresh();
+    }
+
+    @Override
     public void onRefresh() {
         if(!isLoading){
             isLoading = true;
-            page = 1;
+            page = startPage;
             mListener.onLoad(this,getUrl());
         }
     }

@@ -48,8 +48,9 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="ad90d9a285507b7be97a91a7883a39ca" />
-        <meta-data android:name="xiaoliang.ltool.bean.GlideConfiguration"
-            android:value="GlideModule"/>
+        <meta-data
+            android:name="xiaoliang.ltool.bean.GlideConfiguration"
+            android:value="GlideModule" />
         <!-- 定位需要的服务 -->
         <service android:name="com.amap.api.location.APSService" />
 
@@ -80,7 +81,11 @@
         <activity
             android:name=".activity.MeizhiActivity"
             android:label="@string/title_activity_meizhi"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.MeizhiDetailedActivity"
+            android:label="@string/title_activity_meizhi_detailed"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
