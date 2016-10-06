@@ -1,5 +1,6 @@
 package xiaoliang.ltool.fragment;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -27,7 +28,7 @@ public class MeizhiFragmentHandler extends Handler {
     public void handleMessage(Message msg) {
         switch (msg.what){
             case getdata:
-                if(fragment!=null){
+                if(fragment!=null&&msg.obj instanceof ArrayList){
                     fragment.setData((ArrayList<MeizhiBean>) msg.obj);
                 }
                 break;
