@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -24,8 +28,13 @@ import java.util.ArrayList;
 
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.activity.LToolApplication;
+import xiaoliang.ltool.bean.MeizhiBean;
 import xiaoliang.ltool.constant.Constant;
 import xiaoliang.ltool.constant.MeizhiType;
+import xiaoliang.ltool.util.DialogUtil;
+import xiaoliang.ltool.util.HttpTaskRunnable;
+import xiaoliang.ltool.util.MeizhiUtil;
+import xiaoliang.ltool.util.NetTasks;
 import xiaoliang.ltool.view.RatioImageView;
 
 /**
@@ -37,7 +46,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private RecyclerView recyclerView;
     private OnFragmentInteractionListener mListener;
     private MeizhiType type;
-    private ArrayList<String> urlList;
+    private ArrayList<MeizhiBean> urlList;
     private boolean isLoading = false;
     private int page = 0;
     private LToolApplication app;
@@ -45,6 +54,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private StaggeredGridLayoutManager layoutManager;
     private static final int startPage= 1;
     private boolean isAuto = true;
+    private Handler handler;
 
     public MeizhiFragment() {
         // Required empty public constructor
@@ -79,6 +89,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         recyclerView.setAdapter(adapter = new MeizhiAdapter());
         //设置滑动监听器
         recyclerView.addOnScrollListener(new OnScrollDownListener());
+        handler = new MeizhiFragmentHandler(this);
         return root;
     }
 
@@ -101,30 +112,36 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
             return urlList.size();
         }
 
-        private String getItem(int position){
+        private MeizhiBean getItem(int position){
             return urlList.get(position);
         }
 
         class MeizhiHolder extends RecyclerView.ViewHolder{
 
             private RatioImageView img;
+            private TextView text;
             private CardView cardView;
 
-             void onBind(final String url){
-//                imageLoader.displayImage(url,img);
-                 Glide.with(MeizhiFragment.this).load(url).centerCrop().into(img);
+             void onBind(final MeizhiBean bean){
+                 if (null!=bean.title&&!"".equals(bean.title)){
+                     text.setVisibility(View.VISIBLE);
+                     text.setText(bean.title);
+                 }else{
+                     text.setVisibility(View.GONE);
+                 }
+                 Glide.with(MeizhiFragment.this).load(bean.url).centerCrop().into(img);
                  cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onButtonPressed(url);
+                        onButtonPressed(bean);
                     }
                 });
             }
-
              MeizhiHolder(View itemView) {
                 super(itemView);
                  cardView = (CardView) itemView.findViewById(R.id.item_meizhi_card);
                  img = (RatioImageView) itemView.findViewById(R.id.item_meizhi_img);
+                 text = (TextView) itemView.findViewById(R.id.item_meizhi_text);
             }
         }
     }
@@ -138,14 +155,27 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("onResume","Type:"+type.getName());
         isAuto = true;
+        if(urlList==null)
+            urlList = new ArrayList<>();
+        if(urlList.size()<1)
+            onRefresh();
+        if(adapter!=null){
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void onError(String s){
+        app.T(s);
     }
 
     private void onMore(){
-        if(!isLoading){
+        String url = getUrl();
+        if(!isLoading&&!url.equals("")){
             isLoading = true;
             page++;
-            mListener.onLoad(this,getUrl());
+            getData(getUrl());
         }
     }
 
@@ -155,48 +185,61 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
             case GANK:
                 url = Constant.Gank_Meizi_Url+"30/"+page;
                 break;
-            case DOUBAN_ALL:break;
-            case DOUBAN_LIAN:break;
-            case DOUBAN_OTHER:break;
-            case DOUBAN_SIWA:break;
-            case DOUBAN_TUI:break;
-            case DOUBAN_TUN:break;
-            case DOUBAN_XIONG:break;
-
+            case DOUBAN_ALL:
+                url = Constant.Douban_Meizhi_All_Url+page;
+                break;
+            case DOUBAN_LIAN:
+                url = Constant.Douban_Meizhi_Lian_Url+page;
+                break;
+            case DOUBAN_OTHER:
+                url = Constant.Douban_Meizhi_Other_Url+page;
+                break;
+            case DOUBAN_SIWA:
+                url = Constant.Douban_Meizhi_Siwa_Url+page;
+                break;
+            case DOUBAN_TUI:
+                url = Constant.Douban_Meizhi_Tui_Url+page;
+                break;
+            case DOUBAN_TUN:
+                url = Constant.Douban_Meizhi_Tun_Url+page;
+                break;
+            case DOUBAN_XIONG:
+                url = Constant.Douban_Meizhi_Xiong_Url+page;
+                break;
         }
         return url;
     }
 
-    public synchronized void setData(ArrayList<String> data){
+    public synchronized void setData(ArrayList<MeizhiBean> data){
         isLoading = false;
-        swipeRefreshLayout.setRefreshing(false);
+        if(swipeRefreshLayout!=null)
+            swipeRefreshLayout.setRefreshing(false);
+        if(data==null||data.size()<1)
+            return;
         if(page==startPage){
             urlList.clear();
         }
         urlList.addAll(data);
-        adapter.notifyDataSetChanged();
+        if(adapter!=null)
+            adapter.notifyDataSetChanged();
 //        if(isAuto)
 //            onMore();//在这里循环的去主动获取数据
     }
 
     public String getTitle(){
-        String title = "";
-        switch (type){
-            case GANK:
-                return"GANK";
-            case DOUBAN_ALL:
-                return"豆瓣全部";
-            case DOUBAN_LIAN:
-                return"豆瓣颜值";
-            case DOUBAN_OTHER:
-                return"豆瓣其他";
-            case DOUBAN_SIWA:return"豆瓣丝袜";
-            case DOUBAN_TUI:return"豆瓣美腿";
-            case DOUBAN_TUN:return"豆瓣翘臀";
-            case DOUBAN_XIONG:return"豆瓣凶器";
-
-        }
-        return title;
+//        String title = "";
+//        switch (type){
+//            case GANK:return"GANK";
+//            case DOUBAN_ALL:return"豆瓣全部";
+//            case DOUBAN_LIAN:return"豆瓣颜值";
+//            case DOUBAN_OTHER:return"豆瓣其他";
+//            case DOUBAN_SIWA:return"豆瓣丝袜";
+//            case DOUBAN_TUI:return"豆瓣美腿";
+//            case DOUBAN_TUN:return"豆瓣翘臀";
+//            case DOUBAN_XIONG:return"豆瓣凶器";
+//        }
+//        return title;
+        return type.getName();
     }
 
     public void selectedToTop(){
@@ -217,24 +260,8 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             layoutManager.invalidateSpanAssignments();
             // 当不滚动时
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                //获取最后一个完全显示的ItemPosition
-//                int[] lastVisiblePositions = manager.findLastVisibleItemPositions(new int[manager.getSpanCount()]);
-//                int lastVisiblePos = getMaxElem(lastVisiblePositions);
-//                int totalItemCount = manager.getItemCount();
-//                // 判断是否滚动到底部
-//                if (lastVisiblePos > (totalItemCount -5) && isSlidingToLast) {
-//                    //加载更多功能的代码
-//                    onMore();
-//                }
-//                //加载很多数据后，停止自动加载
-//                if(lastVisiblePos<(totalItemCount - 30)){
-//                    isAuto = false;
-//                }else{
-//                    isAuto = true;
-//                }
-//                Log.d("onScrollStateChanged","ItemCount-----------------"+totalItemCount);
-            }
+//            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+//            }
         }
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -250,22 +277,17 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 onMore();
             }
             //加载很多数据后，停止自动加载
-            if(lastVisiblePos<(totalItemCount - 30)){
-                isAuto = false;
-            }else{
-                isAuto = true;
-            }
+//            if(lastVisiblePos<(totalItemCount - 30)){
+//                isAuto = false;
+//            }else{
+//                isAuto = true;
+//            }
             Log.d("onScrollStateChanged","ItemCount-----------------"+totalItemCount);
         }
     }
 
     private int getMaxElem(int[] arr) {
-//        int size = arr.length;
         int maxVal = Integer.MIN_VALUE;
-//        for (int i = 0; i < size; i++) {
-//            if (arr[i]>maxVal)
-//                maxVal = arr[i];
-//        }
         for(int a:arr){
             if(a>maxVal)
                 maxVal = a;
@@ -273,7 +295,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return maxVal;
     }
 
-    public void onButtonPressed(String uri) {
+    public void onButtonPressed(MeizhiBean uri) {
         if (mListener != null) {
             mListener.onCardClick(this,uri);
         }
@@ -300,21 +322,14 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         this.type = type;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(urlList==null)
-            urlList = new ArrayList<>();
-        if(urlList.size()<1)
-            onRefresh();
-    }
 
     @Override
     public void onRefresh() {
-        if(!isLoading){
+        String url = getUrl();
+        if(!isLoading&&!url.equals("")){
             isLoading = true;
             page = startPage;
-            mListener.onLoad(this,getUrl());
+            getData(getUrl());
         }
     }
 
@@ -329,42 +344,50 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onCardClick(MeizhiFragment fragment,String uri);
-        void onError(MeizhiFragment fragment,String msg);
-        void onLoad(MeizhiFragment fragment,String url);
+        void onCardClick(MeizhiFragment fragment,MeizhiBean uri);
     }
 
     public MeizhiType getType() {
         return type;
     }
 
-    public void LoadImage(View view){
-        new DownloadImageTask().execute("http://yourimageurl.png");
-    }
-    private class DownloadImageTask extends AsyncTask<String,Void,String>
-    {
-        protected String doInBackground(String...urls){
-            return loadImageFromNetwork(urls[0]);
-        }
-        protected void onPostExecute(String result){
-        }
-    }
-    private String loadImageFromNetwork(String url){
-        try {
-            URL m_url=new URL(url);
-            HttpURLConnection con=(HttpURLConnection)m_url.openConnection();
-            InputStream in=con.getInputStream();
-            BitmapFactory.Options options=new BitmapFactory.Options();
-            options.inJustDecodeBounds=true;
-            BitmapFactory.decodeStream(in,null,options);
-            int height=options.outHeight;
-            int width=options.outWidth;
-            String s="高度是" + height + "宽度是" + width;
-            return s;
-        } catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
+    /****数据加载开始***/
+
+    private void getData(String url){
+        Log.d("数据加载","Type:"+type.getName());
+        if(swipeRefreshLayout!=null)
+            swipeRefreshLayout.setRefreshing(true);
+        NetTasks.getSimpleData(url, new HttpTaskRunnable.CallBack<ArrayList<MeizhiBean>>(){
+            @Override
+            public void success(ArrayList<MeizhiBean> object) {
+                Message message = handler.obtainMessage(MeizhiFragmentHandler.getdata);
+                message.obj = object;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void error(int code, String msg) {
+                Message message = handler.obtainMessage(MeizhiFragmentHandler.getdata);
+                message.obj = msg;
+                handler.sendMessage(message);
+            }
+            @Override
+            public ArrayList<MeizhiBean> str2Obj(String str) {
+                switch (type){
+                    case GANK:
+                        return MeizhiUtil.getGankImgUrl(str);
+                    case DOUBAN_ALL:
+                    case DOUBAN_LIAN:
+                    case DOUBAN_OTHER:
+                    case DOUBAN_SIWA:
+                    case DOUBAN_TUI:
+                    case DOUBAN_TUN:
+                    case DOUBAN_XIONG:
+                        return MeizhiUtil.getDoubanImgUrl(str);
+                }
+                return null;
+            }
+        });
     }
 
+    /****s数据加载结束***/
 }

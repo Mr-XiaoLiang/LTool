@@ -16,12 +16,9 @@ public class ZoomImageView extends ImageView {
     private PointF startPoint2 = new PointF();
     private Matrix matrix = new Matrix();
     private PointF midPoint;//中心点
-
-    private Matrix currentMaritx = new Matrix();
-    private int mode = 0;//用于标记模式
-    private static final int DRAG = 1;//拖动
-    private static final int ZOOM = 2;//放大
+    private int touchSize = 0;
     private float startDis = 0;
+    private Matrix currentMaritx = new Matrix();
 
     /**
      * 默认构造函数
@@ -40,55 +37,54 @@ public class ZoomImageView extends ImageView {
     public ZoomImageView(Context context, AttributeSet paramAttributeSet) {
         super(context, paramAttributeSet);
     }
-
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                mode = DRAG;
+                touchSize++;
                 currentMaritx.set(this.getImageMatrix());//记录ImageView当期的移动位置
-//                startPoint.set(event.getX(), event.getY());//开始点
+                startPoint1.set(event.getX(), event.getY());//开始点
                 break;
-
             case MotionEvent.ACTION_MOVE://移动事件
-                if (mode == DRAG) {//图片拖动事件
-//                    float dx = event.getX() - startPoint.x;//x轴移动距离
-//                    float dy = event.getY() - startPoint.y;
-//                    matrix.set(currentMaritx);//在当前的位置基础上移动
-//                    matrix.postTranslate(dx, dy);
-
-                } else if (mode == ZOOM) {//图片放大事件
+                if (touchSize==1) {//图片拖动事件
+                    float x = event.getX(0) - startPoint1.x;
+                    float y = event.getY(0) - startPoint1.y;
+                    matrix.set(currentMaritx);//在当前的位置基础上移动
+                    matrix.postTranslate(x, y);
+                } else if (touchSize>1) {//图片放大事件
                     float endDis = distance(event);//结束距离
                     if (endDis > 10f) {
                         float scale = endDis / startDis;//放大倍数
-                        //Log.v("scale=", String.valueOf(scale));
                         matrix.set(currentMaritx);
                         matrix.postScale(scale, scale, midPoint.x, midPoint.y);
                     }
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                mode = 0;
+                touchSize = 0;
                 break;
             //有手指离开屏幕，但屏幕还有触点(手指)
             case MotionEvent.ACTION_POINTER_UP:
-                mode = 0;
+                touchSize--;
                 break;
             //当屏幕上已经有触点（手指）,再有一个手指压下屏幕
             case MotionEvent.ACTION_POINTER_DOWN:
-                mode = ZOOM;
+                touchSize++;
                 startDis = distance(event);
-
                 if (startDis > 10f) {//避免手指上有两个茧
                     midPoint = mid(event);
                     currentMaritx.set(this.getImageMatrix());//记录当前的缩放倍数
                 }
-
                 break;
-
-
         }
         this.setImageMatrix(matrix);
         return true;
+    }
+
+    private PointF move(MotionEvent event){
+        float x = event.getX(0) - startPoint1.x;
+        float y = event.getY(0) - startPoint1.y;
+        return new PointF(x,y);
     }
 
     /**

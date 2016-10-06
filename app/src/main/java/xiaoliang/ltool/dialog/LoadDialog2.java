@@ -28,8 +28,8 @@ public class LoadDialog2 extends Dialog {
 		setContentView(lLoadView);
 		getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 	}
-	public void setProgress(float f){
-		if(lLoadView!=null){
+	public void setProgress(Float f){
+		if(lLoadView!=null&&f!=null){
 			lLoadView.setProgress(f);
 		}
 	}

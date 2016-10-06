@@ -37,4 +37,29 @@ public class NetTasks {
 		parameters.setUrl(url);
 		HttpUtil.createTask(callBack, parameters);
 	}
+
+	/**
+	 * 下载图片
+	 * @param url
+	 * @param progress
+	 * @param callBack
+     */
+	public static void downloadImage(String url,RequestParameters.Progress progress,HttpTaskRunnable.CallBack callBack){
+		RequestParameters parameters = new RequestParameters();
+		parameters.setAccessType(RequestParameters.ACCESS_TYPE_DOWNLOAD);
+		parameters.setUrl(url);
+		parameters.setDownloadPath(OtherUtil.getSDImgPath()+"/");
+		parameters.setProgress(progress);
+		HttpUtil.createTask(callBack, parameters);
+	}
+
+	/**
+	 * 下载图片
+	 * @param url
+	 * @param progress
+     */
+	public static void downloadImage(String url,RequestParameters.Progress progress){
+		downloadImage(url,progress,null);
+	}
+
 }

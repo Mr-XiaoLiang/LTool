@@ -99,12 +99,14 @@ public class HttpTaskRunnable implements Runnable {
 			fileSize = conn.getContentLength();// 根据响应获取文件大小
 			if (fileSize <= 0){
 				parameters.onLoadError(new RuntimeException("无法获取文件大小"), Constant.DownLoadSizeNotFind);
-				callBack.error(Constant.DownLoadSizeNotFind, "无法获取文件大小");
+				if(callBack!=null)
+					callBack.error(Constant.DownLoadSizeNotFind, "无法获取文件大小");
 				return;
 			}
 			if (is == null){
 				parameters.onLoadError(new RuntimeException("下载链接为空"), Constant.DownLoadStreamIsNull);
-				callBack.error(Constant.DownLoadStreamIsNull, "下载链接为空");
+				if(callBack!=null)
+					callBack.error(Constant.DownLoadStreamIsNull, "下载链接为空");
 				return;
 			}
 			fos = new FileOutputStream(path + filename);
@@ -122,10 +124,12 @@ public class HttpTaskRunnable implements Runnable {
 				parameters.setProgress(downLoadFileSize/fileSize);
 			} while (true);
 			parameters.onLoadSeccess(filePath.getPath());
-			callBack.success("success");
+			if(callBack!=null)
+				callBack.success("success");
 		} catch (Exception ex) {
 			parameters.onLoadError(ex, Constant.DownLoadError);
-			callBack.error(Constant.DownLoadStreamIsNull, "下载链接为空");
+			if(callBack!=null)
+				callBack.error(Constant.DownLoadError, "下载失败");
 		}finally{
 			if(is!=null)
 				is.close();
@@ -143,4 +147,20 @@ public class HttpTaskRunnable implements Runnable {
 		public void error(int code, String msg);
 		public T str2Obj(String str);
 	}
+
+	public class SimpleCallBack<T> implements CallBack<T>{
+
+		@Override
+		public void success(T object) {
+		}
+		@Override
+		public void error(int code, String msg) {
+		}
+
+		@Override
+		public T str2Obj(String str) {
+			return null;
+		}
+	}
+
 }

@@ -13,4 +13,12 @@
         android:layout_height="190dp"
         android:maxHeight="240dp"
         android:scaleType="fitXY"/>
+    <TextView
+        android:id="@+id/item_meizhi_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#8fFFFFFF"
+        android:visibility="gone"
+        android:padding="@dimen/cardview_padding"/>
 </android.support.v7.widget.CardView>
