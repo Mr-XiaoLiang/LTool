@@ -7,7 +7,7 @@
     android:id="@+id/item_meizhi_card"
     android:foreground="?attr/selectableItemBackground"
     android:layout_margin="@dimen/cardview_margin">
-    <xiaoliang.ltool.view.RatioImageView
+    <ImageView
         android:id="@+id/item_meizhi_img"
         android:layout_width="match_parent"
         android:layout_height="190dp"

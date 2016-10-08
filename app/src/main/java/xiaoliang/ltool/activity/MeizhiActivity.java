@@ -2,26 +2,17 @@ package xiaoliang.ltool.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import xiaoliang.ltool.R;
@@ -29,11 +20,6 @@ import xiaoliang.ltool.bean.MeizhiBean;
 import xiaoliang.ltool.constant.MeizhiType;
 import xiaoliang.ltool.dialog.LoadDialog;
 import xiaoliang.ltool.fragment.MeizhiFragment;
-import xiaoliang.ltool.util.DialogUtil;
-import xiaoliang.ltool.util.HttpTaskRunnable;
-import xiaoliang.ltool.util.MeizhiUtil;
-import xiaoliang.ltool.util.NetTasks;
-import xiaoliang.ltool.util.OtherUtil;
 
 public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.OnFragmentInteractionListener {
 
@@ -41,7 +27,11 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
     private ViewPager viewPager;
     private ArrayList<MeizhiFragment> fragments;
     private LoadDialog loadDialog;
-    private MeizhiType[] meizhiTypes = {MeizhiType.GANK,MeizhiType.DOUBAN_ALL,MeizhiType.DOUBAN_LIAN,MeizhiType.DOUBAN_SIWA,MeizhiType.DOUBAN_TUI,MeizhiType.DOUBAN_TUN,MeizhiType.DOUBAN_XIONG,MeizhiType.DOUBAN_OTHER};
+    private MeizhiType[] meizhiTypes = {
+            MeizhiType.GANK,
+            MeizhiType.DOUBAN_ALL,MeizhiType.DOUBAN_LIAN,MeizhiType.DOUBAN_SIWA,MeizhiType.DOUBAN_TUI,MeizhiType.DOUBAN_TUN,MeizhiType.DOUBAN_XIONG,MeizhiType.DOUBAN_OTHER,
+            MeizhiType.MEIZHI51_ALL,MeizhiType.MEIZHI51_COMIC,MeizhiType.MEIZHI51_JAPAN,MeizhiType.MEIZHI51_KITTY,MeizhiType.MEIZHI51_LIU,MeizhiType.MEIZHI51_PURE,MeizhiType.MEIZHI51_SEX,MeizhiType.MEIZHI51_TAIWAN,MeizhiType.MEIZHI51_WEIBO,MeizhiType.MEIZHI51_WOMAN,MeizhiType.MEIZHI51_ZHAO,MeizhiType.MEIZHI51_B
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +83,17 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
 
     @Override
     public void onCardClick(MeizhiFragment fragment, MeizhiBean bean) {
-        Intent intent = new Intent(this,MeizhiDetailedActivity.class);
-        intent.putExtra("url",bean.url);
-        intent.putExtra("title",bean.title);
-        intent.putExtra("from",bean.from);
+        Intent intent;
+        if(bean.page!=null&&!bean.page.equals("")){
+            intent = new Intent(this,MeizhiListActivity.class);
+            intent.putExtra("bean",bean);
+            intent.putExtra("type",fragment.getType());
+        }else{
+            intent = new Intent(this,MeizhiDetailedActivity.class);
+            intent.putExtra("url",bean.url);
+            intent.putExtra("title",bean.title);
+            intent.putExtra("from",bean.from);
+        }
         startActivity(intent);
     }
 

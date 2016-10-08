@@ -7,7 +7,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="cardview_elevation">5dp</dimen>
     <dimen name="cardview_padding">10dp</dimen>
-    <dimen name="cardview_margin">0dp</dimen>
+    <dimen name="cardview_margin">10dp</dimen>
     <dimen name="status_bar_height">24dp</dimen>
     <dimen name="navigation_bar_height">48dp</dimen>
     <dimen name="setting_item_padding">15dp</dimen>

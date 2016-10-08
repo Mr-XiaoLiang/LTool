@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 import xiaoliang.ltool.constant.Constant;
 
@@ -212,6 +213,17 @@ public class OtherUtil {
 
 	public static void seveBitmapToSDOnBackground(String name, Bitmap bitmap,SaveBitmapRunnable.SaveBitmapCallBack callBack){
 		seveBitmapOnBackground(getSDImgPath(),name,bitmap,callBack);
+	}
+
+	public static void outputTextFile(String value,String name){
+		try{
+			FileOutputStream outStream = new FileOutputStream(OtherUtil.getSDImgPath()+"/"+name+".txt",true);
+			OutputStreamWriter writer = new OutputStreamWriter(outStream,"gbk");
+			writer.write(value);
+			writer.write("/n");
+			writer.flush();
+			writer.close();//记得关闭
+		}catch (Exception e){}
 	}
 
 }

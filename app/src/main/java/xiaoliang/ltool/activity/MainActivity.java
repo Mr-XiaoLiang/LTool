@@ -216,7 +216,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 checkCameraPermission();
                 break;
             case R.id.content_main_meizhi:
-                startActivity(new Intent(this,MeizhiActivity.class));
+                int networdType = OtherUtil.getNetworkType(this);
+                if(networdType!=Constant.NetWord_WIFI){
+                    DialogUtil.getAlertDialog(this, "警告 请认真阅读",
+                            "您当前不是WIFI状态，前方将消耗大量流量。\n因为是解析民间图片网站，所以将有部分流量被无用广告占用，虽然将会剔除，但是流量消耗不会恢复。" +
+                                    "每次访问将消耗上百Kib用于获取图片链接。并且图片获取也需要大量流量，尽管压缩了，但是消耗仍然很大！\n是否继续？", "继续", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(MainActivity.this,MeizhiActivity.class));
+                                }
+                            });
+                }else{
+                    startActivity(new Intent(MainActivity.this,MeizhiActivity.class));
+                }
                 break;
         }
     }

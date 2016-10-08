@@ -61,4 +61,56 @@ public class MeizhiUtil {
         return beans;
     }
 
+    public static ArrayList<MeizhiBean> getMeizhi51ImgUrl(String json){
+        ArrayList<MeizhiBean> beans = new ArrayList<>();
+        Log.d("getMeizhi51ImgUrl","start");
+        try{
+            json = json.substring(json.indexOf("m-list-main"),json.indexOf("上一页"));
+            String[] imgs = json.split("<li>");
+            for(String img : imgs){
+                Log.d("getMeizhi51ImgUrl",img);
+                if(!img.contains("u-img"))
+                    continue;
+                MeizhiBean bean = new MeizhiBean();
+                img = img.substring(img.indexOf("href=\"")+6);
+                bean.page = bean.from = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("title=\"")+7);
+                bean.title = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("data-original=\"")+15);
+                bean.url = img.substring(0,img.indexOf("\""));
+                Log.d("getMeizhi51ImgUrl",bean.toString());
+                beans.add(bean);
+            }
+        }catch (Exception e){
+            Log.d("getMeizhi51ImgUrl",e.getMessage());
+        }
+        return beans;
+    }
+
+    public static ArrayList<MeizhiBean> getMeizhi51PageImgUrl(String json){
+        ArrayList<MeizhiBean> beans = new ArrayList<>();
+        Log.d("getMeizhi51PageImgUrl","start");
+        try{
+            json = json.substring(json.indexOf("gallery"),json.indexOf("标签"));
+            String[] imgs = json.split("<li>");
+            for(String img : imgs){
+//                Log.d("getMeizhi51PageImgUrl",img);
+                if(!img.contains("lazy"))
+                    continue;
+                MeizhiBean bean = new MeizhiBean();
+                img = img.substring(img.indexOf("href=\"")+6);
+                bean.from = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("title=\"")+7);
+                bean.title = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("data-original=\"")+15);
+                bean.url = img.substring(0,img.indexOf("\""));
+                Log.d("getMeizhi51ImgUrl",bean.toString());
+                beans.add(bean);
+            }
+        }catch (Exception e){
+            Log.d("getMeizhi51ImgUrl",e.getMessage());
+        }
+        return beans;
+    }
+
 }

@@ -100,18 +100,18 @@ public class Constant {
      * 51妹子
      * http://www.51xw.net/meizi/index_1.html
      */
-    public static final String Meizhi_51_All_rl = "http://www.51xw.net/meizi/";
-    public static final String Meizhi_51_Liufeier_rl = "http://www.51xw.net/meizi/liufeier/";
-    public static final String Meizhi_51_Zhaoxiaomi_Url = "http://www.51xw.net/meizi/zhaoxiaomi/";
-    public static final String Meizhi_51_Xinggan_Url = "http://www.51xw.net/meizi/xinggan/";
-    public static final String Meizhi_51_Pure_Url = "http://www.51xw.net/meizi/freash/";
-    public static final String Meizhi_51_Japan_Url = "http://www.51xw.net/meizi/japan/";
-    public static final String Meizhi_51_Comic_Url = "http://www.51xw.net/meizi/shoujo-manga/";
-    public static final String Meizhi_51_Taiwan_Url = "http://www.51xw.net/meizi/taiwan/";
-    public static final String Meizhi_51_Woman_Url = "http://www.51xw.net/meizi/shaofu/";
-    public static final String Meizhi_51_Weibo_Url = "http://www.51xw.net/ooxx/";
-    public static final String Meizhi_51_B_Url = "http://www.51xw.net/meizi/ruoqiyinv/";
-    public static final String Meizhi_51_Kitty_Url = "http://www.51xw.net/meizi/zhaoxiaomi-kitty/";
+    public static final String Meizhi_51_All_Url = "http://www.51xw.net/meizi/index_";
+    public static final String Meizhi_51_Liufeier_Url = "http://www.51xw.net/meizi/liufeier/index_";
+    public static final String Meizhi_51_Zhaoxiaomi_Url = "http://www.51xw.net/meizi/zhaoxiaomi/index_";
+    public static final String Meizhi_51_Sex_Url = "http://www.51xw.net/meizi/xinggan/index_";
+    public static final String Meizhi_51_Pure_Url = "http://www.51xw.net/meizi/freash/index_";
+    public static final String Meizhi_51_Japan_Url = "http://www.51xw.net/meizi/japan/index_";
+    public static final String Meizhi_51_Comic_Url = "http://www.51xw.net/meizi/shoujo-manga/index_";
+    public static final String Meizhi_51_Taiwan_Url = "http://www.51xw.net/meizi/taiwan/index_";
+    public static final String Meizhi_51_Woman_Url = "http://www.51xw.net/meizi/shaofu/index_";
+    public static final String Meizhi_51_Weibo_Url = "http://www.51xw.net/ooxx/index_";
+    public static final String Meizhi_51_B_Url = "http://www.51xw.net/meizi/ruoqiyinv/index_";
+    public static final String Meizhi_51_Kitty_Url = "http://www.51xw.net/meizi/zhaoxiaomi-kitty/index_";
     /**
      * MM妹子
      * http://www.mmjpg.com/home/1
@@ -151,6 +151,31 @@ public class Constant {
 //    public static final String Petals_All_Url = "";
     /**
      * 美图录
+     * http://www.meitulu.com/t/nvshen/2.html
      */
-
+    public static final String Meitulu_Recommend_Url = "http://www.meitulu.com/xihuan//index.php";//反复调用即分页
+    public static final String Meitulu_Japan_Url = "http://www.meitulu.com/rihan/";
+    public static final String Meitulu_Hokon_Url = "http://www.meitulu.com/gangtai/";
+    public static final String Meitulu_Domestic_Url = "http://www.meitulu.com/guochan/";
+    public static final String Meitulu_Highest_Url = "http://www.meitulu.com/t/jipin/";
+    public static final String Meitulu_God_Url = "http://www.meitulu.com/t/nvshen/";
+    public static final String Meitulu_Model_Url = "http://www.meitulu.com/t/nenmo/";
+    public static final String Meitulu_Net_Url = "http://www.meitulu.com/t/wangluohongren/";
+    public static final String Meitulu_Mores_Url = "http://www.meitulu.com/t/fengsuniang/";
+    public static final String Meitulu_Temperament_Url = "http://www.meitulu.com/t/qizhi/";
+    public static final String Meitulu_Stunner_Url = "http://www.meitulu.com/t/youwu/";
+    public static final String Meitulu_Milk_Url = "http://www.meitulu.com/t/baoru/";
+    public static final String Meitulu_Sex_Url = "http://www.meitulu.com/t/xinggan/";
+    public static final String Meitulu_Tempt_Url = "http://www.meitulu.com/t/youhuo/";
+    public static final String Meitulu_Xiong_Url = "http://www.meitulu.com/t/meixiong/";
+    public static final String Meitulu_Woman_Url = "http://www.meitulu.com/t/shaofu/";
+    public static final String Meitulu_Tui_Url = "http://www.meitulu.com/t/changtui/";
+    public static final String Meitulu_Bud_Url = "http://www.meitulu.com/t/mengmeizi/";
+    public static final String Meitulu_Loli_Url = "http://www.meitulu.com/t/loli/";
+    public static final String Meitulu_Cute_Url = "http://www.meitulu.com/t/keai/";
+    public static final String Meitulu_Outdoors_Url = "http://www.meitulu.com/t/huwai/";
+    public static final String Meitulu_Bikini_Url = "http://www.meitulu.com/t/bijini/";
+    public static final String Meitulu_Pure_Url = "http://www.meitulu.com/t/qingchun/";
+    public static final String Meitulu_Aestheticism_Url = "http://www.meitulu.com/t/weimei/";
+    public static final String Meitulu_Fresh_Url = "http://www.meitulu.com/t/qingxin/";
 }
