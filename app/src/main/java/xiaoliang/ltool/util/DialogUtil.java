@@ -55,7 +55,7 @@ public class DialogUtil {
         LoadDialog dialog = new LoadDialog(context);
         Window window = dialog.getWindow();
         window.setGravity(Gravity.CENTER); // 此处可以设置dialog显示的位置
-//		window.setWindowAnimations(R.style.dialogstyle_vertical); // 添加动画
+		window.setWindowAnimations(R.style.dialogstyle_vertical); // 添加动画
         dialog.setCancelable(true);
         dialog.show();
         WindowManager m = context.getWindowManager();
@@ -137,6 +137,23 @@ public class DialogUtil {
             Activity context, String msg) {
         AlertDialog dialog = new AlertDialog.Builder(context).setIcon(R.mipmap.ic_launcher).setTitle("提示").setMessage(msg).create();
         dialog.show();
+        return dialog;
+    }
+
+    public static AlertDialog getAlertDialog(
+            Activity context, String msg,boolean cancelable) {
+        AlertDialog dialog;
+        if(!cancelable){
+            dialog = getAlertDialog(context, "提示", msg, "知道了", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.setCancelable(false);
+        }else{
+            dialog = getAlertDialog(context,msg);
+        }
         return dialog;
     }
 

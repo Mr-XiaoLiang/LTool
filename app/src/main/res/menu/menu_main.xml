@@ -5,9 +5,11 @@
     <item
         android:id="@+id/menu_main_city"
         android:title="@string/menu_main_city_str"
-        app:showAsAction="never" />
+        app:showAsAction="always"
+        android:icon="@drawable/ic_edit_location"/>
     <item
+        android:icon="@drawable/ic_settings"
         android:id="@+id/menu_main_setting"
         android:title="@string/title_activity_setting"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>

@@ -27,7 +27,7 @@ public enum MeizhiType implements Serializable {
     MEIZHI51_TAIWAN(15,"51-台湾"),
     MEIZHI51_WOMAN(16,"51-少妇"),
     MEIZHI51_WEIBO(17,"51-微博"),
-    MEIZHI51_B(18,"51-乙女"),
+    MEIZHI51_B(18,"51-湿身"),
     MEIZHI51_KITTY(19,"51-Kitty"),
     MM_All(20,"MM-全部"),
     MM_Ranking(21,"MM-排行"),

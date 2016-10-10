@@ -30,7 +30,7 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
     private MeizhiType[] meizhiTypes = {
             MeizhiType.GANK,
             MeizhiType.DOUBAN_ALL,MeizhiType.DOUBAN_LIAN,MeizhiType.DOUBAN_SIWA,MeizhiType.DOUBAN_TUI,MeizhiType.DOUBAN_TUN,MeizhiType.DOUBAN_XIONG,MeizhiType.DOUBAN_OTHER,
-            MeizhiType.MEIZHI51_ALL,MeizhiType.MEIZHI51_COMIC,MeizhiType.MEIZHI51_JAPAN,MeizhiType.MEIZHI51_KITTY,MeizhiType.MEIZHI51_LIU,MeizhiType.MEIZHI51_PURE,MeizhiType.MEIZHI51_SEX,MeizhiType.MEIZHI51_TAIWAN,MeizhiType.MEIZHI51_WEIBO,MeizhiType.MEIZHI51_WOMAN,MeizhiType.MEIZHI51_ZHAO,MeizhiType.MEIZHI51_B
+            MeizhiType.MEIZHI51_ALL,MeizhiType.MEIZHI51_COMIC,MeizhiType.MEIZHI51_JAPAN,MeizhiType.MEIZHI51_KITTY,MeizhiType.MEIZHI51_LIU,MeizhiType.MEIZHI51_PURE,MeizhiType.MEIZHI51_SEX,MeizhiType.MEIZHI51_TAIWAN,MeizhiType.MEIZHI51_WOMAN,MeizhiType.MEIZHI51_ZHAO
     };
 
     @Override
@@ -90,9 +90,8 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
             intent.putExtra("type",fragment.getType());
         }else{
             intent = new Intent(this,MeizhiDetailedActivity.class);
-            intent.putExtra("url",bean.url);
-            intent.putExtra("title",bean.title);
-            intent.putExtra("from",bean.from);
+            intent.putExtra("bean",bean);
+            intent.putExtra("type",fragment.getType());
         }
         startActivity(intent);
     }

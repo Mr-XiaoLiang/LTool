@@ -42,6 +42,10 @@ public class RequestParameters {
 	 */
 	private String downloadPath = "";
 	/**
+	 * 下载文件名
+	 */
+	private String downloadFileName = "";
+	/**
 	 * 上传的文件
 	 */
 	private File uploadFile = null;
@@ -139,6 +143,14 @@ public class RequestParameters {
 		if(progress!=null){
 			progress.onLoadError(e, type);
 		}
+	}
+
+	public String getDownloadFileName() {
+		return downloadFileName;
+	}
+
+	public void setDownloadFileName(String downloadFileName) {
+		this.downloadFileName = downloadFileName;
 	}
 
 	public Class getCla() {

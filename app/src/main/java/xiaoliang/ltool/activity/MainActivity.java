@@ -136,12 +136,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
+    private void showMeizhi(){
+        if(SharedPreferencesUtils.getShowMeizhi(this)){
+            meizi.setVisibility(View.VISIBLE);
+        }else{
+            meizi.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         loadWebImg = SharedPreferencesUtils.isLoadWebImg(this);
         autoLocation = SharedPreferencesUtils.getAutoLocation(this);
         getWeather();
+        //检查是否显示妹子卡片
+        showMeizhi();
         if(autoLocation){
             List<String> needRequestPermissonList = findDeniedPermissions(needPermissions);
             if(needRequestPermissonList==null||needRequestPermissonList.size()<1){
@@ -624,6 +634,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
+        if(SharedPreferencesUtils.getShowMeizhiOnce(this)){
+            SharedPreferencesUtils.setShowMeizhi(this,false);
+            SharedPreferencesUtils.setShowMeizhiOnce(this,false);
+        }
         super.onDestroy();
         destroyLocation();
     }

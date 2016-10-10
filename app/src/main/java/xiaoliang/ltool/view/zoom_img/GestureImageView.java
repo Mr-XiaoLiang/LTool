@@ -55,7 +55,7 @@ public class GestureImageView extends ImageView  {
 	private float startingScale = -1.0f;
 
 	private float scale = 1.0f;
-	private float maxScale = 5.0f;
+	private float maxScale = 6.0f;
 	private float minScale = 0.75f;
 	private float fitScaleHorizontal = 1.0f;
 	private float fitScaleVertical = 1.0f;
@@ -332,7 +332,6 @@ public class GestureImageView extends ImageView  {
 
 	/**
 	 * Waits for a draw
-	 * @param max time to wait for draw (ms)
 	 * @throws InterruptedException
 	 */
 	public boolean waitForDraw(long timeout) throws InterruptedException {

@@ -22,6 +22,7 @@ import xiaoliang.ltool.constant.MeizhiType;
 import xiaoliang.ltool.listener.OnScrollDownListener;
 import xiaoliang.ltool.util.HttpTaskRunnable;
 import xiaoliang.ltool.util.MeizhiUrlUtil;
+import xiaoliang.ltool.util.MeizhiUtil;
 import xiaoliang.ltool.util.NetTasks;
 
 /**
@@ -47,13 +48,19 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
         setContentView(R.layout.activity_meizhi_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_meizhi_list_toolbar);
         setSupportActionBar(toolbar);
-        if(getSupportActionBar()!=null)
+        Intent intent = getIntent();
+        type = (MeizhiType) intent.getSerializableExtra("type");
+        bean = (MeizhiBean) intent.getSerializableExtra("bean");
+        if(getSupportActionBar()!=null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(bean.title);
+        }
         app = (LToolApplication) getApplicationContext();
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_meizhi_list_swiperefreshlayout);
         recyclerView = (RecyclerView) findViewById(R.id.activity_meizhi_list_recyclerview);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,R.color.colorPrimary);
+        urlList = new ArrayList<>();
         //设置layoutManager
         layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
@@ -62,9 +69,8 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
         recyclerView.setAdapter(adapter = new MeizhiAdapter(urlList, this, this));
         //设置滑动监听器
         recyclerView.addOnScrollListener(new OnMeizhiScrollDownListener(layoutManager));
-        Intent intent = getIntent();
-        type = (MeizhiType) intent.getSerializableExtra("type");
-        bean = (MeizhiBean) intent.getSerializableExtra("bean");
+
+
     }
 
     private class OnMeizhiScrollDownListener extends OnScrollDownListener {
@@ -168,7 +174,27 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
 
     @Override
     public void OnCardClick(MeizhiBean bean) {
-
+        Intent intent = null;
+        if(type.getValue()<MeizhiType.MM_All.getValue()){
+            intent = new Intent(this,MeizhiDetailedActivity.class);
+            intent.putExtra("bean",bean);
+            intent.putExtra("type",type);
+        }
+//        switch (type){
+//            case MEIZHI51_ALL:
+//            case MEIZHI51_COMIC:
+//            case MEIZHI51_JAPAN:
+//            case MEIZHI51_KITTY:
+//            case MEIZHI51_LIU:
+//            case MEIZHI51_PURE:
+//            case MEIZHI51_SEX:
+//            case MEIZHI51_TAIWAN:
+//            case MEIZHI51_WEIBO:
+//            case MEIZHI51_WOMAN:
+//            case MEIZHI51_ZHAO:
+//
+//        }
+        startActivity(intent);
     }
 
     /****数据加载开始***/
@@ -204,7 +230,7 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
                     case MEIZHI51_WEIBO:
                     case MEIZHI51_WOMAN:
                     case MEIZHI51_ZHAO:
-
+                        return MeizhiUtil.getMeizhi51PageImgUrl(str);
                 }
                 return null;
             }

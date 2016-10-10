@@ -1,5 +1,7 @@
 package xiaoliang.ltool.util;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -45,10 +47,14 @@ public class HttpTaskRunnable implements Runnable {
 	@Override
 	public void run() {
 		try {
-			String success = null;
+			String success;
 			switch (parameters.getAccessType()) {
 				case RequestParameters.ACCESS_TYPE_DOWNLOAD://下载
-					downFile(parameters.getUrl(), parameters.getDownloadPath());
+					if(parameters.getDownloadFileName()==null||parameters.getDownloadFileName().equals("")){
+						downFile(parameters.getUrl(), parameters.getDownloadPath());
+					}else{
+						downFile(parameters.getUrl(), parameters.getDownloadPath(),parameters.getDownloadFileName());
+					}
 					break;
 				case RequestParameters.ACCESS_TYPE_OBJECT://返回对象
 //					String json = HttpUtil.doPost(parameters.getParameters(), parameters.getUrl());
@@ -78,6 +84,12 @@ public class HttpTaskRunnable implements Runnable {
 	}
 
 	private void downFile(String url, String path) throws IOException {
+		// 下载函数
+		filename = url.substring(url.lastIndexOf("/") + 1);
+		downFile(url,path,filename);
+	}
+
+	private void downFile(String url, String path,String name) throws IOException {
 		InputStream is = null;
 		FileOutputStream fos = null;
 		try {
@@ -86,8 +98,7 @@ public class HttpTaskRunnable implements Runnable {
 				filePath.mkdirs();
 			}
 			// 下载函数
-			filename = url.substring(url.lastIndexOf("/") + 1);
-			filePath = new File(path + filename);
+			filePath = new File(path,name);
 			if (filePath.exists()) {
 				filePath.delete();
 			}
@@ -127,6 +138,7 @@ public class HttpTaskRunnable implements Runnable {
 			if(callBack!=null)
 				callBack.success("success");
 		} catch (Exception ex) {
+			Log.d("downFile",ex.getMessage());
 			parameters.onLoadError(ex, Constant.DownLoadError);
 			if(callBack!=null)
 				callBack.error(Constant.DownLoadError, "下载失败");

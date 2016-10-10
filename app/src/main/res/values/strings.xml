@@ -9,5 +9,6 @@
     <string name="title_activity_meizhi">妹纸图</string>
     <string name="back_to_top">回到顶部</string>
     <string name="title_activity_meizhi_detailed">妹纸图</string>
-    <string name="title_activity_meizhi_list">MeizhiListActivity</string>
+    <string name="title_activity_meizhi_list">妹子列表</string>
+    <string name="title_activity_about">关于</string>
 </resources>

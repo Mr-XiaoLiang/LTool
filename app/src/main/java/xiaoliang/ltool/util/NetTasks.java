@@ -62,4 +62,13 @@ public class NetTasks {
 		downloadImage(url,progress,null);
 	}
 
+	public static void downloadApp(String url,RequestParameters.Progress progress){
+		RequestParameters parameters = new RequestParameters();
+		parameters.setAccessType(RequestParameters.ACCESS_TYPE_DOWNLOAD);
+		parameters.setUrl(url);
+		parameters.setDownloadPath(OtherUtil.getSDImgPath()+"/");
+		parameters.setProgress(progress);
+		parameters.setDownloadFileName("LTool.apk");
+		HttpUtil.createTask(null, parameters);
+	}
 }

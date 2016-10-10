@@ -17,10 +17,17 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <!-- 弹出框动画 由下至上 -->
-    <style name="dialogstyle_vertical" parent="@android:style/Animation.Dialog">
+    <style name="dialogstyle_vertical" mce_bogus="1" parent="android:Animation">
         <item name="@android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
         <!-- 进入时的动画 -->
         <item name="@android:windowExitAnimation">@anim/slide_out_to_bottom</item>
+        <!-- 退出时的动画 -->
+    </style>
+    <!-- 弹出框动画 缩放 -->
+    <style name="dialogstyle_scale" mce_bogus="1" parent="android:Animation">
+        <item name="@android:windowEnterAnimation">@anim/slide_in_from_amplification</item>
+        <!-- 进入时的动画 -->
+        <item name="@android:windowExitAnimation">@anim/slide_out_to_narrow</item>
         <!-- 退出时的动画 -->
     </style>
 </resources>

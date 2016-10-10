@@ -2,6 +2,8 @@ package xiaoliang.ltool.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -100,6 +102,9 @@ public class OtherUtil {
 
 	public static String getSDImgPath(){
 		return Environment.getExternalStorageDirectory()+"/LTool/img";
+	}
+	public static String getSDAppPath(){
+		return Environment.getExternalStorageDirectory()+"/LTool/app";
 	}
 
 	/**
@@ -215,6 +220,11 @@ public class OtherUtil {
 		seveBitmapOnBackground(getSDImgPath(),name,bitmap,callBack);
 	}
 
+	/**
+	 * 输出文本文件
+	 * @param value
+	 * @param name
+     */
 	public static void outputTextFile(String value,String name){
 		try{
 			FileOutputStream outStream = new FileOutputStream(OtherUtil.getSDImgPath()+"/"+name+".txt",true);
@@ -225,5 +235,55 @@ public class OtherUtil {
 			writer.close();//记得关闭
 		}catch (Exception e){}
 	}
+
+	/**
+	 * 从酷安的返回数据解析更新
+	 * @param json
+	 * @return
+     */
+	public static String[] getUpdate(String json){
+		try{
+			outputTextFile(json,"getUpdate");
+			json = json.substring(json.indexOf("ex-apk-view-title"),json.indexOf("ex-container"));
+			json = json.substring(json.indexOf("<small>")+7);
+			String ver = json.substring(0,json.indexOf("<"));
+			json = json.substring(json.indexOf("apkDownloadUrl")+18);
+			String url = json.substring(0,json.indexOf("\""));
+			return new String[]{ver,url};
+		}catch (Exception e){
+			return null;
+		}
+	}
+
+	/**
+	 * 获取版本号
+	 *
+	 * @return 当前应用的版本号
+	 */
+	public static String getVersion(Context context) {
+		try {
+			PackageManager manager = context.getPackageManager();
+			PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+			String version = info.versionName;
+			return version;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	/**
+	 * 安装apk方法
+	 */
+	public static void installApk(Context context,String filename) {
+		File file = new File(filename);
+		Intent intent = new Intent();
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setAction(Intent.ACTION_VIEW);
+		String type = "application/vnd.android.package-archive";
+		intent.setDataAndType(Uri.fromFile(file), type);
+		context.startActivity(intent);
+	}
+
 
 }

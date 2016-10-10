@@ -27,7 +27,7 @@ public class SharedPreferencesUtils {
     public static final int Millis_Of_Day = 86400000;
 
 
-    public static <T> void addConfigInfo( Context context, String key, T value ) {
+    public static <T> void put( Context context, String key, T value ) {
         if ( notNull( value ) ) {
             SharedPreferences mShareConfig =
                     context.getSharedPreferences( USER, Context.MODE_PRIVATE );
@@ -47,7 +47,7 @@ public class SharedPreferencesUtils {
         }
     }
 
-    public static <T> T getValueByKey( Context context, String key, T defValue ) {
+    public static <T> T get( Context context, String key, T defValue ) {
         T value = null;
         if ( notNull( key ) ) {
             SharedPreferences mShareConfig =
@@ -322,7 +322,35 @@ public class SharedPreferencesUtils {
     }
 
     public static void setAMapLocation(Context context,AMapLocation location){
-        setCity(context,location.getCity().replace("市",""));
+        setCity(context,location.getCity().replace("市|自治区",""));
+    }
+
+    public static void setShowMeizhi(Context context,boolean show){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE );
+        Editor conEdit = mShareConfig.edit();
+        conEdit.putBoolean("ShowMeizhi", show);
+        conEdit.commit();
+    }
+
+    public static boolean getShowMeizhi(Context context){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE);
+        return mShareConfig.getBoolean("ShowMeizhi",true);
+    }
+
+    public static void setShowMeizhiOnce(Context context,boolean show){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE );
+        Editor conEdit = mShareConfig.edit();
+        conEdit.putBoolean("ShowMeizhiOnce", show);
+        conEdit.commit();
+    }
+
+    public static boolean getShowMeizhiOnce(Context context){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE);
+        return mShareConfig.getBoolean("ShowMeizhiOnce",false);
     }
 
 }

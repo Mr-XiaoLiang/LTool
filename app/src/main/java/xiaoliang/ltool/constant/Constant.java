@@ -60,6 +60,11 @@ public class Constant {
     }
 
     /**
+     * 检查更新地址（酷安的app地址）
+     */
+    public static String UPDATE_URL = "http://www.coolapk.com/apk/xiaoliang.ltool";
+
+    /**
      * 网络类型
      * 无网络
      */
@@ -110,7 +115,7 @@ public class Constant {
     public static final String Meizhi_51_Taiwan_Url = "http://www.51xw.net/meizi/taiwan/index_";
     public static final String Meizhi_51_Woman_Url = "http://www.51xw.net/meizi/shaofu/index_";
     public static final String Meizhi_51_Weibo_Url = "http://www.51xw.net/ooxx/index_";
-    public static final String Meizhi_51_B_Url = "http://www.51xw.net/meizi/ruoqiyinv/index_";
+    public static final String Meizhi_51_B_Url = "http://www.51xw.net/meizi/tag/%E6%B9%BF%E8%BA%AB/index_";
     public static final String Meizhi_51_Kitty_Url = "http://www.51xw.net/meizi/zhaoxiaomi-kitty/index_";
     /**
      * MM妹子
