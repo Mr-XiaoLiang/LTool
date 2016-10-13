@@ -5,33 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="xiaoliang.ltool.activity.MeizhiActivity">
+    tools:context="xiaoliang.ltool.activity.CreateLockActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        app:elevation="0px"
         android:layout_height="wrap_content"
+        app:elevation="0dp"
         android:theme="@style/AppTheme.AppBarOverlay">
+
         <android.support.v7.widget.Toolbar
-            android:id="@+id/activity_meizhi_toolbar"
+            android:id="@+id/activity_create_lock_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:titleTextColor="@android:color/white"/>
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_meizhi_viewpager" />
+    <include layout="@layout/content_create_lock" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/activity_meizhi_fab"
+        android:id="@+id/activity_create_lock_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:elevation="@dimen/cardview_elevation"
-        app:srcCompat="@drawable/ic_back_to_top" />
+        app:srcCompat="@drawable/ic_send"
+        android:onClick="onClick"/>
 
 </android.support.design.widget.CoordinatorLayout>

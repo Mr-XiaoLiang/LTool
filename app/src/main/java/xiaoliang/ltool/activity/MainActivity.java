@@ -39,6 +39,8 @@ import org.dom4j.DocumentException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.bean.WeatherBean;
@@ -52,6 +54,7 @@ import xiaoliang.ltool.util.HttpUtil;
 import xiaoliang.ltool.util.NetTasks;
 import xiaoliang.ltool.util.OtherUtil;
 import xiaoliang.ltool.util.SharedPreferencesUtils;
+import xiaoliang.ltool.util.ToastUtil;
 import xiaoliang.ltool.util.WeatherUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,View.OnLongClickListener {
@@ -78,7 +81,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CardView qrCreate;
     //图片部分
     private CardView meizi;
-
+    private static Boolean isExit = false;
+    //一键锁屏
+    private CardView lock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,10 +110,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         qrRead = (CardView) findViewById(R.id.content_main_qrread);
         qrCreate = (CardView) findViewById(R.id.content_main_qrcreate);
         meizi = (CardView) findViewById(R.id.content_main_meizhi);
+        lock = (CardView) findViewById(R.id.content_main_lock);
         handler = new MyHandler();
         qrCreate.setOnClickListener(this);
         qrRead.setOnClickListener(this);
         meizi.setOnClickListener(this);
+        lock.setOnClickListener(this);
     }
 
     @Override
@@ -222,6 +229,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.content_main_qrcreate:
                 startActivity(new Intent(this,QRCreateActivity.class));
                 break;
+            case R.id.content_main_lock:
+                startActivity(new Intent(this,CreateLockActivity.class));
+                break;
             case R.id.content_main_qrread:
                 checkCameraPermission();
                 break;
@@ -334,6 +344,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         },city);
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitBy2Click();
+    }
+
+    private void exitBy2Click() {
+        Timer tExit = null;
+        if (!isExit) {
+            isExit = true; // 准备退出
+            ToastUtil.T(this, "再按一次退出程序");
+            tExit = new Timer();
+            tExit.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    isExit = false; // 取消退出
+                }
+            }, 2000); // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
+
+        } else {
+            finish();
+        }
     }
 
     /****************权限检查代码块开始*******************/

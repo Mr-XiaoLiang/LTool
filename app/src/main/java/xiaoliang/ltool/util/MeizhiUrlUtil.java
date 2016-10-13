@@ -72,6 +72,18 @@ public class MeizhiUrlUtil {
             case MEIZHI51_B:
                 url = Constant.Meizhi_51_B_Url+page+".html";
                 break;
+            case MM_All:
+                url = Constant.MM_All_Url+page;
+                break;
+            case MM_Ranking:
+                url = Constant.MM_All_Hot_Url;
+                break;
+            case MM_Recommended:
+                url = Constant.MM_All_Recommended_Url+page;
+                break;
+            case MM_Label:
+                url = Constant.MM_All_Label_Url;
+                break;
         }
         return url;
     }

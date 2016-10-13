@@ -43,4 +43,5 @@ dependencies {
     compile 'com.squareup.okio:okio:1.10.0'
     compile 'com.squareup.okhttp:okhttp:2.7.5'
     compile 'org.dom4j:dom4j:2.0.0'
+    compile 'com.android.support:palette-v7:24.2.1'
 }

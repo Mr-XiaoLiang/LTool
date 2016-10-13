@@ -157,6 +157,13 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
 
         @Override
+        public void onScroll(boolean down, int newState) {
+            if (mListener != null) {
+                mListener.onScrollStateChanged(down);
+            }
+        }
+
+        @Override
         public void onMore() {
             onLoadMore();
         }
@@ -202,6 +209,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     public interface OnFragmentInteractionListener {
         void onCardClick(MeizhiFragment fragment,MeizhiBean uri);
+        void onScrollStateChanged(boolean show);
     }
 
     public MeizhiType getType() {

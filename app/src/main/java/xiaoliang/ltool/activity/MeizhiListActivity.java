@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -28,7 +30,7 @@ import xiaoliang.ltool.util.NetTasks;
 /**
  * 妹子图的二级列表页面
  */
-public class MeizhiListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,MeizhiAdapter.OnCardClickListener {
+public class MeizhiListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener,MeizhiAdapter.OnCardClickListener,View.OnClickListener {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
@@ -41,12 +43,14 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     private MeizhiAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
     private static final int startPage= 1;
+    private FloatingActionButton toTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meizhi_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_meizhi_list_toolbar);
+        toTop = (FloatingActionButton) findViewById(R.id.activity_meizhi_list_fab);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
         type = (MeizhiType) intent.getSerializableExtra("type");
@@ -60,6 +64,7 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
         recyclerView = (RecyclerView) findViewById(R.id.activity_meizhi_list_recyclerview);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,R.color.colorPrimary);
+        toTop.setOnClickListener(this);
         urlList = new ArrayList<>();
         //设置layoutManager
         layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
@@ -73,9 +78,28 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.activity_meizhi_list_fab:
+                if(recyclerView!=null)
+                    recyclerView.smoothScrollToPosition(0);
+                break;
+        }
+    }
+
     private class OnMeizhiScrollDownListener extends OnScrollDownListener {
         public OnMeizhiScrollDownListener(StaggeredGridLayoutManager manager) {
             super(manager);
+        }
+
+        @Override
+        public void onScroll(boolean down, int newState) {
+            if(down){
+                toTop.setVisibility(View.VISIBLE);
+            }else{
+                toTop.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -86,20 +110,16 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_meizhi, menu);
+//        getMenuInflater().inflate(R.menu.menu_meizhi, menu);
         return true;
-    }
-    public void selectedToTop(){
-        if(recyclerView!=null)
-            recyclerView.smoothScrollToPosition(0);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menu_meizhi_top:
-                selectedToTop();
-                return true;
+//            case R.id.menu_meizhi_top:
+//                selectedToTop();
+//                return true;
             case android.R.id.home:
                 finish();
                 return true;

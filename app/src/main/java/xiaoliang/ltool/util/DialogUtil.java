@@ -212,5 +212,21 @@ public class DialogUtil {
         dialog.show();
         return dialog;
     }
+    public static AlertDialog getAlertDialog(
+            Activity context, String title, String msg,
+            String leftName, DialogInterface.OnClickListener leftBtn,
+            String rightName, DialogInterface.OnClickListener rightBtn,
+            String otherName, DialogInterface.OnClickListener otherBtn) {
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setIcon(R.mipmap.ic_launcher)
+                .setTitle(title)
+                .setMessage(msg)
+                .setNegativeButton(leftName, leftBtn)
+                .setPositiveButton(rightName, rightBtn)
+                .setNeutralButton(otherName,otherBtn)
+                .create();
+        dialog.show();
+        return dialog;
+    }
 
 }

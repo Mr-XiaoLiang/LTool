@@ -10,6 +10,7 @@
     <dimen name="cardview_margin">10dp</dimen>
     <dimen name="status_bar_height">24dp</dimen>
     <dimen name="navigation_bar_height">48dp</dimen>
+    <dimen name="fab_navigation_bar_height">64dp</dimen>
     <dimen name="setting_item_padding">15dp</dimen>
     <dimen name="item_name">20sp</dimen>
     <dimen name="item_detail">14sp</dimen>

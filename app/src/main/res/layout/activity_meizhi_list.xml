@@ -24,4 +24,13 @@
 
     <include layout="@layout/content_meizhi_list" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/activity_meizhi_list_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:elevation="@dimen/cardview_elevation"
+        app:srcCompat="@drawable/ic_back_to_top" />
+
 </android.support.design.widget.CoordinatorLayout>

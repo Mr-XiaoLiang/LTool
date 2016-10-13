@@ -2,6 +2,7 @@ package xiaoliang.ltool.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import xiaoliang.ltool.constant.MeizhiType;
 import xiaoliang.ltool.dialog.LoadDialog;
 import xiaoliang.ltool.fragment.MeizhiFragment;
 
-public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.OnFragmentInteractionListener {
+public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.OnFragmentInteractionListener,View.OnClickListener {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -31,7 +33,9 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
             MeizhiType.GANK,
             MeizhiType.DOUBAN_ALL,MeizhiType.DOUBAN_LIAN,MeizhiType.DOUBAN_SIWA,MeizhiType.DOUBAN_TUI,MeizhiType.DOUBAN_TUN,MeizhiType.DOUBAN_XIONG,MeizhiType.DOUBAN_OTHER,
             MeizhiType.MEIZHI51_ALL,MeizhiType.MEIZHI51_COMIC,MeizhiType.MEIZHI51_JAPAN,MeizhiType.MEIZHI51_KITTY,MeizhiType.MEIZHI51_LIU,MeizhiType.MEIZHI51_PURE,MeizhiType.MEIZHI51_SEX,MeizhiType.MEIZHI51_TAIWAN,MeizhiType.MEIZHI51_WOMAN,MeizhiType.MEIZHI51_ZHAO
+//            ,MeizhiType.MM_All,MeizhiType.MM_Recommended,MeizhiType.MM_Ranking,MeizhiType.MM_Label
     };
+    private FloatingActionButton toTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,8 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         tabLayout = (TabLayout) findViewById(R.id.content_meizhi_viewpager_tab);
         viewPager = (ViewPager) findViewById(R.id.content_meizhi_viewpager_pager);
+        toTop = (FloatingActionButton) findViewById(R.id.activity_meizhi_fab);
+        toTop.setOnClickListener(this);
         initFragments();
         viewPager.setAdapter(new PageAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(0);
@@ -54,6 +60,17 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
         for(MeizhiType type:meizhiTypes){
             MeizhiFragment fragment = MeizhiFragment.newInstance(type);
             fragments.add(fragment);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.activity_meizhi_fab:
+                int p = viewPager.getCurrentItem();
+                if(p>-1&&p<fragments.size())
+                    fragments.get(p).selectedToTop();
+                break;
         }
     }
 
@@ -97,18 +114,27 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
     }
 
     @Override
+    public void onScrollStateChanged(boolean show) {
+        if(show){
+            toTop.setVisibility(View.VISIBLE);
+        }else{
+            toTop.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_meizhi, menu);
+//        getMenuInflater().inflate(R.menu.menu_meizhi, menu);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menu_meizhi_top:
-                int p = viewPager.getCurrentItem();
-                if(p>-1&&p<fragments.size())
-                    fragments.get(p).selectedToTop();
-                return true;
+//            case R.id.menu_meizhi_top:
+//                int p = viewPager.getCurrentItem();
+//                if(p>-1&&p<fragments.size())
+//                    fragments.get(p).selectedToTop();
+//                return true;
             case android.R.id.home:
                 finish();
                 return true;

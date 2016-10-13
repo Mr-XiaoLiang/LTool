@@ -11,4 +11,5 @@
     <string name="title_activity_meizhi_detailed">妹纸图</string>
     <string name="title_activity_meizhi_list">妹子列表</string>
     <string name="title_activity_about">关于</string>
+    <string name="title_activity_create_lock">添加锁屏</string>
 </resources>

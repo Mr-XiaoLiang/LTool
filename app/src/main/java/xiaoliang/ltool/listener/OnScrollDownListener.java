@@ -28,8 +28,11 @@ public abstract class OnScrollDownListener extends RecyclerView.OnScrollListener
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 //        manager.invalidateSpanAssignments();
         // 当不滚动时
-//            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//            }
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                onScroll(true,newState);
+            }else{
+                onScroll(!isSlidingToLast,newState);
+            }
     }
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -54,6 +57,8 @@ public abstract class OnScrollDownListener extends RecyclerView.OnScrollListener
         }
         return maxVal;
     }
+
+    public abstract void onScroll(boolean down,int newState);
 
     public abstract void onMore();
 

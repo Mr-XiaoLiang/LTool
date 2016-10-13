@@ -1,22 +1,30 @@
 package xiaoliang.ltool.activity;
 
+import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -39,6 +47,7 @@ import xiaoliang.ltool.util.DialogUtil;
 import xiaoliang.ltool.util.HttpTaskRunnable;
 import xiaoliang.ltool.util.MeizhiUtil;
 import xiaoliang.ltool.util.NetTasks;
+import xiaoliang.ltool.util.OtherUtil;
 import xiaoliang.ltool.util.RequestParameters;
 import xiaoliang.ltool.util.ToastUtil;
 import xiaoliang.ltool.view.LLoadView2;
@@ -61,14 +70,17 @@ public class MeizhiDetailedActivity extends AppCompatActivity implements View.On
     private LoadDialog2 progressDialog;
     private String url;
     private RequestManager requestManager;
+    private AppBarLayout appBarLayout;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meizhi_detailed);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_meizhi_detailed_fab_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.activity_meizhi_detailed_fab_toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_meizhi_detailed_fab);
         imageView = (GestureImageView) findViewById(R.id.activity_meizhi_detailed_fab_img);
+        appBarLayout = (AppBarLayout) findViewById(R.id.activity_meizhi_detailed_fab_appbarlayout);
         setSupportActionBar(toolbar);
         fab.setOnClickListener(this);
         Intent intent = getIntent();
@@ -153,15 +165,29 @@ public class MeizhiDetailedActivity extends AppCompatActivity implements View.On
             Log.d("loadImg",url);
             this.url = url;
             requestManager.load(url)
-                    .into(new GlideDrawableImageViewTarget(imageView){
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>(){
                         @Override
-                        public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
-                            super.onResourceReady(drawable, anim);
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            imageView.setImageBitmap(resource);
+                            Palette.from(resource).generate(new Palette.PaletteAsyncListener(){
+                                @Override
+                                public void onGenerated(Palette palette) {
+                                    toolbar.setBackgroundColor(palette.getLightMutedSwatch().getRgb());
+                                    setStatusBarColor(palette.getLightMutedSwatch().getRgb());
+                                }
+                            });
                             if(loadDialog!=null)
                                 loadDialog.dismiss();
                         }
                     });
+
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor(int colot){
+        getWindow().setStatusBarColor(colot);
     }
 
     @Override
