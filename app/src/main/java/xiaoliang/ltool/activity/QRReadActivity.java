@@ -16,6 +16,8 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
@@ -34,7 +36,9 @@ import xiaoliang.ltool.R;
 import xiaoliang.ltool.qr.camera.CameraManager;
 import xiaoliang.ltool.qr.decoding.InactivityTimer;
 import xiaoliang.ltool.qr.decoding.QRReadActivityHandler;
+import xiaoliang.ltool.util.DensityUtil;
 import xiaoliang.ltool.util.DialogUtil;
+import xiaoliang.ltool.util.OtherUtil;
 import xiaoliang.ltool.view.LWavesView;
 import xiaoliang.ltool.view.QRFinderView;
 
@@ -59,6 +63,7 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     private View flashBtn,photoBtn;
     private static final int GET_PHOTO = 986;
     private Dialog loadDialog;
+    private View btnLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,7 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
         wavesView = (LWavesView) findViewById(R.id.activity_qrread_waves);
         flashBtn = findViewById(R.id.activity_qrread_flash);
         photoBtn = findViewById(R.id.activity_qrread_photo);
+        btnLayout = findViewById(R.id.activity_qrread_btn_layout);
         flashBtn.setOnClickListener(this);
         photoBtn.setOnClickListener(this);
         qrFinderView.setWavesView(wavesView);
@@ -165,6 +171,14 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     private void initCamera(SurfaceHolder surfaceHolder) {
         try {
             CameraManager.get().openDriver(surfaceHolder);
+            int[] size = new int[2];
+            CameraManager.get().getCameraSize(size);
+//            Log.d("openDriver","x="+size[0]+",y"+size[1]);
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int x = metrics.widthPixels;//获取了屏幕的宽度
+            int y = (int) (1.0*x*size[0]/size[1]);
+            surfaceHolder.setFixedSize(x,y);
         } catch (Exception e) {
             return;
         }
@@ -228,8 +242,18 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        //统一调整布局尺寸，预览窗口跟随摄像头尺寸，扫描框，按钮，波浪图跟随预览窗口
         qrFinderView.setLayoutParams(new LinearLayout.LayoutParams(width,height));
         wavesView.setTranslationY(height-wavesView.getHeight()/2);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int y = metrics.heightPixels;//获取了屏幕的宽度
+        if(y-height< DensityUtil.dip2px(this,60)){
+            y = DensityUtil.dip2px(this,60);
+        }else{
+            y -= height;
+        }
+        btnLayout.setLayoutParams(new LinearLayout.LayoutParams(width,y));
     }
 
     @Override

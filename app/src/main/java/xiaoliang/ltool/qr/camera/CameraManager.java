@@ -23,6 +23,7 @@ import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
@@ -130,9 +131,10 @@ public final class CameraManager {
         configManager.initFromCameraParameters(camera);
       }
       configManager.setDesiredCameraParameters(camera);
-      int[] size = new int[2];
-      getCameraSize(size);
-      holder.setFixedSize(size[0],size[1]);
+//      int[] size = new int[2];
+//      getCameraSize(size);
+//      holder.setFixedSize(size[0],size[1]);
+//      Log.d("openDriver","x="+size[0]+",y"+size[1]);
     }
   }
 

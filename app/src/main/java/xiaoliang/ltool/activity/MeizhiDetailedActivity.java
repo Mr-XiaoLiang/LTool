@@ -107,6 +107,10 @@ public class MeizhiDetailedActivity extends AppCompatActivity implements View.On
             case DOUBAN_TUI:
             case DOUBAN_TUN:
             case DOUBAN_XIONG:
+            case MM_All:
+            case MM_Recommended:
+            case MM_Ranking:
+            case MM_Label:
                 loadImg(bean.url);
                 break;
             case MEIZHI51_ALL:

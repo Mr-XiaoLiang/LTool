@@ -44,6 +44,7 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     private StaggeredGridLayoutManager layoutManager;
     private static final int startPage= 1;
     private FloatingActionButton toTop;
+    private int maxPage = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +167,7 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     }
 
     private void onLoadMore(){
-        if(type.getValue()< MeizhiType.MM_All.getValue()){
+        if(type.getValue()< MeizhiType.MM_Label.getValue()||maxPage<=page){
             return;
         }
         String url = getUrl();
@@ -178,7 +179,7 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     }
 
     private String getUrl(){
-        if(type.getValue()<MeizhiType.MM_All.getValue())
+        if(type.getValue()<MeizhiType.MM_Label.getValue())
             return bean.page;
         return MeizhiUrlUtil.getUrl(type,page);
     }
@@ -195,7 +196,7 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     @Override
     public void OnCardClick(MeizhiBean bean) {
         Intent intent = null;
-        if(type.getValue()<MeizhiType.MM_All.getValue()){
+        if(type.getValue()<MeizhiType.MM_Label.getValue()){
             intent = new Intent(this,MeizhiDetailedActivity.class);
             intent.putExtra("bean",bean);
             intent.putExtra("type",type);
@@ -251,6 +252,10 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
                     case MEIZHI51_WOMAN:
                     case MEIZHI51_ZHAO:
                         return MeizhiUtil.getMeizhi51PageImgUrl(str);
+                    case MM_All:
+                    case MM_Ranking:
+                    case MM_Recommended:
+                        return MeizhiUtil.getMMImgListUrl(str);
                 }
                 return null;
             }

@@ -1,12 +1,14 @@
 package xiaoliang.ltool.activity;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,8 +17,8 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,10 +29,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -67,15 +65,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView backgroundImg;
     private MyHandler handler;
     private LToolApplication app;
+    private Toolbar toolbar;
     /*天气控件*/
     private TextView weatherDate,weatherTime,weatherTemperature,weatherDayType,weatherDayWind,weatherNightType,weatherNightWind;
     private CardView weather;
     private WeatherBean weatherBean;
-    //定位部分
-    private boolean autoLocation = true;
-    private boolean isGetLocation = false;
-    private AMapLocationClient locationClient = null;
-    private AMapLocationClientOption locationOption = new AMapLocationClientOption();
     //二维码部分
     private CardView qrRead;
     private CardView qrCreate;
@@ -101,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         app = (LToolApplication) getApplicationContext();
         toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.activity_main_toolbar_layout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         headImg = (ImageView) findViewById(R.id.activity_main_headimg);
@@ -155,22 +149,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         loadWebImg = SharedPreferencesUtils.isLoadWebImg(this);
-        autoLocation = SharedPreferencesUtils.getAutoLocation(this);
         getWeather();
         //检查是否显示妹子卡片
         showMeizhi();
-        if(autoLocation){
-            List<String> needRequestPermissonList = findDeniedPermissions(needPermissions);
-            if(needRequestPermissonList==null||needRequestPermissonList.size()<1){
-                if(!isGetLocation){
-                    //初始化定位
-                    initLocation();
-                    isGetLocation = true;
-                }
-            }else if(isNeedCheck){
-                checkPermissions(needPermissions);
-            }
-        }
     }
 
     private void setWeatherView(){
@@ -285,7 +266,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     handler.sendMessage(message);
                 }
             }));
+            Palette.from(resource).generate(new Palette.PaletteAsyncListener(){
+                @Override
+                public void onGenerated(Palette palette) {
+//                    toolbar.setBackgroundColor(palette.getLightMutedSwatch().getRgb());
+//                    setStatusBarColor(palette.getLightMutedSwatch().getRgb());
+                    toolbarLayout.setStatusBarScrimColor(palette.getMutedSwatch().getRgb());
+                    toolbarLayout.setContentScrimColor(palette.getMutedSwatch().getRgb());
+                    toolbarLayout.setBackgroundColor(palette.getMutedSwatch().getRgb());
+                }
+            });
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor(int colot){
+        getWindow().setStatusBarColor(colot);
     }
 
     private class MyHandler extends Handler{
@@ -446,57 +442,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] paramArrayOfInt) {
-        if (requestCode == LOCATION_PERMISSON_REQUESTCODE) {
-            if (!verifyPermissions(paramArrayOfInt)) {
-                showMissingPermissionDialog();
-                isNeedCheck = false;
-            }
-        }
         if (requestCode == CAMERA_PERMISSON_REQUESTCODE) {
             if (!verifyPermissions(paramArrayOfInt)) {
                 showCameraMissingPermissionDialog();
             }
         }
-    }
-
-    /**
-     * 显示提示信息
-     *
-     * @since 2.5.0
-     *
-     */
-    private void showMissingPermissionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("提示");
-        builder.setMessage("您开启了自动获取位置的功能\n但是我们需要必要的权限来定位，我们不会将此权限用于其他不法用途。请问是否去开启权限？");
-
-        // 拒绝, 退出应用
-        builder.setNegativeButton("拒绝",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        setAuto();
-                    }
-                });
-
-        builder.setPositiveButton("设置",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startAppSettings();
-                    }
-                });
-
-        builder.setCancelable(false);
-
-        builder.show();
-    }
-
-    /**
-     * 设置不再自动定位
-     */
-    private void setAuto(){
-        SharedPreferencesUtils.setAutoLocation(this,false);
     }
 
     /****************摄像头权限检查开始*****************/
@@ -557,113 +507,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /****************摄像头权限检查结束*****************/
 
     /****************权限检查代码块结束*******************/
-    /****************定位代码块开始*******************/
-
-    /**
-     * 初始化定位
-     *
-     * @since 2.8.0
-     * @author hongming.wang
-     *
-     */
-    private void initLocation(){
-        //初始化client
-        locationClient = new AMapLocationClient(this.getApplicationContext());
-        //设置定位参数
-        locationClient.setLocationOption(getDefaultOption());
-        // 设置定位监听
-        locationClient.setLocationListener(locationListener);
-        startLocation();
-    }
-
-    /**
-     * 默认的定位参数
-     * @since 2.8.0
-     * @author hongming.wang
-     *
-     */
-    private AMapLocationClientOption getDefaultOption(){
-        AMapLocationClientOption mOption = new AMapLocationClientOption();
-        mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
-        mOption.setGpsFirst(true);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
-//        mOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
-        mOption.setInterval(2000);//可选，设置定位间隔。默认为2秒
-        mOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是ture
-        mOption.setOnceLocation(true);//可选，设置是否单次定位。默认是false
-        mOption.setOnceLocationLatest(true);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
-        locationOption.setLocationCacheEnable(true);// 设置是否开启缓存
-        AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
-        return mOption;
-    }
-
-    /**
-     * 定位监听
-     */
-    private AMapLocationListener locationListener = new AMapLocationListener() {
-        @Override
-        public void onLocationChanged(AMapLocation loc) {
-            if (null != loc&&!"".equals(loc.getCity().trim())) {
-                //解析定位结果
-                setCity(loc);
-            } else {
-                app.T("定位失败，请手动设置城市");
-            }
-        }
-    };
-
-    /**
-     * 保存位置信息
-     * @param loc
-     */
-    private void setCity(AMapLocation loc){
-        SharedPreferencesUtils.setAMapLocation(this,loc);
-        app.T("自动定位结果："+loc.getCity());
-        //定位后重新刷新天气
-        getWeather();
-    }
-
-    /**
-     * 开始定位
-     *
-     * @since 2.8.0
-     * @author hongming.wang
-     *
-     */
-    private void startLocation(){
-        // 启动定位
-        locationClient.startLocation();
-    }
-
-    /**
-     * 停止定位
-     *
-     * @since 2.8.0
-     * @author hongming.wang
-     *
-     */
-    private void stopLocation(){
-        // 停止定位
-        locationClient.stopLocation();
-    }
-
-    /**
-     * 销毁定位
-     *
-     * @since 2.8.0
-     * @author hongming.wang
-     *
-     */
-    private void destroyLocation(){
-        if (null != locationClient) {
-            /**
-             * 如果AMapLocationClient是在当前Activity实例化的，
-             * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
-             */
-            locationClient.onDestroy();
-            locationClient = null;
-            locationOption = null;
-        }
-    }
 
     @Override
     protected void onDestroy() {
@@ -672,7 +515,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SharedPreferencesUtils.setShowMeizhiOnce(this,false);
         }
         super.onDestroy();
-        destroyLocation();
     }
-    /****************定位代码块结束*******************/
 }

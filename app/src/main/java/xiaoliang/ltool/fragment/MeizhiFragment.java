@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 
 import java.util.ArrayList;
 
@@ -108,6 +109,11 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void onLoadMore(){
+        switch(type){
+            case MM_Label:
+            case MM_Ranking:
+                return;
+        }
         String url = getUrl();
         if(!isLoading&&!url.equals("")){
             isLoading = true;
@@ -260,6 +266,14 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     case MEIZHI51_WOMAN:
                     case MEIZHI51_ZHAO:
                         return MeizhiUtil.getMeizhi51ImgUrl(str);
+                    case MM_All:
+                        return MeizhiUtil.getMMHomeImgUrl(str);
+                    case MM_Ranking:
+                        return MeizhiUtil.getMMHotImgUrl(str);
+                    case MM_Recommended:
+                        return MeizhiUtil.getMMRecommendedImgUrl(str);
+                    case MM_Label:
+                        return MeizhiUtil.getMMLabelImgUrl(str);
                 }
                 return null;
             }

@@ -30,10 +30,11 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
     private ArrayList<MeizhiFragment> fragments;
     private LoadDialog loadDialog;
     private MeizhiType[] meizhiTypes = {
-            MeizhiType.GANK,
-            MeizhiType.DOUBAN_ALL,MeizhiType.DOUBAN_LIAN,MeizhiType.DOUBAN_SIWA,MeizhiType.DOUBAN_TUI,MeizhiType.DOUBAN_TUN,MeizhiType.DOUBAN_XIONG,MeizhiType.DOUBAN_OTHER,
-            MeizhiType.MEIZHI51_ALL,MeizhiType.MEIZHI51_COMIC,MeizhiType.MEIZHI51_JAPAN,MeizhiType.MEIZHI51_KITTY,MeizhiType.MEIZHI51_LIU,MeizhiType.MEIZHI51_PURE,MeizhiType.MEIZHI51_SEX,MeizhiType.MEIZHI51_TAIWAN,MeizhiType.MEIZHI51_WOMAN,MeizhiType.MEIZHI51_ZHAO
-//            ,MeizhiType.MM_All,MeizhiType.MM_Recommended,MeizhiType.MM_Ranking,MeizhiType.MM_Label
+            MeizhiType.GANK
+            ,MeizhiType.MM_All,MeizhiType.MM_Recommended,MeizhiType.MM_Ranking,MeizhiType.MM_Label
+            ,MeizhiType.DOUBAN_ALL,MeizhiType.DOUBAN_LIAN,MeizhiType.DOUBAN_SIWA,MeizhiType.DOUBAN_TUI,MeizhiType.DOUBAN_TUN,MeizhiType.DOUBAN_XIONG,MeizhiType.DOUBAN_OTHER
+            ,MeizhiType.MEIZHI51_ALL,MeizhiType.MEIZHI51_COMIC,MeizhiType.MEIZHI51_JAPAN,MeizhiType.MEIZHI51_KITTY,MeizhiType.MEIZHI51_LIU,MeizhiType.MEIZHI51_PURE,MeizhiType.MEIZHI51_SEX,MeizhiType.MEIZHI51_TAIWAN,MeizhiType.MEIZHI51_WOMAN,MeizhiType.MEIZHI51_ZHAO
+
     };
     private FloatingActionButton toTop;
 

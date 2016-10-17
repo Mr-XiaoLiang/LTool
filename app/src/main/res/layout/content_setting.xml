@@ -17,44 +17,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="位置"
-            android:paddingLeft="@dimen/setting_item_padding"
-            android:paddingTop="@dimen/setting_item_padding"
-            android:background="@android:color/white"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="@dimen/setting_item_padding"
-            android:background="@android:color/white"
-            android:layout_marginBottom="@dimen/setting_item_padding">
-
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="@android:color/black"
-                    android:text="自动定位"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:text="每次打开软件将自动定位并更新位置信息"/>
-            </LinearLayout>
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/activity_setting_autolocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="样式"
             android:paddingLeft="@dimen/setting_item_padding"
             android:paddingTop="@dimen/setting_item_padding"

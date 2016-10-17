@@ -21,7 +21,7 @@ import java.util.Iterator;
 public class LWavesView extends View {
 
     private int color = Color.parseColor("#41ddaf");
-    private final static int alpha = 100;
+    private final static int alpha = 150;
     private int width;
     private int offX = 0;
     private int baseLine;

@@ -12,13 +12,6 @@
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <!-- 请求网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 不是SDK需要的权限，是示例中的后台唤醒定位需要的权限 -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- 需要运行时注册的权限 -->
-    <!-- 用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- 用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 写入扩展存储，向扩展卡写入数据，用于写入缓存定位数据 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 读取缓存数据 -->
@@ -53,8 +46,6 @@
         <meta-data
             android:name="xiaoliang.ltool.bean.GlideConfiguration"
             android:value="GlideModule" />
-        <!-- 定位需要的服务 -->
-        <service android:name="com.amap.api.location.APSService" />
 
         <activity
             android:name=".activity.MainActivity"
@@ -83,6 +74,7 @@
             android:label="@string/title_activity_meizhi_detailed"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:launchMode="standard"
             android:name=".activity.MeizhiListActivity"
             android:label="@string/title_activity_meizhi_list"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -104,9 +96,11 @@
             android:label="@string/title_activity_create_lock"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".activity.LockActivity">
+            android:launchMode="singleInstance"
+            android:name=".activity.LockActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <!-- 自定义的action，通过自定义的action可以应用内调用 -->
+                <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
                 <action android:name="android.intent.action.SHORTCUT" />
                 <!-- 必须加上这个，否则无法直接使用自定的action -->
                 <category android:name="android.intent.category.DEFAULT" />

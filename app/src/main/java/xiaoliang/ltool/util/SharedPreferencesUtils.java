@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
-import com.amap.api.location.AMapLocation;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -305,24 +304,6 @@ public class SharedPreferencesUtils {
         Editor conEdit = mShareConfig.edit();
         conEdit.putString("City", city);
         conEdit.commit();
-    }
-
-    public static void setAutoLocation(Context context,boolean auto){
-        SharedPreferences mShareConfig =
-                context.getSharedPreferences(USER, Context.MODE_PRIVATE );
-        Editor conEdit = mShareConfig.edit();
-        conEdit.putBoolean("AutoLocation", auto);
-        conEdit.commit();
-    }
-
-    public static boolean getAutoLocation(Context context){
-        SharedPreferences mShareConfig =
-                context.getSharedPreferences(USER, Context.MODE_PRIVATE);
-        return mShareConfig.getBoolean("AutoLocation",false);
-    }
-
-    public static void setAMapLocation(Context context,AMapLocation location){
-        setCity(context,location.getCity().replace("市|自治区",""));
     }
 
     public static void setShowMeizhi(Context context,boolean show){

@@ -12,12 +12,11 @@ public class MeizhiBean implements Serializable {
     public String from;
     public String title;
     public String page;
+    public int pagination = 1;
+    private String other;
 
     public MeizhiBean() {
-        url = "";
-        from = "";
-        title = "";
-        page = "";
+        this("");
     }
 
     public MeizhiBean(String url) {
@@ -25,6 +24,7 @@ public class MeizhiBean implements Serializable {
         from = "";
         title = "";
         page = "";
+        other = "";
     }
 
     @Override

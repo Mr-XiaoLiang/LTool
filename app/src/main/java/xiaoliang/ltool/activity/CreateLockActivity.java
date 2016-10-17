@@ -36,7 +36,7 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
     private ImageView showImg,resImg;
     private TextInputEditText nameEdit,numEdit;
     private View imgBtn;
-    private SwitchCompat circularSwitch,redPointSwitch,autoPointSwitch,repeatSwitch;
+    private SwitchCompat circularSwitch,redPointSwitch,repeatSwitch;
     private View numLayout;
     private static final int GET_IMG = 500;
     private static final int GET_CLIPPING = 501;
@@ -62,19 +62,19 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         imgBtn = findViewById(R.id.activity_create_lock_imgbtn);
         circularSwitch = (SwitchCompat) findViewById(R.id.activity_create_lock_circular);
         redPointSwitch = (SwitchCompat) findViewById(R.id.activity_create_lock_redpoint);
-        autoPointSwitch = (SwitchCompat) findViewById(R.id.activity_create_lock_redauto);
         repeatSwitch = (SwitchCompat) findViewById(R.id.activity_create_lock_repeat);
         numLayout = findViewById(R.id.activity_create_lock_pointnum_layout);
         imgBtn.setOnClickListener(this);
         circularSwitch.setOnCheckedChangeListener(this);
         redPointSwitch.setOnCheckedChangeListener(this);
-        autoPointSwitch.setOnCheckedChangeListener(this);
         repeatSwitch.setOnCheckedChangeListener(this);
         shortcutUtil = new ShortcutUtil(this);
         //获取设备管理服务
         policyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         componentName = new ComponentName(this, AdminReceiver.class);
         image = OtherUtil.drawable2Bitmap( getResources().getDrawable(R.drawable.ic_oneplus));
+        numLayout.setVisibility(View.GONE);
+        resImg.setImageResource(R.drawable.ic_oneplus);
         showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
     }
 
@@ -88,19 +88,11 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
                 break;
             case R.id.activity_create_lock_redpoint:
                 shortcutUtil.setRedPoint(isChecked);
-                break;
-            case R.id.activity_create_lock_redauto:
                 if(isChecked){
-                    numLayout.setVisibility(View.GONE);
-                    pointNum = 0;
-                }else{
                     numLayout.setVisibility(View.VISIBLE);
-                    if(numEdit.getText().toString().length()>0)
-                        pointNum = Integer.parseInt(numEdit.getText().toString());
-                    else
-                        pointNum = 0;
+                }else{
+                    numLayout.setVisibility(View.GONE);
                 }
-                SharedPreferencesUtils.put(this,"RedAuto",isChecked);
                 break;
             case R.id.activity_create_lock_repeat:
                 shortcutUtil.setRepeat(isChecked);
@@ -126,12 +118,14 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
                 DialogUtil.getAlertDialog(this, "选择图片", "选择您的锁屏按钮图片", "H2OS", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        resImg.setImageResource(R.drawable.ic_oneplus);
                         image = OtherUtil.drawable2Bitmap( getResources().getDrawable(R.drawable.ic_oneplus));
                         showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
                     }
                 }, "锤子", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        resImg.setImageResource(R.drawable.ic_smartisan);
                         image = OtherUtil.drawable2Bitmap( getResources().getDrawable(R.drawable.ic_smartisan));
                         showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
                     }

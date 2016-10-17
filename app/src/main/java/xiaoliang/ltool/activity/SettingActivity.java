@@ -17,18 +17,18 @@ import xiaoliang.ltool.util.SharedPreferencesUtils;
 
 public class SettingActivity extends AppCompatActivity implements SwitchCompat.OnCheckedChangeListener,View.OnClickListener {
 
-    private SwitchCompat autoLocationSwitch, onlyWifiSwitch, dayBgSwitch, meizhiSwithch, meizhiOnceSwithch;
+    private SwitchCompat  onlyWifiSwitch, dayBgSwitch, meizhiSwithch, meizhiOnceSwithch;
     private View updateBtn, aboutBtn;
     private TextView version;
-    private static final int CHECK_UPDATE = 200;
-    private static final int DOWNLOAD_SECCESS = 201;
-    private static final int DOWNLOAD_ERROR = 202;
-    private static final int CHECK_ERROR = 203;
-    private static final int DOWNLOAD_GO = 204;
-    private static final int DOWNLOAD_PROGRESS = 205;
-    private LoadDialog loadDialog;
-    private LoadDialog2 loadDialog2;
-    private String ver;
+//    private static final int CHECK_UPDATE = 200;
+//    private static final int DOWNLOAD_SECCESS = 201;
+//    private static final int DOWNLOAD_ERROR = 202;
+//    private static final int CHECK_ERROR = 203;
+//    private static final int DOWNLOAD_GO = 204;
+//    private static final int DOWNLOAD_PROGRESS = 205;
+//    private LoadDialog loadDialog;
+//    private LoadDialog2 loadDialog2;
+//    private String ver;
 
 
     @Override
@@ -43,7 +43,6 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
     }
 
     private void initView() {
-        autoLocationSwitch = (SwitchCompat) findViewById(R.id.activity_setting_autolocation);
         onlyWifiSwitch = (SwitchCompat) findViewById(R.id.activity_setting_onlywifi);
         dayBgSwitch = (SwitchCompat) findViewById(R.id.activity_setting_daybg);
         meizhiSwithch = (SwitchCompat) findViewById(R.id.activity_setting_meizhi);
@@ -52,7 +51,6 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
         aboutBtn = findViewById(R.id.activity_setting_about);
         version = (TextView) findViewById(R.id.activity_setting_version);
 
-        autoLocationSwitch.setOnCheckedChangeListener(this);
         onlyWifiSwitch.setOnCheckedChangeListener(this);
         dayBgSwitch.setOnCheckedChangeListener(this);
         meizhiOnceSwithch.setOnCheckedChangeListener(this);
@@ -60,7 +58,6 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
         updateBtn.setOnClickListener(this);
         aboutBtn.setOnClickListener(this);
 
-        autoLocationSwitch.setChecked(SharedPreferencesUtils.getAutoLocation(this));
         onlyWifiSwitch.setChecked(SharedPreferencesUtils.isOnlyWifi(this));
         dayBgSwitch.setChecked(SharedPreferencesUtils.isLoadWebImg(this));
         meizhiSwithch.setChecked(SharedPreferencesUtils.getShowMeizhi(this));
@@ -83,9 +80,6 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
-            case R.id.activity_setting_autolocation:
-                SharedPreferencesUtils.setAutoLocation(this, b);
-                break;
             case R.id.activity_setting_onlywifi:
                 SharedPreferencesUtils.setIsOnlyWifi(this, b);
                 if (b) {
@@ -95,19 +89,19 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
             case R.id.activity_setting_daybg:
                 SharedPreferencesUtils.setIsLoadWebImg(this, b);
                 if (!b) {
-                    onlyWifiSwitch.setChecked(b);
+                    onlyWifiSwitch.setChecked(false);
                 }
                 break;
             case R.id.activity_setting_meizhi:
                 SharedPreferencesUtils.setShowMeizhi(this, b);
                 if (!b) {
-                    meizhiOnceSwithch.setChecked(b);
+                    meizhiOnceSwithch.setChecked(false);
                 }
                 break;
             case R.id.activity_setting_meizhi_onlyonce:
                 SharedPreferencesUtils.setShowMeizhiOnce(this, b);
                 if (b) {
-                    meizhiSwithch.setChecked(b);
+                    meizhiSwithch.setChecked(true);
                 }
                 break;
         }
