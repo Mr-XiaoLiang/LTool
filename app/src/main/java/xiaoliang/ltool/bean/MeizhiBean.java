@@ -13,7 +13,7 @@ public class MeizhiBean implements Serializable {
     public String title;
     public String page;
     public int pagination = 1;
-    private String other;
+    public String other;
 
     public MeizhiBean() {
         this("");
@@ -34,6 +34,8 @@ public class MeizhiBean implements Serializable {
                 ", url='" + url + '\'' +
                 ", title='" + title + '\'' +
                 ", page='" + page + '\'' +
+                ", pagination=" + pagination +
+                ", other='" + other + '\'' +
                 '}';
     }
 }

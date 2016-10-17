@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,12 +46,14 @@ import xiaoliang.ltool.bean.WeatherBean;
 import xiaoliang.ltool.bean.WeatherDayBean;
 import xiaoliang.ltool.constant.Constant;
 import xiaoliang.ltool.dialog.CityDialog;
+import xiaoliang.ltool.dialog.LoadDialog2;
 import xiaoliang.ltool.util.BlurBitmapRunnable;
 import xiaoliang.ltool.util.DialogUtil;
 import xiaoliang.ltool.util.HttpTaskRunnable;
 import xiaoliang.ltool.util.HttpUtil;
 import xiaoliang.ltool.util.NetTasks;
 import xiaoliang.ltool.util.OtherUtil;
+import xiaoliang.ltool.util.RequestParameters;
 import xiaoliang.ltool.util.SharedPreferencesUtils;
 import xiaoliang.ltool.util.ToastUtil;
 import xiaoliang.ltool.util.WeatherUtil;
@@ -78,6 +81,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static Boolean isExit = false;
     //一键锁屏
     private CardView lock;
+    //下载壁纸
+    private LoadDialog2 loadDialog2;
+    private static final int ON_DOWNLOAD_IMG = 655;
+    private static final int ON_DOWNLOAD_IMG_SECCESS = 656;
+    private static final int ON_DOWNLOAD_IMG_ERROR = 657;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         qrRead.setOnClickListener(this);
         meizi.setOnClickListener(this);
         lock.setOnClickListener(this);
+        headImg.setOnLongClickListener(this);
     }
 
     @Override
@@ -152,6 +161,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWeather();
         //检查是否显示妹子卡片
         showMeizhi();
+        //检查下载权限
+        if(isNeedCheck){
+            checkPermissions(needPermissions);
+        }
     }
 
     private void setWeatherView(){
@@ -199,6 +212,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Glide.with(this).load(Constant.head_img_url_720).asBitmap().into(new onHeadImgLoaded(this,true));
             }
         }
+        toolbarLayout.setStatusBarScrimColor(Color.TRANSPARENT);
+        toolbarLayout.setContentScrimColor(Color.TRANSPARENT);
+        toolbarLayout.setBackgroundColor(Color.TRANSPARENT);
     }
 
     @Override
@@ -236,7 +252,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onLongClick(View v) {
+        switch (v.getId()){
+            case R.id.activity_main_headimg:
+                DialogUtil.getAlertDialog(this, "提示", "是否下载本张壁纸？", "1080P", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getHeadBGUrl();
+                        dialog.dismiss();
+                    }
+                }, "不用了", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                return true;
+        }
         return false;
+    }
+
+    private void getHeadBGUrl(){
+        loadDialog2 = new LoadDialog2(this);
+        NetTasks.getSimpleData(Constant.bing_image_url, new HttpTaskRunnable.CallBack<String>() {
+            @Override
+            public void success(String object) {
+                downloadHeadBG(object);
+            }
+            @Override
+            public void error(int code, String msg) {
+                handler.sendEmptyMessage(ON_DOWNLOAD_IMG_ERROR);
+                Log.d("downloadHeadBG",msg);
+            }
+
+            @Override
+            public String str2Obj(String json) {
+                String url;
+                json = json.substring(json.indexOf("url\":\"")+6);
+                url = json.substring(0,json.indexOf("\""));
+                return url;
+            }
+        });
+    }
+
+    private void downloadHeadBG(String url){
+        NetTasks.downloadImage(url, new RequestParameters.Progress() {
+            @Override
+            public void onProgress(float pro) {
+                Message message = handler.obtainMessage(ON_DOWNLOAD_IMG);
+                message.obj = pro;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onLoadSeccess(String path) {
+                handler.sendEmptyMessage(ON_DOWNLOAD_IMG_SECCESS);
+            }
+            @Override
+            public void onLoadError(Exception e, int type) {
+                handler.sendEmptyMessage(ON_DOWNLOAD_IMG_ERROR);
+                Log.d("downloadHeadBG",e.getMessage());
+            }
+        });
     }
 
     private class onHeadImgLoaded extends SimpleTarget<Bitmap>{
@@ -266,16 +341,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     handler.sendMessage(message);
                 }
             }));
-            Palette.from(resource).generate(new Palette.PaletteAsyncListener(){
-                @Override
-                public void onGenerated(Palette palette) {
-//                    toolbar.setBackgroundColor(palette.getLightMutedSwatch().getRgb());
-//                    setStatusBarColor(palette.getLightMutedSwatch().getRgb());
-                    toolbarLayout.setStatusBarScrimColor(palette.getMutedSwatch().getRgb());
-                    toolbarLayout.setContentScrimColor(palette.getMutedSwatch().getRgb());
-                    toolbarLayout.setBackgroundColor(palette.getMutedSwatch().getRgb());
-                }
-            });
         }
     }
 
@@ -296,6 +361,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case 202://天气加载失败
                     app.T((String) msg.obj);
+                    break;
+                case ON_DOWNLOAD_IMG:
+                    if(loadDialog2!=null)
+                        loadDialog2.setProgress((Float) msg.obj);
+                    break;
+                case ON_DOWNLOAD_IMG_SECCESS:
+                    if(loadDialog2!=null)
+                        loadDialog2.dismiss();
+                    ToastUtil.T(MainActivity.this,"下载完成，位于LTool/img中");
+                    break;
+                case ON_DOWNLOAD_IMG_ERROR:
+                    ToastUtil.T(MainActivity.this,"下载失败，请稍后重试。");
                     break;
             }
             super.handleMessage(msg);
@@ -370,14 +447,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 需要进行检测的权限数组
      */
     protected String[] needPermissions = {
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.READ_PHONE_STATE
     };
 
-    private static final int LOCATION_PERMISSON_REQUESTCODE = 0;
+    private static final int SD_PERMISSON_REQUESTCODE = 0;
     private static final int CAMERA_PERMISSON_REQUESTCODE = 1;
 
     /**
@@ -398,7 +472,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ActivityCompat.requestPermissions(this,
                     needRequestPermissonList.toArray(
                             new String[needRequestPermissonList.size()]),
-                    LOCATION_PERMISSON_REQUESTCODE);
+                    SD_PERMISSON_REQUESTCODE);
         }
     }
 
@@ -447,6 +521,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 showCameraMissingPermissionDialog();
             }
         }
+        if (requestCode == SD_PERMISSON_REQUESTCODE) {
+            isNeedCheck = false;
+            if (!verifyPermissions(paramArrayOfInt)) {
+                showSDMissingPermissionDialog();
+            }
+        }
     }
 
     /****************摄像头权限检查开始*****************/
@@ -489,6 +569,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         );
     }
 
+    private void showSDMissingPermissionDialog() {
+        DialogUtil.getAlertDialog(this, "权限获取", "您需要同意我们对储存设备的读写功能，这样我们才能下载和缓存图片，否则将造成某些功能不可用。",
+                "拒绝授权",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                },
+                "同意授权",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startAppSettings();
+                    }
+                }
+        );
+    }
 
     private void checkCameraPermission(){
         String perm = Manifest.permission.CAMERA;

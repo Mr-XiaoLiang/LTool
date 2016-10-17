@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import xiaoliang.ltool.adapter.MeizhiAdapter;
 import xiaoliang.ltool.bean.MeizhiBean;
 import xiaoliang.ltool.constant.MeizhiType;
 import xiaoliang.ltool.listener.OnScrollDownListener;
+import xiaoliang.ltool.util.DialogUtil;
 import xiaoliang.ltool.util.HttpTaskRunnable;
 import xiaoliang.ltool.util.MeizhiUrlUtil;
 import xiaoliang.ltool.util.MeizhiUtil;
@@ -38,13 +40,14 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     private MeizhiBean bean;
     private ArrayList<MeizhiBean> urlList;
     private boolean isLoading = false;
-    private int page = 0;
+    private int page = 1;
     private LToolApplication app;
     private MeizhiAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
     private static final int startPage= 1;
     private FloatingActionButton toTop;
     private int maxPage = 1;
+    private int activityPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,7 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
         Intent intent = getIntent();
         type = (MeizhiType) intent.getSerializableExtra("type");
         bean = (MeizhiBean) intent.getSerializableExtra("bean");
+        activityPage = intent.getIntExtra("activityPage",0);
         if(getSupportActionBar()!=null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(bean.title);
@@ -110,17 +114,8 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_meizhi, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-//            case R.id.menu_meizhi_top:
-//                selectedToTop();
-//                return true;
             case android.R.id.home:
                 finish();
                 return true;
@@ -142,6 +137,10 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
                             return;
                         if(page==startPage){
                             urlList.clear();
+                            maxPage = data.get(0).pagination;
+                            if(!TextUtils.isEmpty(data.get(0).other)){
+                                DialogUtil.getAlertDialog(MeizhiListActivity.this,data.get(0).other);
+                            }
                         }
                         urlList.addAll(data);
                         if(adapter!=null)
@@ -170,6 +169,8 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
         if(type.getValue()< MeizhiType.MM_Label.getValue()||maxPage<=page){
             return;
         }
+        if(maxPage<=page)
+            return;
         String url = getUrl();
         if(!isLoading&&!url.equals("")){
             isLoading = true;
@@ -179,14 +180,21 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     }
 
     private String getUrl(){
-        if(type.getValue()<MeizhiType.MM_Label.getValue())
+        if(type.getValue()<MeizhiType.MM_Label.getValue()){
             return bean.page;
+        }else if(type == MeizhiType.MM_Label){
+            if(activityPage==0){
+                return bean.page+"/"+page;
+            }else{
+                return bean.page;
+            }
+        }
         return MeizhiUrlUtil.getUrl(type,page);
     }
     @Override
     public void onRefresh() {
         String url = getUrl();
-        if(!isLoading&&!url.equals("")){
+        if(!isLoading&&!TextUtils.isEmpty(url)){
             isLoading = true;
             page = startPage;
             getData(getUrl());
@@ -200,6 +208,17 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
             intent = new Intent(this,MeizhiDetailedActivity.class);
             intent.putExtra("bean",bean);
             intent.putExtra("type",type);
+        }else if(type == MeizhiType.MM_Label){
+            if(activityPage == 0){
+                intent = new Intent(this,MeizhiListActivity.class);
+                intent.putExtra("bean",bean);
+                intent.putExtra("type",type);
+                intent.putExtra("activityPage",1);
+            }else{
+                intent = new Intent(this,MeizhiDetailedActivity.class);
+                intent.putExtra("bean",bean);
+                intent.putExtra("type",type);
+            }
         }
 //        switch (type){
 //            case MEIZHI51_ALL:
@@ -221,7 +240,7 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     /****数据加载开始***/
 
     private void getData(String url){
-        Log.d("数据加载","Type:"+type.getName());
+        Log.d("数据加载","Type:"+type.getName()+url);
         if(swipeRefreshLayout!=null)
             swipeRefreshLayout.setRefreshing(true);
         NetTasks.getSimpleData(url, new HttpTaskRunnable.CallBack<ArrayList<MeizhiBean>>(){
@@ -256,6 +275,12 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
                     case MM_Ranking:
                     case MM_Recommended:
                         return MeizhiUtil.getMMImgListUrl(str);
+                    case MM_Label:
+                        if(activityPage==0){
+                            return MeizhiUtil.getMMLableListUrl(str);
+                        }else{
+                            return MeizhiUtil.getMMImgListUrl(str);
+                        }
                 }
                 return null;
             }

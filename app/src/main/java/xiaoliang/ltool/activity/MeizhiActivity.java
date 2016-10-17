@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -102,7 +103,7 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
     @Override
     public void onCardClick(MeizhiFragment fragment, MeizhiBean bean) {
         Intent intent;
-        if(bean.page!=null&&!bean.page.equals("")){
+        if(!TextUtils.isEmpty(bean.page)){
             intent = new Intent(this,MeizhiListActivity.class);
             intent.putExtra("bean",bean);
             intent.putExtra("type",fragment.getType());

@@ -92,6 +92,7 @@ public class HttpTaskRunnable implements Runnable {
 	private void downFile(String url, String path,String name) throws IOException {
 		InputStream is = null;
 		FileOutputStream fos = null;
+		Log.d("downFile","url:"+url+",path:"+path+",name:"+name);
 		try {
 			File filePath = new File(path);
 			if (!filePath.exists()) {
@@ -99,8 +100,8 @@ public class HttpTaskRunnable implements Runnable {
 			}
 			// 下载函数
 			filePath = new File(path,name);
-			if (filePath.exists()) {
-				filePath.delete();
+			if (!filePath.exists()) {
+				filePath.createNewFile();
 			}
 			// 获取文件名
 			URL myURL = new URL(url);
@@ -132,7 +133,8 @@ public class HttpTaskRunnable implements Runnable {
 				}
 				fos.write(buf, 0, numread);
 				downLoadFileSize += numread;
-				parameters.setProgress(downLoadFileSize/fileSize);
+				if(fileSize>0)
+					parameters.setProgress(downLoadFileSize/fileSize);
 			} while (true);
 			parameters.onLoadSeccess(filePath.getPath());
 			if(callBack!=null)

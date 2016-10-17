@@ -242,7 +242,7 @@ public class MeizhiUtil {
             json = json.substring(json.indexOf("[")+1,json.indexOf("]"));
             String[] imgs = json.split(",");
             int size = Integer.parseInt(imgs[2].trim());
-            for(int i = 1;i<size;i++){
+            for(int i = 1;i<=size;i++){
                 MeizhiBean bean = new MeizhiBean();
                 bean.from = bean.url = "http://img.mmjpg.com/"+imgs[0]+"/"+imgs[1]+"/"+i+".jpg";
                 bean.title = i+"/"+imgs[2];
@@ -254,23 +254,43 @@ public class MeizhiUtil {
         }
         return beans;
     }
-    public static ArrayList<MeizhiBean> getMMLableImgListUrl(String json){
+    public static ArrayList<MeizhiBean> getMMLableListUrl(String json){
         ArrayList<MeizhiBean> beans = new ArrayList<>();
-        Log.d("getMMLableImgListUrl","start");
+        Log.d("getMMLableListUrl","start");
         try{
-            json = json.substring(json.indexOf("picinfo"));
-            json = json.substring(json.indexOf("[")+1,json.indexOf("]"));
-            String[] imgs = json.split(",");
-            int size = Integer.parseInt(imgs[2].trim());
-            for(int i = 1;i<size;i++){
+            String msg = "";
+            int page;
+            String pageStr;
+            if(json.contains("summary")){
+                json = json.substring(json.indexOf("summary"));
+                json = json.substring(json.indexOf("<span>")+6);
+                msg = json.substring(0,json.indexOf("</span>"));
+            }
+            pageStr = json.substring(json.indexOf("page"));
+            try{
+                page = Integer.parseInt(pageStr.substring(pageStr.indexOf("共")+1,pageStr.indexOf("页")));
+            }catch (Exception e){
+                page = 1;
+            }
+            json = json.substring(json.indexOf("<ul>"),json.indexOf("</ul>"));
+            String[] imgs = json.split("<li");
+            for(String img:imgs){
+                if(!img.contains("_blank"))
+                    continue;
                 MeizhiBean bean = new MeizhiBean();
-                bean.from = bean.url = "http://img.mmjpg.com/"+imgs[0]+"/"+imgs[1]+"/"+i+".jpg";
-                bean.title = i+"/"+imgs[2];
-                Log.d("getMMLableImgListUrl",bean.toString());
+                bean.pagination = page;
+                bean.other = msg;
+                img = img.substring(img.indexOf("href=\"")+6);
+                bean.page = bean.from = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("src=\"")+5);
+                bean.url = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("alt=\"")+5);
+                bean.title = img.substring(0,img.indexOf("\""));
+                Log.d("getMMLableListUrl",bean.toString());
                 beans.add(bean);
             }
         }catch (Exception e){
-            Log.d("getMMLableImgListUrl",e.getMessage());
+            Log.d("getMMLableListUrl",e.getMessage());
         }
         return beans;
     }

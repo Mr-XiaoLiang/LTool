@@ -10,7 +10,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
-        versionName "1.4 alpha"
+        versionName "1.5.3 alpha"
     }
     buildTypes {
         release {
