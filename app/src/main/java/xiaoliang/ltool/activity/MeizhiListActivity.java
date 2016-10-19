@@ -62,7 +62,8 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
         activityPage = intent.getIntExtra("activityPage",0);
         if(getSupportActionBar()!=null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(bean.title);
+            if(!TextUtils.isEmpty(bean.title))
+                getSupportActionBar().setTitle(bean.title);
         }
         app = (LToolApplication) getApplicationContext();
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_meizhi_list_swiperefreshlayout);
@@ -106,7 +107,6 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
                 toTop.setVisibility(View.GONE);
             }
         }
-
         @Override
         public void onMore() {
             onLoadMore();
@@ -145,6 +145,9 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
                         urlList.addAll(data);
                         if(adapter!=null)
                             adapter.notifyDataSetChanged();
+                        if(page<maxPage&&urlList.size()<8){
+                            onLoadMore();
+                        }
                     }
                     break;
             }
@@ -166,11 +169,9 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     }
 
     private void onLoadMore(){
-        if(type.getValue()< MeizhiType.MM_Label.getValue()||maxPage<=page){
+        if(maxPage<=page){
             return;
         }
-        if(maxPage<=page)
-            return;
         String url = getUrl();
         if(!isLoading&&!url.equals("")){
             isLoading = true;
@@ -180,16 +181,48 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     }
 
     private String getUrl(){
-        if(type.getValue()<MeizhiType.MM_Label.getValue()){
-            return bean.page;
-        }else if(type == MeizhiType.MM_Label){
-            if(activityPage==0){
-                return bean.page+"/"+page;
-            }else{
+        switch (type){
+            case MM_Label:
+                if(activityPage==0){
+                    return bean.page+"/"+page;
+                }else{
+                    return bean.page;
+                }
+            case Meitulu_Recommend:
+            case Meitulu_Japan:
+            case Meitulu_Hokon:
+            case Meitulu_Domestic:
+            case Meitulu_Highest:
+            case Meitulu_God:
+            case Meitulu_Model:
+            case Meitulu_Net:
+            case Meitulu_Mores:
+            case Meitulu_Temperament:
+            case Meitulu_Stunner:
+            case Meitulu_Milk:
+            case Meitulu_Sex:
+            case Meitulu_Tempt:
+            case Meitulu_Xiong:
+            case Meitulu_Woman:
+            case Meitulu_Tui:
+            case Meitulu_Bud:
+            case Meitulu_Loli:
+            case Meitulu_Cute:
+            case Meitulu_Outdoors:
+            case Meitulu_Bikini:
+            case Meitulu_Pure:
+            case Meitulu_Aestheticism:
+            case Meitulu_Fresh:
+                if(page>startPage){
+                    String str = bean.page.substring(0, bean.page.length()-5);
+                    str = str+"_"+page+".html";
+                    return str;
+                }else{
+                    return bean.page;
+                }
+            default:
                 return bean.page;
-            }
         }
-        return MeizhiUrlUtil.getUrl(type,page);
     }
     @Override
     public void onRefresh() {
@@ -204,11 +237,7 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     @Override
     public void OnCardClick(MeizhiBean bean) {
         Intent intent = null;
-        if(type.getValue()<MeizhiType.MM_Label.getValue()){
-            intent = new Intent(this,MeizhiDetailedActivity.class);
-            intent.putExtra("bean",bean);
-            intent.putExtra("type",type);
-        }else if(type == MeizhiType.MM_Label){
+        if(type == MeizhiType.MM_Label){
             if(activityPage == 0){
                 intent = new Intent(this,MeizhiListActivity.class);
                 intent.putExtra("bean",bean);
@@ -219,6 +248,11 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
                 intent.putExtra("bean",bean);
                 intent.putExtra("type",type);
             }
+        }else{
+//        if(type.getValue()<MeizhiType.Meizhi_Japan.getValue()){
+            intent = new Intent(this,MeizhiDetailedActivity.class);
+            intent.putExtra("bean",bean);
+            intent.putExtra("type",type);
         }
 //        switch (type){
 //            case MEIZHI51_ALL:
@@ -281,6 +315,47 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
                         }else{
                             return MeizhiUtil.getMMImgListUrl(str);
                         }
+                    case Meizhi_all:
+                    case Meizhi_Sex:
+                    case Meizhi_Private:
+                    case Meizhi_Pure:
+                    case Meizhi_Bud:
+                    case Meizhi_Fresh:
+                    case Meizhi_God:
+                    case Meizhi_Temperament:
+                    case Meizhi_Model:
+                    case Meizhi_Bikini:
+                    case Meizhi_Football:
+                    case Meizhi_Loli:
+                    case Meizhi_90:
+                    case Meizhi_Japan:
+                        return MeizhiUtil.getMeizhituImgListUrl(str);
+                    case Meitulu_Recommend:
+                    case Meitulu_Japan:
+                    case Meitulu_Hokon:
+                    case Meitulu_Domestic:
+                    case Meitulu_Highest:
+                    case Meitulu_God:
+                    case Meitulu_Model:
+                    case Meitulu_Net:
+                    case Meitulu_Mores:
+                    case Meitulu_Temperament:
+                    case Meitulu_Stunner:
+                    case Meitulu_Milk:
+                    case Meitulu_Sex:
+                    case Meitulu_Tempt:
+                    case Meitulu_Xiong:
+                    case Meitulu_Woman:
+                    case Meitulu_Tui:
+                    case Meitulu_Bud:
+                    case Meitulu_Loli:
+                    case Meitulu_Cute:
+                    case Meitulu_Outdoors:
+                    case Meitulu_Bikini:
+                    case Meitulu_Pure:
+                    case Meitulu_Aestheticism:
+                    case Meitulu_Fresh:
+                        return MeizhiUtil.getMeituluImgListUrl(str);
                 }
                 return null;
             }

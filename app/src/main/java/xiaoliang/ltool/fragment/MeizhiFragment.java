@@ -274,6 +274,48 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         return MeizhiUtil.getMMRecommendedImgUrl(str);
                     case MM_Label:
                         return MeizhiUtil.getMMLabelImgUrl(str);
+                    case Meizhi_all:
+                    case Meizhi_Sex:
+                    case Meizhi_Private:
+                    case Meizhi_Pure:
+                    case Meizhi_Bud:
+                    case Meizhi_Fresh:
+                    case Meizhi_God:
+                    case Meizhi_Temperament:
+                    case Meizhi_Model:
+                    case Meizhi_Bikini:
+                    case Meizhi_Football:
+                    case Meizhi_Loli:
+                    case Meizhi_90:
+                    case Meizhi_Japan:
+                        return MeizhiUtil.getMeizhituImgUrl(str);
+                    case Meitulu_Recommend:
+                        return MeizhiUtil.getMeituluHotImgUrl(str);
+                    case Meitulu_Japan:
+                    case Meitulu_Hokon:
+                    case Meitulu_Domestic:
+                    case Meitulu_Highest:
+                    case Meitulu_God:
+                    case Meitulu_Model:
+                    case Meitulu_Net:
+                    case Meitulu_Mores:
+                    case Meitulu_Temperament:
+                    case Meitulu_Stunner:
+                    case Meitulu_Milk:
+                    case Meitulu_Sex:
+                    case Meitulu_Tempt:
+                    case Meitulu_Xiong:
+                    case Meitulu_Woman:
+                    case Meitulu_Tui:
+                    case Meitulu_Bud:
+                    case Meitulu_Loli:
+                    case Meitulu_Cute:
+                    case Meitulu_Outdoors:
+                    case Meitulu_Bikini:
+                    case Meitulu_Pure:
+                    case Meitulu_Aestheticism:
+                    case Meitulu_Fresh:
+                        return MeizhiUtil.getMeituluImgUrl(str);
                 }
                 return null;
             }

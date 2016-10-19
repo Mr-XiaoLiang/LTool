@@ -25,7 +25,7 @@
         <LinearLayout
             android:id="@+id/activity_qrread_btn_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@android:color/white">
             <LinearLayout

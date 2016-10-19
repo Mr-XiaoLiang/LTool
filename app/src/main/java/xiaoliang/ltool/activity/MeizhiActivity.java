@@ -23,6 +23,7 @@ import xiaoliang.ltool.bean.MeizhiBean;
 import xiaoliang.ltool.constant.MeizhiType;
 import xiaoliang.ltool.dialog.LoadDialog;
 import xiaoliang.ltool.fragment.MeizhiFragment;
+import xiaoliang.ltool.util.DialogUtil;
 
 public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.OnFragmentInteractionListener,View.OnClickListener {
 
@@ -33,9 +34,10 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
     private MeizhiType[] meizhiTypes = {
             MeizhiType.GANK
             ,MeizhiType.MM_All,MeizhiType.MM_Recommended,MeizhiType.MM_Ranking,MeizhiType.MM_Label
+            ,MeizhiType.Meitulu_Recommend,MeizhiType.Meitulu_Japan,MeizhiType.Meitulu_Hokon,MeizhiType.Meitulu_Domestic,MeizhiType.Meitulu_Highest,MeizhiType.Meitulu_God,MeizhiType.Meitulu_Model,MeizhiType.Meitulu_Net,MeizhiType.Meitulu_Mores,MeizhiType.Meitulu_Temperament,MeizhiType.Meitulu_Stunner,MeizhiType.Meitulu_Milk,MeizhiType.Meitulu_Sex,MeizhiType.Meitulu_Tempt,MeizhiType.Meitulu_Xiong,MeizhiType.Meitulu_Woman,MeizhiType.Meitulu_Tui,MeizhiType.Meitulu_Bud,MeizhiType.Meitulu_Loli,MeizhiType.Meitulu_Cute,MeizhiType.Meitulu_Outdoors,MeizhiType.Meitulu_Bikini,MeizhiType.Meitulu_Pure,MeizhiType.Meitulu_Aestheticism,MeizhiType.Meitulu_Fresh
             ,MeizhiType.DOUBAN_ALL,MeizhiType.DOUBAN_LIAN,MeizhiType.DOUBAN_SIWA,MeizhiType.DOUBAN_TUI,MeizhiType.DOUBAN_TUN,MeizhiType.DOUBAN_XIONG,MeizhiType.DOUBAN_OTHER
             ,MeizhiType.MEIZHI51_ALL,MeizhiType.MEIZHI51_COMIC,MeizhiType.MEIZHI51_JAPAN,MeizhiType.MEIZHI51_KITTY,MeizhiType.MEIZHI51_LIU,MeizhiType.MEIZHI51_PURE,MeizhiType.MEIZHI51_SEX,MeizhiType.MEIZHI51_TAIWAN,MeizhiType.MEIZHI51_WOMAN,MeizhiType.MEIZHI51_ZHAO
-
+            ,MeizhiType.Meizhi_all,MeizhiType.Meizhi_Sex,MeizhiType.Meizhi_Private,MeizhiType.Meizhi_Pure,MeizhiType.Meizhi_Bud,MeizhiType.Meizhi_Fresh,MeizhiType.Meizhi_God,MeizhiType.Meizhi_Temperament,MeizhiType.Meizhi_Model,MeizhiType.Meizhi_Bikini,MeizhiType.Meizhi_Football,MeizhiType.Meizhi_Loli,MeizhiType.Meizhi_90,MeizhiType.Meizhi_Japan
     };
     private FloatingActionButton toTop;
 
@@ -55,6 +57,7 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
         viewPager.setAdapter(new PageAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(0);
         tabLayout.setupWithViewPager(viewPager);
+        DialogUtil.getAlertDialog(this,"当前分类数量为:"+ meizhiTypes.length+",\n大量分类处于二级页面,此处分类为图源常用分类");
     }
 
     private void initFragments(){

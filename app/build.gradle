@@ -9,8 +9,8 @@ android {
         applicationId "xiaoliang.ltool"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.5.3 alpha"
+        versionCode 2
+        versionName "1.7.0 alpha"
     }
     buildTypes {
         release {

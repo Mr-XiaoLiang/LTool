@@ -10,8 +10,8 @@
     <ImageView
         android:id="@+id/item_meizhi_img"
         android:layout_width="match_parent"
-        android:layout_height="190dp"
-        android:maxHeight="240dp"
+        android:layout_height="230dp"
+        android:maxHeight="260dp"
         android:scaleType="fitXY"/>
     <TextView
         android:id="@+id/item_meizhi_text"
@@ -20,6 +20,7 @@
         android:layout_gravity="bottom"
         android:background="#8f000000"
         android:visibility="gone"
+        android:textSize="12dp"
         android:textColor="@android:color/white"
-        android:padding="@dimen/cardview_padding"/>
+        android:padding="5dp"/>
 </android.support.v7.widget.CardView>

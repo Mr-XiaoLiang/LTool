@@ -1,10 +1,12 @@
 package xiaoliang.ltool.activity;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -13,6 +15,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -64,6 +69,7 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     private static final int GET_PHOTO = 986;
     private Dialog loadDialog;
     private View btnLayout;
+    private View root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +91,7 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
         flashBtn = findViewById(R.id.activity_qrread_flash);
         photoBtn = findViewById(R.id.activity_qrread_photo);
         btnLayout = findViewById(R.id.activity_qrread_btn_layout);
+        root = findViewById(R.id.content_qrread);
         flashBtn.setOnClickListener(this);
         photoBtn.setOnClickListener(this);
         qrFinderView.setWavesView(wavesView);
@@ -98,6 +105,7 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
         }
         initBeepSound();
         vibrate = true;
+//        checkCameraPermission();
     }
 
     @Override
@@ -243,17 +251,18 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         //统一调整布局尺寸，预览窗口跟随摄像头尺寸，扫描框，按钮，波浪图跟随预览窗口
-        qrFinderView.setLayoutParams(new LinearLayout.LayoutParams(width,height));
-        wavesView.setTranslationY(height-wavesView.getHeight()/2);
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int y = metrics.heightPixels;//获取了屏幕的宽度
+        qrFinderView.setLayoutParams(new FrameLayout.LayoutParams(width,height));
+//        DisplayMetrics metrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//        int y = metrics.heightPixels;//获取了屏幕的高度
+        int y = root.getHeight();
         if(y-height< DensityUtil.dip2px(this,60)){
             y = DensityUtil.dip2px(this,60);
         }else{
             y -= height;
         }
         btnLayout.setLayoutParams(new LinearLayout.LayoutParams(width,y));
+        wavesView.setTranslationY(root.getHeight()-y-wavesView.getHeight()/2);
     }
 
     @Override
@@ -342,5 +351,84 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
             loadDialog.dismiss();
         app.T("解码失败");
     }
+
+    /****************摄像头权限检查开始*****************/
+    private static final int CAMERA_PERMISSON_REQUESTCODE = 1;
+    /**
+     *  启动应用的设置
+     *
+     * @since 2.5.0
+     *
+     */
+    private void startAppSettings() {
+        Intent intent = new Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse("package:" + getPackageName()));
+        startActivity(intent);
+    }
+
+    /**
+     * 显示提示信息
+     *
+     * @since 2.5.0
+     *
+     */
+    private void showCameraMissingPermissionDialog() {
+        DialogUtil.getAlertDialog(this, "权限获取", "您选择了二维码识别，为此，需要您对我们授权使用摄像头，否则操作无法进行。",
+                "拒绝授权",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        QRReadActivity.this.finish();
+                    }
+                },
+                "同意授权",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startAppSettings();
+                    }
+                }
+        );
+    }
+
+    private void checkCameraPermission(){
+        String perm = Manifest.permission.CAMERA;
+        if (ContextCompat.checkSelfPermission(this,perm)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.shouldShowRequestPermissionRationale(
+                this, perm)) {
+            ActivityCompat.requestPermissions(this,new String[]{perm},CAMERA_PERMISSON_REQUESTCODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] paramArrayOfInt) {
+        if (requestCode == CAMERA_PERMISSON_REQUESTCODE) {
+            if (!verifyPermissions(paramArrayOfInt)) {
+                showCameraMissingPermissionDialog();
+            }
+        }
+    }
+
+    /**
+     * 检测是否说有的权限都已经授权
+     * @param grantResults
+     * @return
+     * @since 2.5.0
+     *
+     */
+    private boolean verifyPermissions(int[] grantResults) {
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /****************摄像头权限检查结束*****************/
 
 }

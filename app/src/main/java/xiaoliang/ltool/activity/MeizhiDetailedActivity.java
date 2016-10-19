@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,6 +20,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -125,6 +127,10 @@ public class MeizhiDetailedActivity extends AppCompatActivity implements View.On
             case MEIZHI51_WOMAN:
             case MEIZHI51_ZHAO:
                 getData(bean.from);
+                break;
+            default:
+                loadImg(bean.url);
+                break;
         }
     }
 
@@ -177,8 +183,8 @@ public class MeizhiDetailedActivity extends AppCompatActivity implements View.On
                             Palette.from(resource).generate(new Palette.PaletteAsyncListener(){
                                 @Override
                                 public void onGenerated(Palette palette) {
-                                    toolbar.setBackgroundColor(palette.getLightMutedSwatch().getRgb());
-                                    setStatusBarColor(palette.getLightMutedSwatch().getRgb());
+                                    toolbar.setBackgroundColor(palette.getLightMutedColor(Color.parseColor("#41ddaf")));
+                                    setStatusBarColor(palette.getLightMutedColor(Color.parseColor("#41ddaf")));
                                 }
                             });
                             if(loadDialog!=null)
@@ -289,7 +295,7 @@ public class MeizhiDetailedActivity extends AppCompatActivity implements View.On
                     break;
                 case GET_URL:
                     String url = (String) msg.obj;
-                    if(!url.equals("")){
+                    if(!TextUtils.isEmpty(url)){
                         loadImg(url);
                         break;
                     }

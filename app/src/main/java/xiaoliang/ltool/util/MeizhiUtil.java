@@ -5,6 +5,8 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import xiaoliang.ltool.bean.MeizhiBean;
@@ -291,6 +293,161 @@ public class MeizhiUtil {
             }
         }catch (Exception e){
             Log.d("getMMLableListUrl",e.getMessage());
+        }
+        return beans;
+    }
+
+    public static ArrayList<MeizhiBean> getMeizhituImgUrl(String json){
+        ArrayList<MeizhiBean> beans = new ArrayList<>();
+        Log.d("getMeizhituImgUrl","start");
+        try{
+            json = json.substring(json.indexOf("wp-list"),json.indexOf("navigation"));
+            String[] imgs = json.split("<li");
+            for(String img : imgs){
+//                Log.d("getMeizhituImgUrl",img);
+                if(!img.contains("wp-item"))
+                    continue;
+                MeizhiBean bean = new MeizhiBean();
+                img = img.substring(img.indexOf("href=\"")+6);
+                bean.page = bean.from = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("src=\"")+5);
+                bean.url = img.substring(0,img.indexOf("\""));
+//                img = img.substring(img.indexOf("alt=\"")+5);
+//                bean.title = img.substring(0,img.indexOf("\"")).replaceAll("<b>|</b>","");
+//                bean.title = URLDecoder.decode(bean.title, "UTF-8");
+//                bean.title = URLDecoder.decode(bean.title, "GB2312");
+//                bean.title = new String(bean.title.getBytes(), "GB2312");
+//                bean.title = new String(bean.title.getBytes(), "GB2312");
+                Log.d("getMeizhituImgUrl",bean.toString());
+                beans.add(bean);
+            }
+        }catch (Exception e){
+            Log.d("getMeizhituImgUrl",e.getMessage());
+        }
+        return beans;
+    }
+
+    public static ArrayList<MeizhiBean> getMeizhituImgListUrl(String json){
+        ArrayList<MeizhiBean> beans = new ArrayList<>();
+        Log.d("getMeizhituImgListUrl","start");
+        try{
+            json = json.substring(json.indexOf("postContent"));
+            json = json.substring(0,json.indexOf("</p>"));
+            String[] imgs = json.split("<img");
+            for(String img : imgs){
+//                Log.d("getMeizhituImgListUrl",img);
+                if(!img.contains("src"))
+                    continue;
+                MeizhiBean bean = new MeizhiBean();
+//                img = img.substring(img.indexOf("alt=\"")+5);
+//                bean.title = img.substring(0,img.indexOf("\""));
+//                bean.title = URLDecoder.decode(bean.title, "GB2312");
+//                bean.title = new String(bean.title.getBytes(), "GB2312");
+                img = img.substring(img.indexOf("src=\"")+5);
+                bean.from = bean.url = img.substring(0,img.indexOf("\""));
+                Log.d("getMeizhituImgListUrl",bean.toString());
+                beans.add(bean);
+            }
+        }catch (Exception e){
+            Log.d("getMeizhituImgListUrl",e.getMessage());
+        }
+        return beans;
+    }
+
+    public static ArrayList<MeizhiBean> getMeituluImgUrl(String json){
+        ArrayList<MeizhiBean> beans = new ArrayList<>();
+        Log.d("getMeituluImgUrl","start");
+        try{
+            json = json.substring(json.indexOf("class=\"img\""));
+            String[] imgs = json.split("<li>");
+            for(String img : imgs){
+//                Log.d("getMeituluImgUrl",img);
+                if(!img.contains("src"))
+                    continue;
+                MeizhiBean bean = new MeizhiBean();
+                img = img.substring(img.indexOf("href=\"")+6);
+                bean.page = bean.from = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("src=\"")+5);
+                bean.url = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("alt=\"")+5);
+                bean.title = img.substring(0,img.indexOf("\""));
+                if(img.indexOf("图片：")>0){
+                    img = img.substring(img.indexOf("图片：")+3);
+                }else{
+                    img = img.substring(img.indexOf("数量：")+3);
+                }
+                bean.title += "\n"+img.substring(0,img.indexOf("</"));
+                Log.d("getMeituluImgUrl",bean.toString());
+                beans.add(bean);
+            }
+        }catch (Exception e){
+            Log.d("getMeituluImgUrl",e.getMessage());
+        }
+        return beans;
+    }
+    public static ArrayList<MeizhiBean> getMeituluHotImgUrl(String json){
+        ArrayList<MeizhiBean> beans = new ArrayList<>();
+        Log.d("getMeituluHotImgUrl","start");
+        try{
+            json = json.substring(json.indexOf("boxs"));
+            String[] imgs = json.split("<li>");
+            for(String img : imgs){
+//                Log.d("getMeituluHotImgUrl",img);
+                if(!img.contains("src"))
+                    continue;
+                MeizhiBean bean = new MeizhiBean();
+                img = img.substring(img.indexOf("href=\"")+6);
+                bean.page = bean.from = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("src=\"")+5);
+                bean.url = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("alt=\"")+5);
+                bean.title = img.substring(0,img.indexOf("\""));
+                img = img.substring(img.indexOf("数量：")+3);
+                bean.title += "\n"+img.substring(0,img.indexOf("</"));
+                Log.d("getMeituluHotImgUrl",bean.toString());
+                beans.add(bean);
+            }
+        }catch (Exception e){
+            Log.d("getMeituluHotImgUrl",e.getMessage());
+        }
+        return beans;
+    }
+    public static ArrayList<MeizhiBean> getMeituluImgListUrl(String json){
+        ArrayList<MeizhiBean> beans = new ArrayList<>();
+        Log.d("getMeituluImgListUrl","start");
+        try{
+            String msg = "";
+            int page;
+            String pageStr;
+            if(json.contains("buchongshuoming")){
+                json = json.substring(json.indexOf("buchongshuoming"));
+                json = json.substring(json.indexOf("</span>")+7);
+                msg = json.substring(0,json.indexOf("</p>"));
+            }
+            pageStr = json.substring(json.indexOf("pages"),json.lastIndexOf("a1"));
+            try{
+                page = Integer.parseInt(pageStr.substring(pageStr.lastIndexOf("\">")+2,pageStr.lastIndexOf("</a>")));
+            }catch (Exception e){
+                page = 1;
+            }
+            json = json.substring(json.indexOf("class=\"content\""),json.indexOf("pages"));
+            String[] imgs = json.split("<img");
+            for(String img:imgs){
+                if(!img.contains("src"))
+                    continue;
+                MeizhiBean bean = new MeizhiBean();
+                bean.pagination = page;
+                bean.other = msg;
+                img = img.substring(img.indexOf("src=")+4);
+                bean.from = bean.url = img.substring(0,img.indexOf(" alt"));
+//                bean.url = "http://img.buxidai.com/uploadfile/2015/0928/20150928045305932.jpg";
+                img = img.substring(img.indexOf("alt=\"")+5);
+                bean.title = img.substring(0,img.indexOf("\""));
+                Log.d("getMeituluImgListUrl",bean.toString());
+                beans.add(bean);
+            }
+        }catch (Exception e){
+            Log.d("getMeituluImgListUrl",e.getMessage());
         }
         return beans;
     }

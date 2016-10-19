@@ -158,7 +158,7 @@ public class Constant {
      * 美图录
      * http://www.meitulu.com/t/nvshen/2.html
      */
-    public static final String Meitulu_Recommend_Url = "http://www.meitulu.com/xihuan//index.php";//反复调用即分页
+    public static final String Meitulu_Recommend_Url = "http://www.meitulu.com/xihuan/index.php";//反复调用即分页
     public static final String Meitulu_Japan_Url = "http://www.meitulu.com/rihan/";
     public static final String Meitulu_Hokon_Url = "http://www.meitulu.com/gangtai/";
     public static final String Meitulu_Domestic_Url = "http://www.meitulu.com/guochan/";
