@@ -180,13 +180,15 @@ public class MeizhiDetailedActivity extends AppCompatActivity implements View.On
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             imageView.setImageBitmap(resource);
-                            Palette.from(resource).generate(new Palette.PaletteAsyncListener(){
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    toolbar.setBackgroundColor(palette.getLightMutedColor(Color.parseColor("#41ddaf")));
-                                    setStatusBarColor(palette.getLightMutedColor(Color.parseColor("#41ddaf")));
-                                }
-                            });
+                                Palette.from(resource).generate(new Palette.PaletteAsyncListener(){
+                                    @Override
+                                    public void onGenerated(Palette palette) {
+                                        toolbar.setBackgroundColor(palette.getLightMutedColor(Color.parseColor("#41ddaf")));
+                                        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+                                           setStatusBarColor(palette.getLightMutedColor(Color.parseColor("#41ddaf")));
+                                        }
+                                    }
+                                });
                             if(loadDialog!=null)
                                 loadDialog.dismiss();
                         }

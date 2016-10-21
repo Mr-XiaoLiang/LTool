@@ -53,22 +53,50 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.WeatherActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
+                <action android:name="android.intent.action.SHORTCUT" />
+                <!-- 必须加上这个，否则无法直接使用自定的action -->
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.SettingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.QRCreateActivity"
             android:label="@string/title_activity_qrcreate"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
+                <action android:name="android.intent.action.SHORTCUT" />
+                <!-- 必须加上这个，否则无法直接使用自定的action -->
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.QRReadActivity"
             android:label="@string/title_activity_qrread"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
+                <action android:name="android.intent.action.SHORTCUT" />
+                <!-- 必须加上这个，否则无法直接使用自定的action -->
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.MeizhiActivity"
             android:label="@string/title_activity_meizhi"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
+                <action android:name="android.intent.action.SHORTCUT" />
+                <!-- 必须加上这个，否则无法直接使用自定的action -->
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.MeizhiDetailedActivity"
             android:label="@string/title_activity_meizhi_detailed"

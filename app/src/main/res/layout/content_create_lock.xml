@@ -32,6 +32,16 @@
             android:scaleType="centerInside"
             android:src="@mipmap/ic_launcher"
             android:layout_margin="@dimen/cardview_margin"/>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/cardview_margin">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/activity_create_lock_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入按钮名称"/>
+        </android.support.design.widget.TextInputLayout>
         <LinearLayout
             android:id="@+id/activity_create_lock_imgbtn"
             android:layout_width="match_parent"
@@ -60,7 +70,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
-                        android:text="自定义锁屏按钮的图标"/>
+                        android:text="自定义按钮的图标"/>
                 </LinearLayout>
                 <ImageView
                     android:id="@+id/activity_create_lock_img"
@@ -73,16 +83,47 @@
                 android:layout_height="1px"
                 android:background="@color/colorPrimary"/>
         </LinearLayout>
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/cardview_margin">
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/activity_create_lock_name"
+            android:orientation="vertical">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="请输入锁屏按钮名称"/>
-        </android.support.design.widget.TextInputLayout>
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/cardview_padding">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="@android:color/black"
+                        android:text="启动模块"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="点击后启动的模块"/>
+                    </LinearLayout>
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/activity_create_lock_model"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/cardview_padding"/>
+            </LinearLayout>
+            <View
+                android:layout_marginTop="@dimen/cardview_padding"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

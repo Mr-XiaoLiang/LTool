@@ -12,13 +12,17 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Switch;
 
 import java.io.IOException;
@@ -31,7 +35,7 @@ import xiaoliang.ltool.util.SharedPreferencesUtils;
 import xiaoliang.ltool.util.ShortcutUtil;
 import xiaoliang.ltool.util.ToastUtil;
 
-public class CreateLockActivity extends AppCompatActivity implements Switch.OnCheckedChangeListener,View.OnClickListener {
+public class CreateLockActivity extends AppCompatActivity implements Switch.OnCheckedChangeListener,View.OnClickListener,AdapterView.OnItemSelectedListener {
 
     private ImageView showImg,resImg;
     private TextInputEditText nameEdit,numEdit;
@@ -46,6 +50,10 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
     private DevicePolicyManager policyManager;
     private ComponentName componentName;
     private static final int MY_REQUEST_CODE = 9999;
+    private AppCompatSpinner openModel;
+    private String[] modelNames = {"锁屏","二维码扫描","二维码生成","妹子图","天气"};
+    private Class[] modelClass = {LockActivity.class,QRReadActivity.class,QRCreateActivity.class,MeizhiActivity.class,WeatherActivity.class};
+    private Class thisClass = modelClass[0];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +72,8 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         redPointSwitch = (SwitchCompat) findViewById(R.id.activity_create_lock_redpoint);
         repeatSwitch = (SwitchCompat) findViewById(R.id.activity_create_lock_repeat);
         numLayout = findViewById(R.id.activity_create_lock_pointnum_layout);
+        openModel = (AppCompatSpinner) findViewById(R.id.activity_create_lock_model);
+        openModel.setOnItemSelectedListener(this);
         imgBtn.setOnClickListener(this);
         circularSwitch.setOnCheckedChangeListener(this);
         redPointSwitch.setOnCheckedChangeListener(this);
@@ -76,6 +86,7 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         numLayout.setVisibility(View.GONE);
         resImg.setImageResource(R.drawable.ic_oneplus);
         showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
+        openModel.setAdapter(new ArrayAdapter(this,R.layout.item_shortcut_model,R.id.item_shortcut_model_text,modelNames));
     }
 
 
@@ -232,7 +243,7 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         if (!policyManager.isAdminActive(componentName)) {
             activeManage();
         }else{
-            shortcutUtil.addShortcut(nameEdit.getText().toString(),pointNum,image,LockActivity.class);
+            shortcutUtil.addShortcut(nameEdit.getText().toString(),pointNum,image,thisClass);
             ToastUtil.T(this,"已添加");
         }
     }
@@ -245,5 +256,15 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         //描述(additional explanation)
         intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "本权限用于调用系统锁屏功能，本应用承诺，不用于其他任何非法途径");
         startActivityForResult(intent, MY_REQUEST_CODE);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        thisClass = modelClass[position];
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        openModel.setSelection(0);
     }
 }

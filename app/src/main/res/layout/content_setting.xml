@@ -154,6 +154,45 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="天气"
+            android:layout_marginTop="@dimen/setting_item_padding"
+            android:paddingLeft="@dimen/setting_item_padding"
+            android:paddingTop="@dimen/setting_item_padding"
+            android:background="@android:color/white"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/setting_item_padding"
+            android:background="@android:color/white"
+            android:layout_marginTop="1px">
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    android:text="显示天气信息"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:text="部分地区可能无法获取天气信息"/>
+            </LinearLayout>
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/activity_setting_meizhi_weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="系统"
             android:layout_marginTop="@dimen/setting_item_padding"
             android:paddingLeft="@dimen/setting_item_padding"

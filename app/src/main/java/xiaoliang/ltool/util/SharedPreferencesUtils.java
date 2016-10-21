@@ -334,4 +334,18 @@ public class SharedPreferencesUtils {
         return mShareConfig.getBoolean("ShowMeizhiOnce",false);
     }
 
+    public static void setWeatherShow(Context context,boolean show){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE );
+        Editor conEdit = mShareConfig.edit();
+        conEdit.putBoolean("WeatherShow", show);
+        conEdit.commit();
+    }
+
+    public static boolean getWeatherShow(Context context){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE);
+        return mShareConfig.getBoolean("WeatherShow",true);
+    }
+
 }

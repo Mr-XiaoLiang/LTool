@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView weatherDate,weatherTime,weatherTemperature,weatherDayType,weatherDayWind,weatherNightType,weatherNightWind;
     private CardView weather;
     private WeatherBean weatherBean;
+    private boolean showWeather = true;
     //二维码部分
     private CardView qrRead;
     private CardView qrCreate;
@@ -119,11 +120,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         meizi.setOnClickListener(this);
         lock.setOnClickListener(this);
         headImg.setOnLongClickListener(this);
+        showWeather = SharedPreferencesUtils.getWeatherShow(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if(showWeather){
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+        }else{
+            getMenuInflater().inflate(R.menu.menu_main2, menu);
+        }
         return true;
     }
 
@@ -158,7 +164,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         loadWebImg = SharedPreferencesUtils.isLoadWebImg(this);
-        getWeather();
+        showWeather = SharedPreferencesUtils.getWeatherShow(this);
+        if(showWeather){
+            getWeather();
+        }
         //检查是否显示妹子卡片
         showMeizhi();
         //检查下载权限

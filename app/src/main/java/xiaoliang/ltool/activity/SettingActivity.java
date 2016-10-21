@@ -17,7 +17,7 @@ import xiaoliang.ltool.util.SharedPreferencesUtils;
 
 public class SettingActivity extends AppCompatActivity implements SwitchCompat.OnCheckedChangeListener,View.OnClickListener {
 
-    private SwitchCompat  onlyWifiSwitch, dayBgSwitch, meizhiSwithch, meizhiOnceSwithch;
+    private SwitchCompat  onlyWifiSwitch, dayBgSwitch, meizhiSwitch, meizhiOnceSwitch,weatherSwitch;
     private View updateBtn, aboutBtn;
     private TextView version;
 //    private static final int CHECK_UPDATE = 200;
@@ -45,23 +45,26 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
     private void initView() {
         onlyWifiSwitch = (SwitchCompat) findViewById(R.id.activity_setting_onlywifi);
         dayBgSwitch = (SwitchCompat) findViewById(R.id.activity_setting_daybg);
-        meizhiSwithch = (SwitchCompat) findViewById(R.id.activity_setting_meizhi);
-        meizhiOnceSwithch = (SwitchCompat) findViewById(R.id.activity_setting_meizhi_onlyonce);
+        meizhiSwitch = (SwitchCompat) findViewById(R.id.activity_setting_meizhi);
+        meizhiOnceSwitch = (SwitchCompat) findViewById(R.id.activity_setting_meizhi_onlyonce);
         updateBtn = findViewById(R.id.activity_setting_update);
         aboutBtn = findViewById(R.id.activity_setting_about);
         version = (TextView) findViewById(R.id.activity_setting_version);
+        weatherSwitch = (SwitchCompat) findViewById(R.id.activity_setting_meizhi_weather);
 
         onlyWifiSwitch.setOnCheckedChangeListener(this);
         dayBgSwitch.setOnCheckedChangeListener(this);
-        meizhiOnceSwithch.setOnCheckedChangeListener(this);
-        meizhiSwithch.setOnCheckedChangeListener(this);
+        meizhiOnceSwitch.setOnCheckedChangeListener(this);
+        meizhiSwitch.setOnCheckedChangeListener(this);
+        weatherSwitch.setOnCheckedChangeListener(this);
         updateBtn.setOnClickListener(this);
         aboutBtn.setOnClickListener(this);
 
         onlyWifiSwitch.setChecked(SharedPreferencesUtils.isOnlyWifi(this));
         dayBgSwitch.setChecked(SharedPreferencesUtils.isLoadWebImg(this));
-        meizhiSwithch.setChecked(SharedPreferencesUtils.getShowMeizhi(this));
-        meizhiOnceSwithch.setChecked(SharedPreferencesUtils.getShowMeizhiOnce(this));
+        meizhiSwitch.setChecked(SharedPreferencesUtils.getShowMeizhi(this));
+        meizhiOnceSwitch.setChecked(SharedPreferencesUtils.getShowMeizhiOnce(this));
+        weatherSwitch.setChecked(SharedPreferencesUtils.getWeatherShow(this));
 //        ver = OtherUtil.getVersion(this);
 //        version.setText("V"+ ver);
     }
@@ -95,14 +98,16 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
             case R.id.activity_setting_meizhi:
                 SharedPreferencesUtils.setShowMeizhi(this, b);
                 if (!b) {
-                    meizhiOnceSwithch.setChecked(false);
+                    meizhiOnceSwitch.setChecked(false);
                 }
                 break;
             case R.id.activity_setting_meizhi_onlyonce:
                 SharedPreferencesUtils.setShowMeizhiOnce(this, b);
                 if (b) {
-                    meizhiSwithch.setChecked(true);
+                    meizhiSwitch.setChecked(true);
                 }
+            case R.id.activity_setting_meizhi_weather:
+                SharedPreferencesUtils.setWeatherShow(this,b);
                 break;
         }
     }
