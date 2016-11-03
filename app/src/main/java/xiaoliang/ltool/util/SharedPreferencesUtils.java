@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
+import android.util.Log;
 
 
 import java.io.ByteArrayInputStream;
@@ -22,8 +23,8 @@ import java.util.Set;
  */
 public class SharedPreferencesUtils {
 
-    public static  final String USER = "ltool_setting";
-    public static final int Millis_Of_Day = 86400000;
+    private static  final String USER = "ltool_setting";
+    private static final int Millis_Of_Day = 24*60*60*1000;
 
 
     public static <T> void put( Context context, String key, T value ) {
@@ -202,7 +203,7 @@ public class SharedPreferencesUtils {
                     redStr.getBytes("ISO-8859-1"));
             objectInputStream = new ObjectInputStream(
                     byteArrayInputStream);
-            object =  (Object) objectInputStream.readObject();
+            object =  objectInputStream.readObject();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -289,6 +290,7 @@ public class SharedPreferencesUtils {
                 context.getSharedPreferences(USER, Context.MODE_PRIVATE);
         long now = System.currentTimeMillis();
         long last = mShareConfig.getLong("GetBgTime",0);
+        Log.d("isGetBgEnd","now:"+now+",lase:"+last);
         return now/Millis_Of_Day==last/Millis_Of_Day;
     }
 

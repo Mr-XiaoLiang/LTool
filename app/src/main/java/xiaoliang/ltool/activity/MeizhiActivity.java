@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.bean.MeizhiBean;
+import xiaoliang.ltool.bean.MeizhiBeanArray;
 import xiaoliang.ltool.constant.MeizhiType;
 import xiaoliang.ltool.dialog.LoadDialog;
 import xiaoliang.ltool.fragment.MeizhiFragment;
@@ -112,7 +113,7 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
             intent.putExtra("type",fragment.getType());
         }else{
             intent = new Intent(this,MeizhiDetailedActivity.class);
-            intent.putExtra("bean",bean);
+            intent.putExtra("bean",new MeizhiBeanArray(bean));
             intent.putExtra("type",fragment.getType());
         }
         startActivity(intent);

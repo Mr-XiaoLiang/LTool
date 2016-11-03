@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="xiaoliang.ltool.activity.HealthActivity">
+
+    <ImageView
+        android:id="@+id/activity_health_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@android:color/darker_gray"
+        android:text="你可以尝试输入：关键字\nLTool将尝试从各种渠道搜索\n并且去除无效结果"/>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/status_bar_height"
+                android:layout_marginLeft="@dimen/cardview_margin"
+                android:layout_marginRight="@dimen/cardview_margin"
+                android:layout_marginTop="34dp">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/activity_health_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@android:color/white"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingRight="@dimen/cardview_padding">
+                        <android.support.design.widget.TextInputEditText
+                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:id="@+id/activity_health_edittext"
+                            android:hint="请输入搜索关键字"
+                            android:textColor="@android:color/black"
+                            android:lines="1"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:textColorHint="@android:color/darker_gray"
+                            android:ellipsize="middle"/>
+                        <ImageView
+                            android:visibility="gone"
+                            android:id="@+id/activity_health_search"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_search"
+                            android:tint="@android:color/darker_gray"/>
+                    </LinearLayout>
+                </android.support.v7.widget.Toolbar>
+            </android.support.v7.widget.CardView>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_health" />
+
+</android.support.design.widget.CoordinatorLayout>

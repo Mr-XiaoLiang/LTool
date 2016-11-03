@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_meizhi_detailed"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="xiaoliang.ltool.activity.MeizhiDetailedActivity"
-    tools:showIn="@layout/activity_meizhi_detailed"
-    android:background="@android:color/black">
-    <xiaoliang.ltool.view.zoom_img.GestureImageView
-        android:id="@+id/activity_meizhi_detailed_fab_img"
+    android:layout_height="match_parent">
+    <xiaoliang.ltool.view.ZoomImageView
+        android:id="@+id/activity_meizhi_detailed_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </FrameLayout>

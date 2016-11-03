@@ -74,12 +74,12 @@ public class DialogUtil {
 //		window.setWindowAnimations(R.style.dialogstyle_vertical); // 添加动画
         dialog.setCancelable(true);
         dialog.show();
-        WindowManager m = context.getWindowManager();
-        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
-        WindowManager.LayoutParams p = window.getAttributes(); // 获取对话框当前的参数值
-        p.width = p.height = (int) (d.getWidth() * 0.3);
-        dialog.onWindowAttributesChanged(p);
-        window.setAttributes(p);
+//        WindowManager m = context.getWindowManager();
+//        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
+//        WindowManager.LayoutParams p = window.getAttributes(); // 获取对话框当前的参数值
+//        p.width = p.height = (int) (d.getWidth() * 0.3);
+//        dialog.onWindowAttributesChanged(p);
+//        window.setAttributes(p);
         return dialog;
     }
 

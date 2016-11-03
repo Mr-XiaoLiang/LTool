@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.adapter.MeizhiAdapter;
 import xiaoliang.ltool.bean.MeizhiBean;
+import xiaoliang.ltool.bean.MeizhiBeanArray;
 import xiaoliang.ltool.constant.MeizhiType;
 import xiaoliang.ltool.listener.OnScrollDownListener;
 import xiaoliang.ltool.util.DialogUtil;
@@ -235,8 +236,8 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
     }
 
     @Override
-    public void OnCardClick(MeizhiBean bean) {
-        Intent intent = null;
+    public void OnCardClick(MeizhiBean bean,int position) {
+        Intent intent;
         if(type == MeizhiType.MM_Label){
             if(activityPage == 0){
                 intent = new Intent(this,MeizhiListActivity.class);
@@ -245,14 +246,16 @@ public class MeizhiListActivity extends AppCompatActivity implements SwipeRefres
                 intent.putExtra("activityPage",1);
             }else{
                 intent = new Intent(this,MeizhiDetailedActivity.class);
-                intent.putExtra("bean",bean);
+                intent.putExtra("bean",new MeizhiBeanArray(urlList));
                 intent.putExtra("type",type);
+                intent.putExtra("index",position);
             }
         }else{
 //        if(type.getValue()<MeizhiType.Meizhi_Japan.getValue()){
             intent = new Intent(this,MeizhiDetailedActivity.class);
-            intent.putExtra("bean",bean);
+            intent.putExtra("bean",new MeizhiBeanArray(urlList));
             intent.putExtra("type",type);
+            intent.putExtra("index",position);
         }
 //        switch (type){
 //            case MEIZHI51_ALL:

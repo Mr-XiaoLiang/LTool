@@ -1,6 +1,7 @@
 package xiaoliang.ltool.activity;
 
 import android.app.Application;
+import android.graphics.Bitmap;
 import android.widget.Toast;
 
 import xiaoliang.ltool.util.ToastUtil;
@@ -19,4 +20,13 @@ public class LToolApplication extends Application {
         ToastUtil.T(this,s);
     }
 
+    private Bitmap blurBackground;
+
+    public Bitmap getBlurBackground() {
+        return blurBackground;
+    }
+
+    public void setBlurBackground(Bitmap blurBackground) {
+        this.blurBackground = blurBackground;
+    }
 }

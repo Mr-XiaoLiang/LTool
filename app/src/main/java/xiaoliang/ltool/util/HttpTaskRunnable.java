@@ -121,7 +121,7 @@ public class HttpTaskRunnable implements Runnable {
 					callBack.error(Constant.DownLoadStreamIsNull, "下载链接为空");
 				return;
 			}
-			fos = new FileOutputStream(path + filename);
+			fos = new FileOutputStream(filePath);
 			// 把数据存入路径+文件名
 			byte buf[] = new byte[1024];
 			downLoadFileSize = 0;

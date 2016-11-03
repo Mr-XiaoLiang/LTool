@@ -23,14 +23,44 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_meizhi_detailed" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/activity_meizhi_detailed_fab"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/activity_meizhi_detailed_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@android:color/black"/>
+
+    <com.github.clans.fab.FloatingActionMenu
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_cloud_download" />
+        app:menu_fab_size="normal"
+        app:menu_showShadow="true"
+        app:menu_icon="@drawable/ic_add"
+        app:menu_fab_show_animation="@anim/show_from_bottom"
+        app:menu_fab_hide_animation="@anim/hide_to_bottom"
+        app:menu_colorNormal="@color/colorAccent"
+        app:menu_colorPressed="@color/colorAccent">
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/activity_meizhi_detailed_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cloud_download"
+            app:fab_size="mini"
+            app:fab_label="下载本图"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorAccent"/>
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/activity_meizhi_detailed_downs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cloud_download"
+            app:fab_size="mini"
+            app:fab_label="下载本组"
+            app:fab_colorNormal="@color/colorAccent"
+            app:fab_colorPressed="@color/colorAccent"/>
+    </com.github.clans.fab.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>

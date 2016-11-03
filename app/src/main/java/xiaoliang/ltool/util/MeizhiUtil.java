@@ -31,6 +31,7 @@ public class MeizhiUtil {
             JSONArray results = jsonObject.getJSONArray("results");
             for(int i = 0;i<results.length();i++){
                 MeizhiBean bean = new MeizhiBean(results.getJSONObject(i).getString("url"));
+                bean.from = bean.url;
                 beans.add(bean);
             }
         }catch (Exception e){

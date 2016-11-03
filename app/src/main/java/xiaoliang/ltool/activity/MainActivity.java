@@ -19,10 +19,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
@@ -114,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         qrCreate = (CardView) findViewById(R.id.content_main_qrcreate);
         meizi = (CardView) findViewById(R.id.content_main_meizhi);
         lock = (CardView) findViewById(R.id.content_main_lock);
+        findViewById(R.id.content_main_health).setOnClickListener(this);
         handler = new MyHandler();
         qrCreate.setOnClickListener(this);
         qrRead.setOnClickListener(this);
@@ -215,10 +215,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int networdType = OtherUtil.getNetworkType(this);
         boolean onlyWifi = SharedPreferencesUtils.isOnlyWifi(this);
         loadWebImg = SharedPreferencesUtils.isLoadWebImg(this);
-        Glide.with(this).load(Constant.getBabkgroundPath(this)).asBitmap().into(new onHeadImgLoaded(this,false));
+        Glide.with(this)
+                .load(Constant.getBabkgroundPath(this))
+                .asBitmap()
+                .diskCacheStrategy( DiskCacheStrategy.NONE )
+                .skipMemoryCache(true)
+                .into(new onHeadImgLoaded(this,false));
         if(networdType==Constant.NetWord_WIFI||(networdType==Constant.NetWord_MOBILE&&!onlyWifi)){
             if(loadWebImg&&!SharedPreferencesUtils.isGetBgEnd(this)){
-                Glide.with(this).load(Constant.head_img_url_720).asBitmap().into(new onHeadImgLoaded(this,true));
+//                Log.d("loadImg","isLoadWebImg...........");
+                Glide.with(this)
+                        .load(Constant.head_img_url_720)
+                        .asBitmap()
+                        .diskCacheStrategy( DiskCacheStrategy.NONE )
+                        .skipMemoryCache(true)
+                        .into(new onHeadImgLoaded(this,true));
             }
         }
         toolbarLayout.setStatusBarScrimColor(Color.TRANSPARENT);
@@ -256,6 +267,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(new Intent(MainActivity.this,MeizhiActivity.class));
                 }
                 break;
+            case R.id.content_main_health:
+                startActivity(new Intent(this,HealthActivity.class));
+                break;
         }
     }
 
@@ -290,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void error(int code, String msg) {
                 handler.sendEmptyMessage(ON_DOWNLOAD_IMG_ERROR);
-                Log.d("downloadHeadBG",msg);
+//                Log.d("downloadHeadBG",msg);
             }
 
             @Override
@@ -318,25 +332,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onLoadError(Exception e, int type) {
                 handler.sendEmptyMessage(ON_DOWNLOAD_IMG_ERROR);
-                Log.d("downloadHeadBG",e.getMessage());
+//                Log.d("downloadHeadBG",e.getMessage());
             }
         });
     }
 
     private class onHeadImgLoaded extends SimpleTarget<Bitmap>{
 
-        boolean isSave;
-        Context context;
+        final boolean isSave;
+        final Context context;
 
         public onHeadImgLoaded(Context context, boolean isSave) {
             this.context = context;
             this.isSave = isSave;
+//            Log.d("onHeadImgLoaded","onHeadImgLoaded.............");
         }
 
         @Override
-        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+        public void onResourceReady(final Bitmap resource, GlideAnimation glideAnimation) {
             headImg.setImageBitmap(resource);
             if(isSave){
+//                Log.d("onHeadImgLoaded","onResourceReady.............");
                 OtherUtil.saveBabkground(context,resource);
                 SharedPreferencesUtils.setGetBgTime(context);
             }
@@ -353,17 +369,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(int colot){
-        getWindow().setStatusBarColor(colot);
-    }
-
     private class MyHandler extends Handler{
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 200://背景图高斯模糊完毕
-                    backgroundImg.setImageBitmap((Bitmap)msg.obj);
+                    Bitmap bg = (Bitmap)msg.obj;
+                    backgroundImg.setImageBitmap(bg);
+                    app.setBlurBackground(bg);
                     break;
                 case 201://天气加载成功
                     setWeatherView();
@@ -390,7 +403,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getWeather(){
         String city = SharedPreferencesUtils.getCity(this);
-        Log.d("城市",city);
+//        Log.d("城市",city);
 //        app.T("当前城市："+city);
         if(city==null||"".equals(city.trim()))
             return;
@@ -410,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 message.what = 202;
                 message.obj = "抱歉！天气信息获取出错！\n请更换天气源";
                 handler.sendMessage(message);
-                Log.d("天气获取",msg);
+//                Log.d("天气获取",msg);
             }
 
             @Override

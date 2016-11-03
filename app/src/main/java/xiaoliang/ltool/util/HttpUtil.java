@@ -11,6 +11,7 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -122,17 +123,16 @@ public class HttpUtil {
 		}
 	}
 
-
-
 	/**
 	 * 获取线程来执行任务
 	 * @param run 任务对象
 	 */
 	public static void getThread(Runnable run) {
 		if (threadPool == null) {
-			threadPool = new ThreadPoolExecutor(2, 10, 3, TimeUnit.SECONDS,
-					new ArrayBlockingQueue<Runnable>(30),
-					new ThreadPoolExecutor.CallerRunsPolicy());
+			threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+//			threadPool = new ThreadPoolExecutor(2, 10, 3, TimeUnit.SECONDS,
+//					new ArrayBlockingQueue<Runnable>(1000),
+//					new ThreadPoolExecutor.CallerRunsPolicy());
 		}
 		threadPool.execute(run);
 	}

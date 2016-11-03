@@ -44,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
-                    android:text="每日更新首页壁纸（仅下载一次）"/>
+                    android:text="每日更新首页壁纸"/>
             </LinearLayout>
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/activity_setting_daybg"

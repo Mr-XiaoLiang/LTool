@@ -28,21 +28,21 @@ import xiaoliang.ltool.view.RatioImageView;
 public class MeizhiAdapter extends RecyclerView.Adapter<MeizhiAdapter.MeizhiHolder>{
 
     private ArrayList<MeizhiBean> beans;
-    private Activity context;
-    private Fragment fragment;
+//    private Activity context;
+//    private Fragment fragment;
     private OnCardClickListener listener;
     private RequestManager requestManager;
 
     public MeizhiAdapter(ArrayList<MeizhiBean> beans, Fragment fragment, OnCardClickListener listener) {
         this.beans = beans;
-        this.fragment = fragment;
+//        this.fragment = fragment;
         this.listener = listener;
         requestManager = Glide.with(fragment);
     }
 
     public MeizhiAdapter(ArrayList<MeizhiBean> beans, Activity context, OnCardClickListener listener) {
         this.beans = beans;
-        this.context = context;
+//        this.context = context;
         this.listener = listener;
         requestManager = Glide.with(context);
     }
@@ -55,7 +55,7 @@ public class MeizhiAdapter extends RecyclerView.Adapter<MeizhiAdapter.MeizhiHold
 
     @Override
     public void onBindViewHolder(MeizhiHolder holder, int position) {
-        holder.onBind(getItem(position));
+        holder.onBind(getItem(position),position);
 
     }
     @Override
@@ -73,7 +73,7 @@ public class MeizhiAdapter extends RecyclerView.Adapter<MeizhiAdapter.MeizhiHold
         private TextView text;
         private CardView cardView;
 
-        void onBind(final MeizhiBean bean){
+        void onBind(final MeizhiBean bean,final int position){
             if (null!=bean.title&&!"".equals(bean.title)){
                 text.setVisibility(View.VISIBLE);
                 text.setText(bean.title);
@@ -85,7 +85,7 @@ public class MeizhiAdapter extends RecyclerView.Adapter<MeizhiAdapter.MeizhiHold
                 @Override
                 public void onClick(View v) {
                     if(listener!=null)
-                        listener.OnCardClick(bean);
+                        listener.OnCardClick(bean,position);
                 }
             });
         }
@@ -98,7 +98,7 @@ public class MeizhiAdapter extends RecyclerView.Adapter<MeizhiAdapter.MeizhiHold
     }
 
     public interface OnCardClickListener{
-        void OnCardClick(MeizhiBean bean);
+        void OnCardClick(MeizhiBean bean,int position);
     }
 
 }

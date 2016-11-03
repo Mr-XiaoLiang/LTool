@@ -152,7 +152,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     @Override
-    public void OnCardClick(MeizhiBean bean) {
+    public void OnCardClick(MeizhiBean bean,int p) {
         onButtonPressed(bean);
     }
 

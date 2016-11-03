@@ -53,8 +53,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.WeatherActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
+
                 <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
                 <action android:name="android.intent.action.SHORTCUT" />
                 <!-- 必须加上这个，否则无法直接使用自定的action -->
@@ -67,8 +68,9 @@
         <activity
             android:name=".activity.QRCreateActivity"
             android:label="@string/title_activity_qrcreate"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
+
                 <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
                 <action android:name="android.intent.action.SHORTCUT" />
                 <!-- 必须加上这个，否则无法直接使用自定的action -->
@@ -78,8 +80,9 @@
         <activity
             android:name=".activity.QRReadActivity"
             android:label="@string/title_activity_qrread"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
+
                 <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
                 <action android:name="android.intent.action.SHORTCUT" />
                 <!-- 必须加上这个，否则无法直接使用自定的action -->
@@ -89,8 +92,9 @@
         <activity
             android:name=".activity.MeizhiActivity"
             android:label="@string/title_activity_meizhi"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
+
                 <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
                 <action android:name="android.intent.action.SHORTCUT" />
                 <!-- 必须加上这个，否则无法直接使用自定的action -->
@@ -102,9 +106,9 @@
             android:label="@string/title_activity_meizhi_detailed"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:launchMode="standard"
             android:name=".activity.MeizhiListActivity"
             android:label="@string/title_activity_meizhi_list"
+            android:launchMode="standard"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.StartActivity"
@@ -122,31 +126,38 @@
         <activity
             android:name=".activity.CreateLockActivity"
             android:label="@string/title_activity_create_lock"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:launchMode="singleInstance"
             android:name=".activity.LockActivity"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
+
                 <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
                 <action android:name="android.intent.action.SHORTCUT" />
                 <!-- 必须加上这个，否则无法直接使用自定的action -->
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <receiver
             android:name=".listener.AdminReceiver"
-            android:label="@string/app_name"
             android:description="@string/app_name"
+            android:label="@string/app_name"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
                 android:name="android.app.device_admin"
-                android:resource="@xml/lock"/>
+                android:resource="@xml/lock" />
+
             <intent-filter>
-                <action
-                    android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".activity.HealthActivity"
+            android:label="@string/title_activity_health"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
