@@ -217,8 +217,7 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-                android:visibility="gone"
-                android:id="@+id/content_main_health"
+                android:id="@+id/content_main_note"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -235,12 +234,12 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/item_name"
                         android:textColor="@color/colorPrimary"
-                        android:text="生活信息查询"/>
+                        android:text="记事本"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/item_detail"
-                        android:text="查询生活中的常用信息"/>
+                        android:text="生活信息、账单、备忘录"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>

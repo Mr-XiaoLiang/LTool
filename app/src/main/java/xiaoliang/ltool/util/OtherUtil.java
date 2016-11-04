@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
@@ -14,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -315,4 +317,15 @@ public class OtherUtil {
 		}
 	}
 
+	/**
+	 * 对资源进行渲染
+	 * @param drawable
+	 * @param colors
+     * @return
+     */
+	public static Drawable tintDrawable(Drawable drawable, ColorStateList colors) {
+		final Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
+		 DrawableCompat.setTintList(wrappedDrawable, colors);
+		return wrappedDrawable;
+	}
 }

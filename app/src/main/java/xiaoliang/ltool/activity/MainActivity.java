@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         qrCreate = (CardView) findViewById(R.id.content_main_qrcreate);
         meizi = (CardView) findViewById(R.id.content_main_meizhi);
         lock = (CardView) findViewById(R.id.content_main_lock);
-        findViewById(R.id.content_main_health).setOnClickListener(this);
+        findViewById(R.id.content_main_note).setOnClickListener(this);
         handler = new MyHandler();
         qrCreate.setOnClickListener(this);
         qrRead.setOnClickListener(this);
@@ -261,14 +261,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     startActivity(new Intent(MainActivity.this,MeizhiActivity.class));
+                                    dialog.dismiss();
                                 }
                             });
                 }else{
                     startActivity(new Intent(MainActivity.this,MeizhiActivity.class));
                 }
                 break;
-            case R.id.content_main_health:
-                startActivity(new Intent(this,HealthActivity.class));
+            case R.id.content_main_note:
+                startActivity(new Intent(this,NoteActivity.class));
                 break;
         }
     }

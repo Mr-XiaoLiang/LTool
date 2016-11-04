@@ -157,6 +157,10 @@
         <activity
             android:name=".activity.HealthActivity"
             android:label="@string/title_activity_health"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.NoteActivity"
+            android:label="@string/title_activity_note"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
