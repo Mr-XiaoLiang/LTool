@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="xiaoliang.ltool.activity.HealthActivity"
+    tools:context="xiaoliang.ltool.activity.health.HealthActivity"
     tools:showIn="@layout/activity_health">
 
     <android.support.v7.widget.RecyclerView

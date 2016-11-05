@@ -27,7 +27,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
 
-import xiaoliang.ltool.activity.QRReadActivity;
+import xiaoliang.ltool.activity.qr.QRReadActivity;
 
 /**
  * This thread does all the heavy lifting of decoding the images.

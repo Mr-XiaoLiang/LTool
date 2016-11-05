@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="xiaoliang.ltool.activity.AboutActivity"
+    tools:context="xiaoliang.ltool.activity.system.AboutActivity"
     tools:showIn="@layout/activity_about"
     android:weightSum="2">
     <LinearLayout
@@ -35,7 +35,27 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="bottom">
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/cardview_margin">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="QQ群:390685779"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/activity_about_copyqq"
+                android:layout_marginLeft="@dimen/cardview_margin"
+                android:textColor="@color/colorPrimary"
+                android:padding="@dimen/cardview_padding"
+                android:layout_width="wrap_content"
+                android:text="复制"
+                android:onClick="onClick"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
         <TextView
             android:id="@+id/activity_about_copyright"
             android:layout_width="match_parent"

@@ -31,7 +31,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
 import xiaoliang.ltool.R;
-import xiaoliang.ltool.activity.QRReadActivity;
+import xiaoliang.ltool.activity.qr.QRReadActivity;
 import xiaoliang.ltool.qr.camera.CameraManager;
 
 /**

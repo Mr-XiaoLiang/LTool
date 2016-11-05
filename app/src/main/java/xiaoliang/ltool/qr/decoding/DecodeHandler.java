@@ -35,7 +35,7 @@ import com.google.zxing.common.HybridBinarizer;
 import java.util.Hashtable;
 
 import xiaoliang.ltool.R;
-import xiaoliang.ltool.activity.QRReadActivity;
+import xiaoliang.ltool.activity.qr.QRReadActivity;
 import xiaoliang.ltool.qr.camera.CameraManager;
 import xiaoliang.ltool.qr.camera.PlanarYUVLuminanceSource;
 

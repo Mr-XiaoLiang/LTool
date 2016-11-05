@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="xiaoliang.ltool.activity.WeatherActivity"
+    tools:context="xiaoliang.ltool.activity.weather.WeatherActivity"
     tools:showIn="@layout/activity_weather"
     xmlns:tools="http://schemas.android.com/tools">
 

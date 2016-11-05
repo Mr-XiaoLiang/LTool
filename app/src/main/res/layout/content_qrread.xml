@@ -5,7 +5,7 @@
     android:id="@+id/content_qrread"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="xiaoliang.ltool.activity.QRReadActivity"
+    tools:context="xiaoliang.ltool.activity.qr.QRReadActivity"
     tools:showIn="@layout/activity_qrread"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:background="@android:color/white">

@@ -1,7 +1,6 @@
 package xiaoliang.ltool.activity;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,6 +39,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import xiaoliang.ltool.R;
+import xiaoliang.ltool.activity.lock.CreateLockActivity;
+import xiaoliang.ltool.activity.meizhi.MeizhiActivity;
+import xiaoliang.ltool.activity.note.NoteActivity;
+import xiaoliang.ltool.activity.qr.QRCreateActivity;
+import xiaoliang.ltool.activity.qr.QRReadActivity;
+import xiaoliang.ltool.activity.system.SettingActivity;
+import xiaoliang.ltool.activity.weather.WeatherActivity;
 import xiaoliang.ltool.bean.WeatherBean;
 import xiaoliang.ltool.bean.WeatherDayBean;
 import xiaoliang.ltool.constant.Constant;

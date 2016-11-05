@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="xiaoliang.ltool.activity.WeatherActivity">
+    tools:context="xiaoliang.ltool.activity.weather.WeatherActivity">
 
     <xiaoliang.ltool.view.LGradualBGView
         android:layout_width="match_parent"

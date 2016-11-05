@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="xiaoliang.ltool.activity.CreateLockActivity"
+    tools:context="xiaoliang.ltool.activity.lock.CreateLockActivity"
     tools:showIn="@layout/activity_create_lock">
     <LinearLayout
         android:focusable="true"

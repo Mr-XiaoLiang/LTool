@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="xiaoliang.ltool.activity.NoteActivity"
+    tools:context="xiaoliang.ltool.activity.note.NoteActivity"
     tools:showIn="@layout/activity_note"
     android:background="#DDD">
     <android.support.v7.widget.RecyclerView
