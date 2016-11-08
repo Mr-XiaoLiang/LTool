@@ -38,7 +38,8 @@
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="请输入金额"
+                android:hint="@string/add_note_money"
+                android:textColorHint="@color/edit_hint_color"
                 android:inputType="numberDecimal"/>
         </LinearLayout>
         <LinearLayout
@@ -78,15 +79,18 @@
             android:layout_weight="1"
             android:orientation="horizontal">
             <RadioGroup
+                android:id="@+id/item_note_add_income"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <RadioButton
+                    android:id="@+id/item_note_add_income_in"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="收入"
                     android:checked="true"/>
                 <RadioButton
+                    android:id="@+id/item_note_add_income_out"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="支出"/>

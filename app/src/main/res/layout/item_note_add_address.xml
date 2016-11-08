@@ -38,7 +38,8 @@
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="请输入内容"/>
+                android:textColorHint="@color/edit_hint_color"
+                android:hint="@string/add_note_address"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"

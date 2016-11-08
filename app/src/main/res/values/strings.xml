@@ -15,7 +15,7 @@
     <string name="title_activity_health">healthActivity</string>
     <string name="title_activity_note">记事本</string>
     <string name="title_activity_note_add">记一笔</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_note_money">金额...</string>
+    <string name="add_note_address">地址...</string>
+    <string name="add_note_msg">内容...</string>
 </resources>
