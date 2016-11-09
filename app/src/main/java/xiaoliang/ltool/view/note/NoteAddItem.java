@@ -3,7 +3,9 @@ package xiaoliang.ltool.view.note;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.SwitchCompat;
@@ -23,6 +25,7 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 import xiaoliang.ltool.R;
+import xiaoliang.ltool.util.DensityUtil;
 
 /**
  * Created by liuj on 2016/11/5.
@@ -60,6 +63,7 @@ public class NoteAddItem extends LinearLayout implements
 
     public NoteAddItem(Context context,int type) {
         super(context);
+        this.context = context;
         init(type);
     }
 
@@ -110,6 +114,7 @@ public class NoteAddItem extends LinearLayout implements
         editText = (TextInputEditText) findViewById(R.id.item_note_add_text);
         cancel = (ImageView) findViewById(R.id.item_note_add_cancel);
         checkBox = (CheckBox) findViewById(R.id.item_note_add_checkbox);
+        checkBox.setOnCheckedChangeListener(this);
         editText.setOnFocusChangeListener(this);
         cancel.setOnClickListener(this);
     }
@@ -120,6 +125,10 @@ public class NoteAddItem extends LinearLayout implements
         editText = (TextInputEditText) findViewById(R.id.item_note_add_text);
         cancel = (ImageView) findViewById(R.id.item_note_add_cancel);
         number = (TextView) findViewById(R.id.item_note_add_number);
+        //将字体文件保存在assets/fonts/目录下，创建Typeface对象
+        Typeface typeFace = Typeface.createFromAsset(context.getAssets(), "fonts/century_gothic_std.otf");
+        //使用字体
+        number.setTypeface(typeFace);
         editText.setOnFocusChangeListener(this);
         cancel.setOnClickListener(this);
     }
@@ -128,6 +137,7 @@ public class NoteAddItem extends LinearLayout implements
         LayoutInflater.from(context).inflate(R.layout.item_note_add_check,
                 this, true);
         editText = (TextInputEditText) findViewById(R.id.item_note_add_text);
+        findViewById(R.id.item_note_add_checkbox).setVisibility(View.INVISIBLE);
         cancel = (ImageView) findViewById(R.id.item_note_add_cancel);
         editText.setOnFocusChangeListener(this);
         cancel.setOnClickListener(this);
@@ -195,7 +205,7 @@ public class NoteAddItem extends LinearLayout implements
     }
 
     public void setIndex(int index,int maxSize) {
-        if(this.index != index&&type == LIST){
+        if(type == LIST){
             this.index = index;
             if(number==null)
                 return;
@@ -275,9 +285,13 @@ public class NoteAddItem extends LinearLayout implements
         switch (buttonView.getId()){
             case R.id.item_note_add_checkbox:
                 if(isChecked){
+                    editText.getPaint().setStrokeWidth(DensityUtil.dip2px(context,2));
                     editText.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+                    editText.setTextColor(Color.GRAY);
                 }else{
                     editText.getPaint().setFlags(0);  // 取消设置的的划线
+                    editText.setTextColor(Color.BLACK);
+
                 }
                 break;
         }
@@ -296,7 +310,7 @@ public class NoteAddItem extends LinearLayout implements
     }
 
     public interface OnNoteAddItemClickListener{
-        void onClickCancelBtn(View v);
+        void onClickCancelBtn(NoteAddItem v);
     }
 
     @Override
@@ -311,5 +325,9 @@ public class NoteAddItem extends LinearLayout implements
 
     public void setClickListener(OnNoteAddItemClickListener clickListener) {
         this.clickListener = clickListener;
+    }
+
+    public int getType() {
+        return type;
     }
 }
