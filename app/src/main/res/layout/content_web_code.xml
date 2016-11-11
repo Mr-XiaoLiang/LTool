@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_web_code"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="xiaoliang.ltool.activity.webcode.WebCodeActivity"
+    tools:showIn="@layout/activity_web_code">
+    <TextView
+        android:id="@+id/activity_web_code_text"
+        android:paddingTop="@dimen/cardview_padding"
+        android:paddingLeft="@dimen/cardview_padding"
+        android:paddingRight="@dimen/cardview_padding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true"
+        android:paddingBottom="56dp"/>
+</android.support.v4.widget.NestedScrollView>

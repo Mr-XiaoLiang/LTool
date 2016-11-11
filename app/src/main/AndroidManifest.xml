@@ -165,6 +165,10 @@
         <activity
             android:name=".activity.note.NoteAddActivity"
             android:label="@string/title_activity_note_add"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.webcode.WebCodeActivity"
+            android:label="@string/title_activity_web_code"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

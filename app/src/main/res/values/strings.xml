@@ -18,4 +18,6 @@
     <string name="add_note_money">金额...</string>
     <string name="add_note_address">地址...</string>
     <string name="add_note_msg">内容...</string>
+    <string name="menu_note_add_down_str">完成</string>
+    <string name="title_activity_web_code">WebCodeActivity</string>
 </resources>

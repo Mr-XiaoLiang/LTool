@@ -76,6 +76,18 @@ public class ShortcutUtil {
     }
 
     /**
+     * 创建一个快捷方式
+     * @param name
+     * @param size
+     * @param bitmap
+     * @param intent
+     */
+    public void addShortcut(String name, int size, Bitmap bitmap,Intent intent){
+        // 创建一张空白图片
+        addShortcut(name,getShortcutBmp(size,bitmap),intent);
+    }
+
+    /**
      * 获取一个桌面快捷方式的图片
      * @param size
      * @param bitmap
@@ -143,6 +155,11 @@ public class ShortcutUtil {
      * @param cls 跳转目标
      */
     public void addShortcut(String name, Bitmap bitmap,Class cls) {
+        Intent startIntent = new Intent(context, cls);
+        addShortcut(name,bitmap,startIntent);
+    }
+
+    public void addShortcut(String name, Bitmap bitmap,Intent startIntent) {
         Intent addShortCutIntent = new Intent(ACTION_ADD_SHORTCUT);
 
         // 不允许重复创建
@@ -152,7 +169,6 @@ public class ShortcutUtil {
         // 屏幕上没有空间时会提示
         // 注意：重复创建的行为MIUI和三星手机上不太一样，小米上似乎不能重复创建快捷方式
         //用于点击快捷方式要启动的程序，这里就启动本程序了
-        Intent startIntent = new Intent(context, cls);
         //快捷方式的名称
         addShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
         //快捷方式的图标
@@ -205,6 +221,7 @@ public class ShortcutUtil {
         paint.reset();
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setAntiAlias(true);
+        paint.setDither(true);
         paint.setTextSize(redPointTextSize);
     }
 

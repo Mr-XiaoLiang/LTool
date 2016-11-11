@@ -110,6 +110,9 @@ public class OtherUtil {
 	public static String getSDImgPath(){
 		return Environment.getExternalStorageDirectory()+"/LTool/img";
 	}
+	public static String getSDTxtPath(){
+		return Environment.getExternalStorageDirectory()+"/LTool/txt";
+	}
 	public static String getSDAppPath(){
 		return Environment.getExternalStorageDirectory()+"/LTool/app";
 	}
@@ -234,10 +237,14 @@ public class OtherUtil {
      */
 	public static void outputTextFile(String value,String name){
 		try{
-			FileOutputStream outStream = new FileOutputStream(OtherUtil.getSDImgPath()+"/"+name+".txt",true);
+			String file = OtherUtil.getSDTxtPath()+"/"+name+".txt";
+			File path = new File(OtherUtil.getSDTxtPath());
+			if(!path.exists()){
+				path.mkdirs();
+			}
+			FileOutputStream outStream = new FileOutputStream(file,true);
 			OutputStreamWriter writer = new OutputStreamWriter(outStream,"gbk");
 			writer.write(value);
-			writer.write("/n");
 			writer.flush();
 			writer.close();//记得关闭
 		}catch (Exception e){}
@@ -315,6 +322,19 @@ public class OtherUtil {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * 对资源进行渲染
+	 * @param context
+	 * @param resId
+	 * @param color
+     * @return
+     */
+	public static Drawable tintDrawable(Context context,int resId, int color) {
+		final Drawable wrappedDrawable = DrawableCompat.wrap(context.getResources().getDrawable(resId));
+		DrawableCompat.setTintList(wrappedDrawable, ColorStateList.valueOf(color));
+		return wrappedDrawable;
 	}
 
 	/**

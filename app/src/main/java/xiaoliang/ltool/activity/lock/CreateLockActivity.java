@@ -6,7 +6,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,12 +29,18 @@ import android.widget.ImageView;
 import android.widget.Switch;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import xiaoliang.ltool.R;
+import xiaoliang.ltool.activity.note.NoteActivity;
 import xiaoliang.ltool.activity.weather.WeatherActivity;
 import xiaoliang.ltool.activity.meizhi.MeizhiActivity;
 import xiaoliang.ltool.activity.qr.QRCreateActivity;
 import xiaoliang.ltool.activity.qr.QRReadActivity;
+import xiaoliang.ltool.adapter.OpenModelAdapter;
+import xiaoliang.ltool.bean.AppInfo;
 import xiaoliang.ltool.listener.AdminReceiver;
 import xiaoliang.ltool.util.DialogUtil;
 import xiaoliang.ltool.util.OtherUtil;
@@ -39,7 +49,7 @@ import xiaoliang.ltool.util.ToastUtil;
 
 public class CreateLockActivity extends AppCompatActivity implements Switch.OnCheckedChangeListener,View.OnClickListener,AdapterView.OnItemSelectedListener {
 
-    private ImageView showImg,resImg;
+    private ImageView showImg;
     private TextInputEditText nameEdit,numEdit;
     private View imgBtn;
     private SwitchCompat circularSwitch,redPointSwitch,repeatSwitch;
@@ -52,10 +62,13 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
     private DevicePolicyManager policyManager;
     private ComponentName componentName;
     private static final int MY_REQUEST_CODE = 9999;
-    private AppCompatSpinner openModel;
-    private String[] modelNames = {"锁屏","二维码扫描","二维码生成","妹子图","天气"};
-    private Class[] modelClass = {LockActivity.class,QRReadActivity.class,QRCreateActivity.class,MeizhiActivity.class,WeatherActivity.class};
-    private Class thisClass = modelClass[0];
+    private AppCompatSpinner openModel,resImg;
+    private String[] modelNames = {"锁屏","二维码扫描","二维码生成","妹子图","天气","记事本"};
+    private Class[] modelClass = {LockActivity.class,QRReadActivity.class,QRCreateActivity.class,MeizhiActivity.class,WeatherActivity.class, NoteActivity.class};
+    private ArrayList<AppInfo> appInfoList;
+    private ArrayList<AppInfo> appImageList;
+    private int selectIndex = 0;
+    private OpenModelAdapter imageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +79,7 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         if(getSupportActionBar()!=null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         showImg = (ImageView) findViewById(R.id.activity_create_lock_show);
-        resImg = (ImageView) findViewById(R.id.activity_create_lock_img);
+        resImg = (AppCompatSpinner) findViewById(R.id.activity_create_lock_img);
         nameEdit = (TextInputEditText) findViewById(R.id.activity_create_lock_name);
         numEdit = (TextInputEditText) findViewById(R.id.activity_create_lock_pointnum);
         imgBtn = findViewById(R.id.activity_create_lock_imgbtn);
@@ -76,6 +89,7 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         numLayout = findViewById(R.id.activity_create_lock_pointnum_layout);
         openModel = (AppCompatSpinner) findViewById(R.id.activity_create_lock_model);
         openModel.setOnItemSelectedListener(this);
+        resImg.setOnItemSelectedListener(this);
         imgBtn.setOnClickListener(this);
         circularSwitch.setOnCheckedChangeListener(this);
         redPointSwitch.setOnCheckedChangeListener(this);
@@ -86,9 +100,13 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         componentName = new ComponentName(this, AdminReceiver.class);
         image = OtherUtil.drawable2Bitmap( getResources().getDrawable(R.drawable.ic_oneplus));
         numLayout.setVisibility(View.GONE);
-        resImg.setImageResource(R.drawable.ic_oneplus);
         showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
-        openModel.setAdapter(new ArrayAdapter(this,R.layout.item_shortcut_model,R.id.item_shortcut_model_text,modelNames));
+        queryAppInfo();
+        openModel.setAdapter(new OpenModelAdapter(appInfoList,this));
+        openModel.setSelection(selectIndex);
+        resImg.setAdapter(imageAdapter = new OpenModelAdapter(appImageList,this));
+        resImg.setSelection(1);
+
     }
 
 
@@ -127,30 +145,30 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
             case R.id.activity_create_lock_fab:
                 sendLock();
                 break;
-            case R.id.activity_create_lock_imgbtn:
-                DialogUtil.getAlertDialog(this, "选择图片", "选择您的锁屏按钮图片", "H2OS", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        resImg.setImageResource(R.drawable.ic_oneplus);
-                        image = OtherUtil.drawable2Bitmap( getResources().getDrawable(R.drawable.ic_oneplus));
-                        showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
-                    }
-                }, "锤子", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        resImg.setImageResource(R.drawable.ic_smartisan);
-                        image = OtherUtil.drawable2Bitmap( getResources().getDrawable(R.drawable.ic_smartisan));
-                        showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
-                    }
-                }, "选择图片", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Intent.ACTION_PICK, null);
-                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
-                        startActivityForResult(intent, GET_IMG);
-                    }
-                });
-                break;
+//            case R.id.activity_create_lock_imgbtn:
+//                DialogUtil.getAlertDialog(this, "选择图片", "选择您的锁屏按钮图片", "H2OS", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        resImg.setImageResource(R.drawable.ic_oneplus);
+//                        image = OtherUtil.drawable2Bitmap( getResources().getDrawable(R.drawable.ic_oneplus));
+//                        showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
+//                    }
+//                }, "锤子", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        resImg.setImageResource(R.drawable.ic_smartisan);
+//                        image = OtherUtil.drawable2Bitmap( getResources().getDrawable(R.drawable.ic_smartisan));
+//                        showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
+//                    }
+//                }, "选择图片", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Intent intent = new Intent(Intent.ACTION_PICK, null);
+//                        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+//                        startActivityForResult(intent, GET_IMG);
+//                    }
+//                });
+//                break;
         }
     }
 
@@ -166,8 +184,9 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
                         Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());//显得到bitmap图片
                         if(bmp!=null){
                             image = bmp;
-                            resImg.setImageBitmap(image);
+                            appImageList.get(0).appIcon = new BitmapDrawable(getResources(),image);
                             showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
+                            imageAdapter.notifyDataSetChanged();
                         }
                     }
                 }catch (IOException e){
@@ -193,8 +212,9 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
                     return;
                 if(bmp.getWidth()==bmp.getHeight()) {
                     image = bmp;
-                    resImg.setImageBitmap(image);
+                    appImageList.get(0).appIcon = new BitmapDrawable(getResources(),image);
                     showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
+                    imageAdapter.notifyDataSetChanged();
                 }else{
                     startPhotoZoom(data.getData(),GET_CLIPPING);
                 }
@@ -242,10 +262,10 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         * 综上推荐第一种方法。*/
 
         //判断是否有锁屏权限，若有则立即锁屏并结束自己，若没有则获取权限
-        if (!policyManager.isAdminActive(componentName)) {
+        if (selectIndex==0&&!policyManager.isAdminActive(componentName)) {
             activeManage();
         }else{
-            shortcutUtil.addShortcut(nameEdit.getText().toString(),pointNum,image,thisClass);
+            shortcutUtil.addShortcut(nameEdit.getText().toString(),pointNum,image,appInfoList.get(selectIndex).intent);
             ToastUtil.T(this,"已添加");
         }
     }
@@ -262,11 +282,91 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        thisClass = modelClass[position];
+        switch (parent.getId()){
+            case R.id.activity_create_lock_model:
+                selectIndex = position;
+                break;
+            case R.id.activity_create_lock_img:
+                if(position==0){
+                    Intent intent = new Intent(Intent.ACTION_PICK, null);
+                    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+                    startActivityForResult(intent, GET_IMG);
+                }else{
+                    image = OtherUtil.drawable2Bitmap(appImageList.get(position).appIcon);
+                    showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
+                }
+                break;
+        }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         openModel.setSelection(0);
+    }
+
+    private void queryAppImage(){
+        AppInfo appInfo = new AppInfo();
+        appInfo.name = "相册选择";
+        appInfo.pkgName = "选择自定义图片";
+        appInfo.appIcon = null;
+        appInfo.intent = null;
+        appImageList.add(appInfo); // 添加至列表中
+        appInfo = new AppInfo();
+        appInfo.name = "H2OS";
+        appInfo.pkgName = "默认图标";
+        appInfo.appIcon = getResources().getDrawable(R.drawable.ic_oneplus);
+        appInfo.intent = null;
+        appImageList.add(appInfo); // 添加至列表中
+        appInfo = new AppInfo();
+        appInfo.name = "锤子";
+        appInfo.pkgName = "默认图标";
+        appInfo.appIcon = getResources().getDrawable(R.drawable.ic_smartisan);
+        appInfo.intent = null;
+        appImageList.add(appInfo); // 添加至列表中
+    }
+
+    private void queryAppInfo() {
+        if(appInfoList==null){
+            appInfoList = new ArrayList<>();
+            appImageList = new ArrayList<>();
+        }
+        appImageList.clear();
+        appInfoList.clear();
+        for(int i = 0;i<modelNames.length;i++){
+            Intent launchIntent = new Intent(this, modelClass[i]);
+            // 创建一个AppInfo对象，并赋值
+            AppInfo appInfo = new AppInfo();
+            appInfo.name = modelNames[i];
+            appInfo.pkgName = "本应用";
+            appInfo.appIcon = getResources().getDrawable(R.mipmap.ic_launcher);
+            appInfo.intent = launchIntent;
+            appInfoList.add(appInfo); // 添加至列表中
+        }
+        queryAppImage();
+        // 获得所有启动Activity的信息，类似于Launch界面
+        PackageManager pm = this.getPackageManager(); // 获得PackageManager对象
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        // 通过查询，获得所有ResolveInfo对象.
+        List<ResolveInfo> resolveInfos = pm
+                .queryIntentActivities(mainIntent, 0);
+        // 调用系统排序 ， 根据name排序
+        // 该排序很重要，否则只能显示系统应用，而不能列出第三方应用程序
+        Collections.sort(resolveInfos,new ResolveInfo.DisplayNameComparator(pm));
+            for (ResolveInfo reInfo : resolveInfos) {
+                String activityName = reInfo.activityInfo.name; // 获得该应用程序的启动Activity的name
+                String pkgName = reInfo.activityInfo.packageName; // 获得应用程序的包名
+                String appLabel = (String) reInfo.loadLabel(pm); // 获得应用程序的Label
+                Drawable icon = reInfo.loadIcon(pm); // 获得应用程序图标
+                // 为应用程序的启动Activity 准备Intent
+                Intent launchIntent = new Intent();
+                launchIntent.setComponent(new ComponentName(pkgName,
+                        activityName));
+                // 创建一个AppInfo对象，并赋值
+                appInfoList.add(new AppInfo(icon,launchIntent,appLabel,pkgName)); // 添加至列表中
+                appImageList.add(new AppInfo(icon,null,appLabel,"应用图标")); // 添加至列表中
+                Log.d("queryAppInfo",appLabel + " activityName---" + activityName
+                        + " pkgName---" + pkgName);
+        }
     }
 }

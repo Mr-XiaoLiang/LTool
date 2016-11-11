@@ -46,6 +46,7 @@ import xiaoliang.ltool.activity.qr.QRCreateActivity;
 import xiaoliang.ltool.activity.qr.QRReadActivity;
 import xiaoliang.ltool.activity.system.SettingActivity;
 import xiaoliang.ltool.activity.weather.WeatherActivity;
+import xiaoliang.ltool.activity.webcode.WebCodeActivity;
 import xiaoliang.ltool.bean.WeatherBean;
 import xiaoliang.ltool.bean.WeatherDayBean;
 import xiaoliang.ltool.constant.Constant;
@@ -275,6 +276,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.content_main_note:
                 startActivity(new Intent(this,NoteActivity.class));
+                break;
+            case R.id.content_main_webcode:
+                startActivity(new Intent(this,WebCodeActivity.class));
                 break;
         }
     }

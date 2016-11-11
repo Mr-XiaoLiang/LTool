@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -30,6 +31,10 @@ import xiaoliang.ltool.util.OtherUtil;
 import xiaoliang.ltool.util.ToastUtil;
 import xiaoliang.ltool.view.note.NoteAddItem;
 
+/**
+ * 添加一份笔记，并且也是回显笔记，修改笔记的页面
+ * @author Liuj
+ */
 public class NoteAddActivity extends AppCompatActivity implements View.OnClickListener,NoteAddItem.OnNoteAddItemClickListener {
 
     //时间，地址，金额等固定部分
@@ -43,7 +48,7 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<NoteAddItem> noteItems;
     private int itemType = -1;
     private LinearLayout body;
-    //6个按钮
+    //6个按钮（此处获取仅仅是为了修改按钮颜色，点击事件的监听并不依靠对象）
     private ImageView checkListBtn,numberListBtn,textListBtn,moneyBtn,addressBtn,advanceBtn;
 
     @Override
@@ -123,7 +128,11 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
     }
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_note_add, menu);
+        return true;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==android.R.id.home){
