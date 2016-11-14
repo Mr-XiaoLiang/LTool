@@ -31,6 +31,7 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -94,6 +95,7 @@ public class QRCreateActivity extends AppCompatActivity implements
     private int imageWidth = 0;
     private QRCreateRunnable.QRCallBack showQRCB;//展示用的二维码回调
     private QRCreateRunnable.QRCallBack saveQRCB;//保存用的二维码回调
+    private String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -618,8 +620,9 @@ public class QRCreateActivity extends AppCompatActivity implements
         saveQRCB = new QRCreateRunnable.QRCallBack() {
             @Override
             public void obtainQR(Bitmap bitmap) {
+                imagePath = System.currentTimeMillis()+".png";
                 OtherUtil.seveBitmapToSDOnBackground(
-                        System.currentTimeMillis()+".png",
+                        imagePath,
                         bitmap,
                         new SaveBitmapRunnable.SaveBitmapCallBack(){
                             @Override
@@ -647,6 +650,11 @@ public class QRCreateActivity extends AppCompatActivity implements
                     System.gc();//调用内存清理，防止溢出
                     break;
                 case 201://保存成功
+                    File img = new File(OtherUtil.getSDImgPath()+"/"+imagePath);
+                    if(img.exists()){
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(img)));
+                    }
+                    DialogUtil.getShareDialog(QRCreateActivity.this,img,"","","");
                     app.T("保存成功，图片位于：/LTool/img");
                     break;
                 case 202://保存失败

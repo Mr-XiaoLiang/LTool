@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import xiaoliang.ltool.R;
@@ -20,6 +21,7 @@ import xiaoliang.ltool.dialog.ColorsDialog;
 import xiaoliang.ltool.dialog.LoadDialog;
 import xiaoliang.ltool.dialog.LoadDialog2;
 import xiaoliang.ltool.dialog.QRWidthDialog;
+import xiaoliang.ltool.dialog.ShareDialog;
 
 /**
  * dialog调用类
@@ -119,6 +121,22 @@ public class DialogUtil {
 
     public static QRWidthDialog getQRWidthDialog(Activity context, int width, QRWidthDialog.QRWidthDialogListener listener){
         QRWidthDialog dialog = new QRWidthDialog(context,width,listener);
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER); // 此处可以设置dialog显示的位置
+        dialog.setCancelable(true);
+        dialog.show();
+        WindowManager m = context.getWindowManager();
+        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
+        WindowManager.LayoutParams p = window.getAttributes(); // 获取对话框当前的参数值
+//        p.height = (int) (d.getHeight() * 0.5);
+        p.width = (int) (d.getWidth() * 0.8);
+        dialog.onWindowAttributesChanged(p);
+        window.setAttributes(p);
+        return dialog;
+    }
+
+    public static ShareDialog getShareDialog(Activity context, File imgPath, String title, String msg, String pMsg){
+        ShareDialog dialog = ShareDialog.newInstance(context,imgPath,title,msg,pMsg);
         Window window = dialog.getWindow();
         window.setGravity(Gravity.CENTER); // 此处可以设置dialog显示的位置
         dialog.setCancelable(true);

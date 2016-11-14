@@ -19,5 +19,6 @@
     <string name="add_note_address">地址...</string>
     <string name="add_note_msg">内容...</string>
     <string name="menu_note_add_down_str">完成</string>
-    <string name="title_activity_web_code">WebCodeActivity</string>
+    <string name="title_activity_web_code">查看网页源码</string>
+    <string name="menu_note_add_share_str">分享</string>
 </resources>

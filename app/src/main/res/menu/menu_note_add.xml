@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="xiaoliang.ltool.MainActivity">
     <item
+        android:id="@+id/menu_note_add_share"
+        android:title="@string/menu_note_add_share_str"
+        android:icon="@drawable/ic_share"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/menu_note_add_done"
         android:title="@string/menu_note_add_down_str"
         android:icon="@drawable/ic_done"

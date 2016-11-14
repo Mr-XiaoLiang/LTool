@@ -1,6 +1,8 @@
 package xiaoliang.ltool.activity.meizhi;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -58,7 +60,15 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
         viewPager.setAdapter(new PageAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(0);
         tabLayout.setupWithViewPager(viewPager);
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+            setStatusBarColor(getResources().getColor(R.color.colorPrimary));
+        }
         DialogUtil.getAlertDialog(this,"当前分类数量为:"+ meizhiTypes.length+",\n大量分类处于二级页面,此处分类为图源常用分类");
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor(int colot){
+        getWindow().setStatusBarColor(colot);
     }
 
     private void initFragments(){

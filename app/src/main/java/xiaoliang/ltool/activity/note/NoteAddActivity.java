@@ -4,17 +4,14 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.SweepGradient;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,9 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import xiaoliang.ltool.R;
-import xiaoliang.ltool.activity.LToolApplication;
 import xiaoliang.ltool.util.OtherUtil;
-import xiaoliang.ltool.util.ToastUtil;
 import xiaoliang.ltool.view.note.NoteAddItem;
 
 /**

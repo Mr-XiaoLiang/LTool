@@ -64,7 +64,8 @@
         </activity>
         <activity
             android:name=".activity.system.SettingActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="设置"/>
         <activity
             android:name=".activity.qr.QRCreateActivity"
             android:label="@string/title_activity_qrcreate"
@@ -130,7 +131,8 @@
         <activity
             android:name=".activity.lock.LockActivity"
             android:launchMode="singleInstance"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="一键锁屏">
             <intent-filter>
 
                 <!-- 快捷方式的action，通过快捷方式的action可以应用内调用 -->
