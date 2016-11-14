@@ -1,9 +1,15 @@
 package xiaoliang.ltool.activity.note;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +18,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import xiaoliang.ltool.R;
+import xiaoliang.ltool.fragment.note.CalendarFragment;
+import xiaoliang.ltool.fragment.note.NoteFragment;
+import xiaoliang.ltool.fragment.note.NoteInterface;
+import xiaoliang.ltool.listener.OnNoteFragmentListener;
 
-public class NoteActivity extends AppCompatActivity implements View.OnClickListener{
+/**
+ * 记事本主页
+ */
+public class NoteActivity extends AppCompatActivity implements View.OnClickListener,OnNoteFragmentListener{
+
+    private NoteInterface[] noteFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +40,53 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_note_fab);
         fab.setOnClickListener(this);
+        init();
+    }
+
+    private void init(){
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_note_tablayout);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.activity_note_viewpager);
+        noteFragments = new NoteInterface[2];
+        noteFragments[0] = NoteFragment.newInstance();
+        noteFragments[1] = CalendarFragment.newInstance();
+        viewPager.setAdapter(new NotePageAdapter(getSupportFragmentManager()));
+        viewPager.setCurrentItem(0);
+        tabLayout.setupWithViewPager(viewPager);
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+            setStatusBarColor(getResources().getColor(R.color.colorPrimary));
+        }
+    }
+
+    @Override
+    public void onNoteClick(int noteId) {
+
+    }
+
+    private class NotePageAdapter extends FragmentStatePagerAdapter {
+
+        NotePageAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return noteFragments[position];
+        }
+
+        @Override
+        public int getCount() {
+            return noteFragments.length;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return noteFragments[position].getTitle();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor(int colot){
+        getWindow().setStatusBarColor(colot);
     }
 
     @Override
@@ -44,5 +106,4 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

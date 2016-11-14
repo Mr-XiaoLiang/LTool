@@ -2,6 +2,7 @@ package xiaoliang.ltool.activity.note;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -32,6 +33,8 @@ import xiaoliang.ltool.view.note.NoteAddItem;
  */
 public class NoteAddActivity extends AppCompatActivity implements View.OnClickListener,NoteAddItem.OnNoteAddItemClickListener {
 
+    public static final String ARG_NOTE_ID = "ARG_NOTE_ID";
+
     //时间，地址，金额等固定部分
     private View addressLayout,moneyLayout,timeLayout;
     private TextInputEditText addressEditText,moneyEditText,advanceEditText;
@@ -45,6 +48,8 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayout body;
     //6个按钮（此处获取仅仅是为了修改按钮颜色，点击事件的监听并不依靠对象）
     private ImageView checkListBtn,numberListBtn,textListBtn,moneyBtn,addressBtn,advanceBtn;
+    //回显/修改
+    private int noteId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,19 +82,6 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
         addressBtn = (ImageView) findViewById(R.id.content_note_add_address_btn);
         advanceBtn = (ImageView) findViewById(R.id.content_note_add_time_btn);
         noteItems = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-        startYear = calendar.get(Calendar.YEAR);
-        startMonth = calendar.get(Calendar.MONTH);
-        startDay = calendar.get(Calendar.DAY_OF_MONTH);
-        startHour = calendar.get(Calendar.HOUR_OF_DAY);
-        startMinute = calendar.get(Calendar.MINUTE);
-        calendar.set(Calendar.MINUTE,startMinute+15);
-        endYear = calendar.get(Calendar.YEAR);
-        endMonth = calendar.get(Calendar.MONTH);
-        endDay = calendar.get(Calendar.DAY_OF_MONTH);
-        endHour = calendar.get(Calendar.HOUR_OF_DAY);
-        endMinute = calendar.get(Calendar.MINUTE);
-        setDate();
         addressBtn.setImageDrawable(getDrawable(R.drawable.ic_edit_location,false));
         moneyBtn.setImageDrawable(getDrawable(R.drawable.ic_attach_money,false));
         advanceBtn.setImageDrawable(getDrawable(R.drawable.ic_query_builder,false));
@@ -97,7 +89,32 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
         checkListBtn.setImageDrawable(getDrawable(R.drawable.ic_format_list_bulleted,false));
         numberListBtn.setImageDrawable(getDrawable(R.drawable.ic_format_list_numbered,false));
         setItemType(NoteAddItem.TEXT);
-        addItem();
+        Intent intent = getIntent();
+        noteId = intent.getIntExtra(ARG_NOTE_ID,-1);
+        if(noteId<0){
+            Calendar calendar = Calendar.getInstance();
+            startYear = calendar.get(Calendar.YEAR);
+            startMonth = calendar.get(Calendar.MONTH);
+            startDay = calendar.get(Calendar.DAY_OF_MONTH);
+            startHour = calendar.get(Calendar.HOUR_OF_DAY);
+            startMinute = calendar.get(Calendar.MINUTE);
+            calendar.set(Calendar.MINUTE,startMinute+15);
+            endYear = calendar.get(Calendar.YEAR);
+            endMonth = calendar.get(Calendar.MONTH);
+            endDay = calendar.get(Calendar.DAY_OF_MONTH);
+            endHour = calendar.get(Calendar.HOUR_OF_DAY);
+            endMinute = calendar.get(Calendar.MINUTE);
+            setDate();
+            addItem();
+        }else{
+            //TODO 获取数据库数据
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        //TODO 提交数据
+        super.onDestroy();
     }
 
     private void addItem(){
@@ -130,9 +147,16 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==android.R.id.home){
-            finish();
-            return true;
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.menu_note_add_share:
+                //TODO 分享
+                break;
+            case R.id.menu_note_add_done:
+                //TODO 提交
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

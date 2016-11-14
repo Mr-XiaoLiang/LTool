@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
@@ -46,7 +47,9 @@ public class ColorsDialog extends Dialog implements AdapterView.OnItemClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);// 去除屏幕title
         setContentView(R.layout.dialog_colors);
+        getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         leftBtn = (TextView) findViewById(R.id.dialog_colors_leftbtn);
         rightBtn = (TextView) findViewById(R.id.dialog_colors_rightbtn);
         show = findViewById(R.id.dialog_colors_show);
