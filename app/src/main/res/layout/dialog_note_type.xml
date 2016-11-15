@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:padding="@dimen/cardview_padding">
         <ListView
-            android:id="@+id/dialog_note_type_recyclerview"
+            android:id="@+id/dialog_note_type_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <LinearLayout

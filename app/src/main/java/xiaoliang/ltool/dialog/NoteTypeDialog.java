@@ -39,6 +39,7 @@ public class NoteTypeDialog extends Dialog implements
         requestWindowFeature(Window.FEATURE_NO_TITLE);// 去除屏幕title
         setContentView(R.layout.dialog_note_type);
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        listView = (ListView) findViewById(R.id.dialog_note_type_listview);
     }
 
     @Override
