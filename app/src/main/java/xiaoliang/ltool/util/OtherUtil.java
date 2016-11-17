@@ -334,7 +334,33 @@ public class OtherUtil {
      */
 	public static Drawable tintDrawable(Context context,int resId, int color) {
 		final Drawable wrappedDrawable = DrawableCompat.wrap(context.getResources().getDrawable(resId));
-		DrawableCompat.setTintList(wrappedDrawable, ColorStateList.valueOf(color));
+		return tintDrawable(wrappedDrawable,ColorStateList.valueOf(color));
+	}
+
+	/**
+	 * 对资源进行渲染
+	 * @param context
+	 * @param resId
+	 * @param color
+	 * @param independent
+     * @return
+     */
+	public static Drawable tintDrawable(Context context,int resId, int color,boolean independent){
+		final Drawable wrappedDrawable = DrawableCompat.wrap(context.getResources().getDrawable(resId));
+		return tintDrawable(wrappedDrawable,ColorStateList.valueOf(color),independent);
+	}
+
+	/**
+	 * 对资源进行渲染
+	 * @param drawable
+	 * @param colors
+     * @return
+     */
+	public static Drawable tintDrawable(Drawable drawable, ColorStateList colors,boolean independent) {
+		final Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
+		if (independent)
+			wrappedDrawable.mutate();
+		 DrawableCompat.setTintList(wrappedDrawable, colors);
 		return wrappedDrawable;
 	}
 
@@ -345,9 +371,7 @@ public class OtherUtil {
      * @return
      */
 	public static Drawable tintDrawable(Drawable drawable, ColorStateList colors) {
-		final Drawable wrappedDrawable = DrawableCompat.wrap(drawable);
-		 DrawableCompat.setTintList(wrappedDrawable, colors);
-		return wrappedDrawable;
+		return tintDrawable(drawable,colors,false);
 	}
 
 	/**
