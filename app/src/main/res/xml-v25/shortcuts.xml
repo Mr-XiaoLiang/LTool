@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts  xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="note_add"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcuts_note"
+        android:shortcutShortLabel="@string/shortcuts_note_short"
+        android:shortcutLongLabel="@string/shortcuts_note_long"
+        android:shortcutDisabledMessage="@string/shortcuts_disabled_message">
+        <intent
+            android:action="xiaoliang.ltool.NoteAdd"/>
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <shortcut
+        android:shortcutId="qr_read"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcuts_qr"
+        android:shortcutShortLabel="@string/shortcuts_qr_short"
+        android:shortcutLongLabel="@string/shortcuts_qr_long"
+        android:shortcutDisabledMessage="@string/shortcuts_disabled_message">
+        <intent
+            android:action="xiaoliang.ltool.QRRead"/>
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <shortcut
+        android:shortcutId="qr_create"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcuts_qc"
+        android:shortcutShortLabel="@string/shortcuts_qc_short"
+        android:shortcutLongLabel="@string/shortcuts_qc_long"
+        android:shortcutDisabledMessage="@string/shortcuts_disabled_message">
+        <intent
+            android:action="xiaoliang.ltool.QRCreate"/>
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <shortcut
+        android:shortcutId="web"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcuts_web"
+        android:shortcutShortLabel="@string/shortcuts_web_short"
+        android:shortcutLongLabel="@string/shortcuts_web_long"
+        android:shortcutDisabledMessage="@string/shortcuts_disabled_message">
+        <intent
+            android:action="xiaoliang.ltool.WebCode"/>
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <shortcut
+        android:shortcutId="meizhi"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcuts_mei"
+        android:shortcutShortLabel="@string/shortcuts_mei_short"
+        android:shortcutLongLabel="@string/shortcuts_mei_long"
+        android:shortcutDisabledMessage="@string/shortcuts_disabled_message">
+        <intent
+            android:action="xiaoliang.ltool.Meizhi"/>
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+</shortcuts >

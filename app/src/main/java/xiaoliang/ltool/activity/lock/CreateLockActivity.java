@@ -39,6 +39,7 @@ import xiaoliang.ltool.activity.weather.WeatherActivity;
 import xiaoliang.ltool.activity.meizhi.MeizhiActivity;
 import xiaoliang.ltool.activity.qr.QRCreateActivity;
 import xiaoliang.ltool.activity.qr.QRReadActivity;
+import xiaoliang.ltool.activity.webcode.WebCodeActivity;
 import xiaoliang.ltool.adapter.OpenModelAdapter;
 import xiaoliang.ltool.bean.AppInfo;
 import xiaoliang.ltool.listener.AdminReceiver;
@@ -63,8 +64,9 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
     private ComponentName componentName;
     private static final int MY_REQUEST_CODE = 9999;
     private AppCompatSpinner openModel,resImg;
-    private String[] modelNames = {"锁屏","二维码扫描","二维码生成","妹子图","天气","记事本"};
-    private Class[] modelClass = {LockActivity.class,QRReadActivity.class,QRCreateActivity.class,MeizhiActivity.class,WeatherActivity.class, NoteActivity.class};
+    private String[] modelNames = {"锁屏","二维码扫描","二维码生成","妹子图","天气","记事本","网页源码"};
+    private Class[] modelClass = {LockActivity.class,QRReadActivity.class,QRCreateActivity.class,MeizhiActivity.class,WeatherActivity.class, NoteActivity.class, WebCodeActivity.class};
+    private String[] modelAction = {"xiaoliang.ltool.Lock","xiaoliang.ltool.QRRead","xiaoliang.ltool.QRCreate","xiaoliang.ltool.Meizhi","xiaoliang.ltool.Weather","xiaoliang.ltool.Note","xiaoliang.ltool.WebCode"};
     private ArrayList<AppInfo> appInfoList;
     private ArrayList<AppInfo> appImageList;
     private int selectIndex = 0;
@@ -195,7 +197,8 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
                 break;
             case MY_REQUEST_CODE:
                 if(resultCode == Activity.RESULT_OK){
-                    shortcutUtil.addShortcut(nameEdit.getText().toString(),pointNum,image,LockActivity.class);
+                    shortcutUtil.addShortcut(nameEdit.getText().toString(),pointNum,image,appInfoList.get(selectIndex).intent);
+                    ToastUtil.T(this,"已添加");
                 }else{
                     DialogUtil.getAlertDialog(CreateLockActivity.this,"未获取设备管理器权限，无法进行锁屏操作。\n请进行授权，本应用承诺此权限不用于锁屏意外的任何用途。");
                 }
@@ -333,7 +336,7 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         appImageList.clear();
         appInfoList.clear();
         for(int i = 0;i<modelNames.length;i++){
-            Intent launchIntent = new Intent(this, modelClass[i]);
+            Intent launchIntent = new Intent(modelAction[i]);
             // 创建一个AppInfo对象，并赋值
             AppInfo appInfo = new AppInfo();
             appInfo.name = modelNames[i];

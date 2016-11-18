@@ -1,0 +1,17 @@
+<resources>
+    <string name="shortcuts_disabled_message">暂不可用</string>
+    <string name="shortcuts_note_short">记一笔</string>
+    <string name="shortcuts_note_long">添加笔记</string>
+
+    <string name="shortcuts_qr_short">扫一扫</string>
+    <string name="shortcuts_qr_long">二维码扫描</string>
+
+    <string name="shortcuts_qc_short">二维码生成</string>
+    <string name="shortcuts_qc_long">二维码生成</string>
+
+    <string name="shortcuts_web_short">网页源码</string>
+    <string name="shortcuts_web_long">查看网页源码</string>
+
+    <string name="shortcuts_mei_short">妹子图</string>
+    <string name="shortcuts_mei_long">妹子图</string>
+</resources>
