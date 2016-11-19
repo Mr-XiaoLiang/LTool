@@ -38,15 +38,16 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         HttpUtil.getThread(new Start());
-        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.N){
-            init();
-        }else{
-            init = true;
-        }
+//        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.N){
+//            init();
+//        }else{
+//            init = true;
+//        }
+        init = true;
     }
 
-    @TargetApi(Build.VERSION_CODES.N_MR1)
-    private void init(){
+//    @TargetApi(Build.VERSION_CODES.N_MR1)
+//    private void init(){
 //        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
 //        List<ShortcutInfo> infos = new ArrayList<>();
 //        int max = shortName.length;
@@ -66,8 +67,8 @@ public class StartActivity extends AppCompatActivity {
 ////            manager.addDynamicShortcuts(Arrays.asList(info));
 //        }
 //        shortcutManager.setDynamicShortcuts(infos);
-        init = true;
-    }
+//        init = true;
+//    }
 
     private class Start implements Runnable{
         @Override

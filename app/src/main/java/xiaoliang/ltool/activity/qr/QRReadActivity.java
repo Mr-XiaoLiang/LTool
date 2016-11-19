@@ -414,8 +414,6 @@ public class QRReadActivity extends AppCompatActivity implements SurfaceHolder.C
 
     /**
      * 检测是否说有的权限都已经授权
-     * @param grantResults
-     * @return
      * @since 2.5.0
      *
      */

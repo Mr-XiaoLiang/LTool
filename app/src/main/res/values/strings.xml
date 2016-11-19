@@ -40,4 +40,33 @@
 
     <string name="shortcuts_mei_short">妹子图</string>
     <string name="shortcuts_mei_long">妹子图</string>
+
+    <string name="shortcuts_weather_short">天气</string>
+    <string name="shortcuts_weather_long">天气</string>
+
+    <string name="shortcuts_lock_short">锁定</string>
+    <string name="shortcuts_lock_long">一键锁屏</string>
+
+    <string name="title_activity_shortcut_manager">快捷方式管理</string>
+    <string name="menu_shortcut_manager_done_title">完成</string>
+
+    <!-- shortcut ID -->
+    <string name="shortcuts_id_lock">lock</string>
+    <string name="shortcuts_id_qc">qr_create</string>
+    <string name="shortcuts_id_qr">qr_read</string>
+    <string name="shortcuts_id_weather">weather</string>
+    <string name="shortcuts_id_mei">meizhi</string>
+    <string name="shortcuts_id_note">note_add</string>
+    <string name="shortcuts_id_web">web</string>
+    <!--action-->
+    <!--"","xiaoliang.ltool.QRRead","","","xiaoliang.ltool.Meizhi","",""-->
+    <string name="action_web_code">xiaoliang.ltool.WebCode</string>
+    <string name="action_lock">xiaoliang.ltool.Lock</string>
+    <string name="action_lock_create">xiaoliang.ltool.lockCreate</string>
+    <string name="action_weather">xiaoliang.ltool.Weather</string>
+    <string name="action_note_list">xiaoliang.ltool.Note</string>
+    <string name="action_note_add">xiaoliang.ltool.NoteAdd</string>
+    <string name="action_qr_read">xiaoliang.ltool.QRRead</string>
+    <string name="action_qr_create">xiaoliang.ltool.QRCreate</string>
+    <string name="action_meizhi">xiaoliang.ltool.Meizhi</string>
 </resources>

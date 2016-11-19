@@ -167,6 +167,31 @@
                 android:background="@color/colorPrimary"/>
         </LinearLayout>
         <LinearLayout
+            android:layout_marginTop="@dimen/cardview_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/activity_create_lock_bmpsize_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:text="显示大小 85%"/>
+            <SeekBar
+                android:id="@+id/activity_create_lock_bmpsize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:progress="85"
+                android:paddingTop="10dp"/>
+            <View
+                android:layout_marginTop="@dimen/cardview_padding"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

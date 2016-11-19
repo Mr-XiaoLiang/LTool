@@ -131,12 +131,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         if(showWeather){
-            getMenuInflater().inflate(R.menu.menu_main, menu);
+            menu.findItem(R.id.menu_main_city).setVisible(true);
         }else{
-            getMenuInflater().inflate(R.menu.menu_main2, menu);
+            menu.findItem(R.id.menu_main_city).setVisible(false);
         }
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(showWeather){
+            menu.findItem(R.id.menu_main_city).setVisible(true);
+        }else{
+            menu.findItem(R.id.menu_main_city).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -170,7 +181,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         loadWebImg = SharedPreferencesUtils.isLoadWebImg(this);
-        showWeather = SharedPreferencesUtils.getWeatherShow(this);
+        if(showWeather!=SharedPreferencesUtils.getWeatherShow(this)){
+            showWeather = !showWeather;
+            invalidateOptionsMenu();
+        }
         if(showWeather){
             getWeather();
         }

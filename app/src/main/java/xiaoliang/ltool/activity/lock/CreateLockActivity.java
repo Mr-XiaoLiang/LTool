@@ -26,7 +26,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,7 +51,7 @@ import xiaoliang.ltool.util.OtherUtil;
 import xiaoliang.ltool.util.ShortcutUtil;
 import xiaoliang.ltool.util.ToastUtil;
 
-public class CreateLockActivity extends AppCompatActivity implements Switch.OnCheckedChangeListener,View.OnClickListener,AdapterView.OnItemSelectedListener {
+public class CreateLockActivity extends AppCompatActivity implements Switch.OnCheckedChangeListener,View.OnClickListener,AdapterView.OnItemSelectedListener,OnSeekBarChangeListener {
 
     private ImageView showImg;
     private TextInputEditText nameEdit,numEdit;
@@ -71,6 +74,7 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
     private ArrayList<AppInfo> appImageList;
     private int selectIndex = 0;
     private OpenModelAdapter imageAdapter;
+    private TextView bmpSizeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +94,15 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         repeatSwitch = (SwitchCompat) findViewById(R.id.activity_create_lock_repeat);
         numLayout = findViewById(R.id.activity_create_lock_pointnum_layout);
         openModel = (AppCompatSpinner) findViewById(R.id.activity_create_lock_model);
+        SeekBar bmpSizeBar = (SeekBar) findViewById(R.id.activity_create_lock_bmpsize);
+        bmpSizeText = (TextView) findViewById(R.id.activity_create_lock_bmpsize_text);
         openModel.setOnItemSelectedListener(this);
         resImg.setOnItemSelectedListener(this);
         imgBtn.setOnClickListener(this);
         circularSwitch.setOnCheckedChangeListener(this);
         redPointSwitch.setOnCheckedChangeListener(this);
         repeatSwitch.setOnCheckedChangeListener(this);
+        bmpSizeBar.setOnSeekBarChangeListener(this);
         shortcutUtil = new ShortcutUtil(this);
         //获取设备管理服务
         policyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
@@ -371,5 +378,21 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
                 Log.d("queryAppInfo",appLabel + " activityName---" + activityName
                         + " pkgName---" + pkgName);
         }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        shortcutUtil.setBmpSize(i*0.01f);
+        bmpSizeText.setText("显示大小 "+i+"%");
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        showImg.setImageBitmap(shortcutUtil.getShortcutBmp(pointNum,image));
     }
 }

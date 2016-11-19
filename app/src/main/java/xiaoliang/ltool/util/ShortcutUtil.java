@@ -9,6 +9,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.PorterDuff;
 import android.graphics.Shader;
 import android.util.Log;
 
@@ -28,6 +30,8 @@ public class ShortcutUtil {
     private boolean repeat = false;
     private boolean circular = true;
     private boolean redPoint = false;
+    private float bmpSize = 0.85f;
+    private Bitmap shortcutBmp;
 
     public ShortcutUtil(Context context) {
         this.context = context;
@@ -48,7 +52,10 @@ public class ShortcutUtil {
         addShortcut(name,size,bitmap,cls);
     }
 
-
+    public void setBmpSize(float bmpSize) {
+        this.bmpSize = bmpSize;
+        width = DensityUtil.dip2px(this.context,56/0.85f*bmpSize);
+    }
 
     /**
      * 创建一个带有文字提示的快捷方式
@@ -106,18 +113,27 @@ public class ShortcutUtil {
 
     public Bitmap getShortcutBmp(String size, Bitmap bitmap){
         // 创建一张空白图片
-        Bitmap b = Bitmap.createBitmap(width, width, Bitmap.Config.ARGB_8888);
-        redPointHeight = (int) (b.getHeight()*0.35);
-        redPointTextSize = (int) (redPointHeight*0.7);
+        if(shortcutBmp==null||shortcutBmp.getWidth()!=width){
+            shortcutBmp = Bitmap.createBitmap(width, width, Bitmap.Config.ARGB_8888);
+            redPointHeight = (int) (shortcutBmp.getHeight()*0.35);
+            redPointTextSize = (int) (redPointHeight*0.7);
+        }else{
+        }
         paint.setTextSize(redPointTextSize);
         // 创建一张画布
-        Canvas canvas = new Canvas(b);
-        getCroppedRoundBitmap(bitmap, width / 2);
+        Canvas canvas = new Canvas(shortcutBmp);
+        //
+        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.FILTER_BITMAP_FLAG|Paint.ANTI_ALIAS_FLAG));
+        canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        getCroppedRoundBitmap(bitmap, width*bmpSize);//设置图片为画布的0.9
+        canvas.save();
+        canvas.translate(width*(1-bmpSize)/2,width*(1-bmpSize)/2);//坐标系移位,保持中心
         if(circular){
-            canvas.drawCircle(width/2,width/2,width/2,paint);
+            canvas.drawCircle(width*bmpSize/2,width*bmpSize/2,width*bmpSize/2,paint);
         }else{
-            canvas.drawRect(0, 0, width, width, paint);
+            canvas.drawRect(0, 0, width*bmpSize, width*bmpSize, paint);
         }
+        canvas.restore();//还原坐标系
         if(redPoint&&size.length()>0){
             //画红色小点
             resetPaint();
@@ -145,7 +161,7 @@ public class ShortcutUtil {
                 size = size.substring(0,(width-redPointHeight)/redPointTextSize);
             canvas.drawText(size,textX,textY,paint);
         }
-        return b;
+        return shortcutBmp;
     }
 
     /**
@@ -197,15 +213,15 @@ public class ShortcutUtil {
      * 使用渲染来绘制圆形图片
      *
      * @param bmp  图片
-     * @param radius 半径
+     * @param diameter  直径
      * @return
      */
-    public void getCroppedRoundBitmap(Bitmap bmp, int radius) {
+    public void getCroppedRoundBitmap(Bitmap bmp, float diameter ) {
         // 将bmp作为着色器，就是在指定区域内绘制bmp
         Shader mBitmapShader = new BitmapShader(bmp, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         float scale;
         // 如果图片的宽或者高与view的宽高不匹配，计算出需要缩放的比例；缩放后的图片的宽高，一定要大于我们view的宽高；所以我们这里取大值；
-        scale = Math.max(radius * 2.0f / bmp.getWidth(), radius * 2.0f / bmp.getHeight());
+        scale = Math.max(diameter / bmp.getWidth(), diameter / bmp.getHeight());
         if(matrix==null){
             matrix = new Matrix();
         }
@@ -215,6 +231,17 @@ public class ShortcutUtil {
         mBitmapShader.setLocalMatrix(matrix);
         // 设置shader
         paint.setShader(mBitmapShader);
+    }
+
+    public float getCroppedRoundBitmap2(Bitmap bmp, float diameter) {
+        // 将bmp作为着色器，就是在指定区域内绘制bmp
+        Shader mBitmapShader = new BitmapShader(bmp, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        float scale;
+        // 如果图片的宽或者高与view的宽高不匹配，计算出需要缩放的比例；缩放后的图片的宽高，一定要大于我们view的宽高；所以我们这里取大值；
+        scale = Math.max(diameter / bmp.getWidth(), diameter / bmp.getHeight());
+        // 设置shader
+        paint.setShader(mBitmapShader);
+        return scale;
     }
 
     private void resetPaint(){

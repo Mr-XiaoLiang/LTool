@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcuts  xmlns:android="http://schemas.android.com/apk/res/android">
+
     <shortcut
         android:shortcutId="note_add"
         android:enabled="true"
@@ -12,7 +13,7 @@
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
     <shortcut
-        android:shortcutId="qr_read"
+        android:shortcutId="@string/shortcuts_id_qr"
         android:enabled="true"
         android:icon="@drawable/ic_shortcuts_qr"
         android:shortcutShortLabel="@string/shortcuts_qr_short"
@@ -23,7 +24,7 @@
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
     <shortcut
-        android:shortcutId="qr_create"
+        android:shortcutId="@string/shortcuts_id_qc"
         android:enabled="true"
         android:icon="@drawable/ic_shortcuts_qc"
         android:shortcutShortLabel="@string/shortcuts_qc_short"
@@ -34,7 +35,7 @@
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
     <shortcut
-        android:shortcutId="web"
+        android:shortcutId="@string/shortcuts_id_web"
         android:enabled="true"
         android:icon="@drawable/ic_shortcuts_web"
         android:shortcutShortLabel="@string/shortcuts_web_short"
@@ -45,7 +46,7 @@
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
     <shortcut
-        android:shortcutId="meizhi"
+        android:shortcutId="@string/shortcuts_id_mei"
         android:enabled="true"
         android:icon="@drawable/ic_shortcuts_mei"
         android:shortcutShortLabel="@string/shortcuts_mei_short"
@@ -53,6 +54,28 @@
         android:shortcutDisabledMessage="@string/shortcuts_disabled_message">
         <intent
             android:action="xiaoliang.ltool.Meizhi"/>
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <shortcut
+        android:shortcutId="@string/shortcuts_id_weather"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcuts_weather"
+        android:shortcutShortLabel="@string/shortcuts_weather_short"
+        android:shortcutLongLabel="@string/shortcuts_weather_long"
+        android:shortcutDisabledMessage="@string/shortcuts_disabled_message">
+        <intent
+            android:action="xiaoliang.ltool.Weather"/>
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <shortcut
+        android:shortcutId="lock"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcuts_lock"
+        android:shortcutShortLabel="@string/shortcuts_lock_short"
+        android:shortcutLongLabel="@string/shortcuts_lock_long"
+        android:shortcutDisabledMessage="@string/shortcuts_disabled_message">
+        <intent
+            android:action="xiaoliang.ltool.Lock"/>
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
 </shortcuts >

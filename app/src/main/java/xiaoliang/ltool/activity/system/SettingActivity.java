@@ -1,6 +1,8 @@
 package xiaoliang.ltool.activity.system;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -65,6 +67,10 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
         weatherSwitch.setChecked(SharedPreferencesUtils.getWeatherShow(this));
 //        ver = OtherUtil.getVersion(this);
 //        version.setText("V"+ ver);
+        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.N_MR1){
+            findViewById(R.id.activity_setting_shortcut).setVisibility(View.GONE);
+            findViewById(R.id.activity_setting_shortcut_title).setVisibility(View.GONE);
+        }
     }
 
 
@@ -118,6 +124,9 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
                 break;
             case R.id.activity_setting_update:
 //                checkUpdate();
+                break;
+            case R.id.activity_setting_shortcut:
+                startActivity(new Intent(this,ShortcutManagerActivity.class));
                 break;
         }
     }

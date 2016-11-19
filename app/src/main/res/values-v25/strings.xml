@@ -1,4 +1,30 @@
 <resources>
+    <string name="app_name">LTool</string>
+    <string name="menu_main_city_str">城市切换</string>
+    <string name="title_activity_weather">WeatherActivity</string>
+    <string name="title_activity_setting">设置</string>
+    <string name="title_activity_qrcreate">二维码生成</string>
+    <string name="qr_hint">不建议输入过长的内容，越复杂的二维码识别越困难。\n对于复杂的二维码不建议进行过度的定制，这样会增加识别的难度。</string>
+    <string name="title_activity_qrread">二维码识别</string>
+    <string name="title_activity_meizhi">妹纸图</string>
+    <string name="back_to_top">回到顶部</string>
+    <string name="title_activity_meizhi_detailed">妹纸图</string>
+    <string name="title_activity_meizhi_list">妹子列表</string>
+    <string name="title_activity_about">关于</string>
+    <string name="title_activity_create_lock">添加快捷方式</string>
+    <string name="title_activity_health">healthActivity</string>
+    <string name="title_activity_note">记事本</string>
+    <string name="title_activity_note_add">记一笔</string>
+    <string name="add_note_money">金额...</string>
+    <string name="add_note_address">地址...</string>
+    <string name="add_note_msg">内容...</string>
+    <string name="menu_note_add_down_str">完成</string>
+    <string name="title_activity_web_code">查看网页源码</string>
+    <string name="menu_note_add_share_str">分享</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="shortcuts_disabled_message">暂不可用</string>
     <string name="shortcuts_note_short">记一笔</string>
     <string name="shortcuts_note_long">添加笔记</string>
@@ -14,4 +40,32 @@
 
     <string name="shortcuts_mei_short">妹子图</string>
     <string name="shortcuts_mei_long">妹子图</string>
+
+    <string name="shortcuts_weather_short">天气</string>
+    <string name="shortcuts_weather_long">天气</string>
+
+    <string name="shortcuts_lock_short">锁定</string>
+    <string name="shortcuts_lock_long">一键锁屏</string>
+
+    <string name="title_activity_shortcut_manager">快捷方式管理</string>
+    <string name="menu_shortcut_manager_done_title">完成</string>
+
+    <!-- shortcut ID -->
+    <string name="shortcuts_id_lock">lock</string>
+    <string name="shortcuts_id_qc">qr_create</string>
+    <string name="shortcuts_id_qr">qr_read</string>
+    <string name="shortcuts_id_weather">weather</string>
+    <string name="shortcuts_id_mei">meizhi</string>
+    <string name="shortcuts_id_note">note_add</string>
+    <string name="shortcuts_id_web">web</string>
+    <!--action-->
+    <string name="action_web_code">xiaoliang.ltool.WebCode</string>
+    <string name="action_lock">xiaoliang.ltool.Lock</string>
+    <string name="action_lock_create">xiaoliang.ltool.lockCreate</string>
+    <string name="action_weather">xiaoliang.ltool.Weather</string>
+    <string name="action_note_list">xiaoliang.ltool.Note</string>
+    <string name="action_note_add">xiaoliang.ltool.NoteAdd</string>
+    <string name="action_qr_read">xiaoliang.ltool.QRRead</string>
+    <string name="action_qr_create">xiaoliang.ltool.QRCreate</string>
+    <string name="action_meizhi">xiaoliang.ltool.Meizhi</string>
 </resources>

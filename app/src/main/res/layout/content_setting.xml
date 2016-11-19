@@ -22,6 +22,8 @@
             android:paddingTop="@dimen/setting_item_padding"
             android:background="@android:color/white"/>
         <LinearLayout
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="onClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -51,7 +53,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
+
         <LinearLayout
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="onClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -82,6 +87,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/activity_setting_shortcut_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="快捷方式"
+            android:layout_marginTop="@dimen/setting_item_padding"
+            android:paddingLeft="@dimen/setting_item_padding"
+            android:paddingTop="@dimen/setting_item_padding"
+            android:background="@android:color/white"/>
+        <LinearLayout
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="onClick"
+            android:id="@+id/activity_setting_shortcut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|left"
+            android:orientation="vertical"
+            android:padding="@dimen/setting_item_padding"
+            android:background="@android:color/white">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:text="快捷方式"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="修改快捷方式显示顺序及内容(Android 7.1以上可用)"/>
+        </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,6 +128,8 @@
             android:paddingTop="@dimen/setting_item_padding"
             android:background="@android:color/white"/>
         <LinearLayout
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="onClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -121,6 +160,8 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="onClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -160,13 +201,14 @@
             android:paddingTop="@dimen/setting_item_padding"
             android:background="@android:color/white"/>
         <LinearLayout
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="onClick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="@dimen/setting_item_padding"
-            android:background="@android:color/white"
-            android:layout_marginTop="1px">
+            android:background="@android:color/white">
 
             <LinearLayout
                 android:layout_width="0px"
@@ -221,11 +263,13 @@
                 android:text="V1.2"/>
         </LinearLayout>
         <LinearLayout
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="onClick"
             android:id="@+id/activity_setting_about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center|left"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="@dimen/setting_item_padding"
             android:background="@android:color/white">
             <TextView
@@ -234,6 +278,11 @@
                 android:textSize="18sp"
                 android:textColor="@android:color/black"
                 android:text="关于"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="版本号与彩蛋、作者相关"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
