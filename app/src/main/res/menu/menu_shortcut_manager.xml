@@ -4,7 +4,7 @@
     tools:context="xiaoliang.ltool.MainActivity">
     <item
         android:icon="@drawable/ic_done"
-        android:id="@+id/menu_shortcut_manager"
+        android:id="@+id/menu_shortcut_manager_done"
         android:title="@string/menu_shortcut_manager_done_title"
         app:showAsAction="always" />
 </menu>

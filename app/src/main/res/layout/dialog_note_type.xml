@@ -112,6 +112,15 @@
                 <TextView
                     android:onClick="onClick"
                     android:foreground="?attr/selectableItemBackground"
+                    android:id="@+id/dialog_note_type_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/cardview_padding"
+                    android:text="取消"
+                    android:gravity="center"/>
+                <TextView
+                    android:onClick="onClick"
+                    android:foreground="?attr/selectableItemBackground"
                     android:id="@+id/dialog_note_type_done"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

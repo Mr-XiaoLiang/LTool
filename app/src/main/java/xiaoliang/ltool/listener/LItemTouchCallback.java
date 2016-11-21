@@ -110,7 +110,7 @@ public class LItemTouchCallback extends ItemTouchHelper.Callback {
         boolean onMove(int srcPosition, int targetPosition);
     }
 
-    public class DefaultOnItemTouchCallbackListener implements OnItemTouchCallbackListener{
+    public static class DefaultOnItemTouchCallbackListener implements OnItemTouchCallbackListener{
 
         private List data;
         private RecyclerView.Adapter adapter;

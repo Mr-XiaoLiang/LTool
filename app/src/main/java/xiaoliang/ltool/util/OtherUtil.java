@@ -346,8 +346,13 @@ public class OtherUtil {
      * @return
      */
 	public static Drawable tintDrawable(Context context,int resId, int color,boolean independent){
-		final Drawable wrappedDrawable = DrawableCompat.wrap(context.getResources().getDrawable(resId));
-		return tintDrawable(wrappedDrawable,ColorStateList.valueOf(color),independent);
+		final Drawable wrappedDrawable;
+		if(independent){
+			wrappedDrawable = context.getResources().getDrawable(resId).mutate();
+		}else{
+			wrappedDrawable = DrawableCompat.wrap(context.getResources().getDrawable(resId));
+		}
+		return tintDrawable(wrappedDrawable,ColorStateList.valueOf(color));
 	}
 
 	/**

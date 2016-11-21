@@ -11,8 +11,8 @@
 
         <ImageView
             android:id="@+id/item_note_type_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:src="@drawable/ic_dot"
             android:tint="@color/colorAccent" />
     </LinearLayout>

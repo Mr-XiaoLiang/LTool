@@ -20,6 +20,7 @@ import xiaoliang.ltool.dialog.CityDialog;
 import xiaoliang.ltool.dialog.ColorsDialog;
 import xiaoliang.ltool.dialog.LoadDialog;
 import xiaoliang.ltool.dialog.LoadDialog2;
+import xiaoliang.ltool.dialog.NoteTypeDialog;
 import xiaoliang.ltool.dialog.QRWidthDialog;
 import xiaoliang.ltool.dialog.ShareDialog;
 
@@ -121,6 +122,23 @@ public class DialogUtil {
 
     public static QRWidthDialog getQRWidthDialog(Activity context, int width, QRWidthDialog.QRWidthDialogListener listener){
         QRWidthDialog dialog = new QRWidthDialog(context,width,listener);
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER); // 此处可以设置dialog显示的位置
+        dialog.setCancelable(true);
+        dialog.show();
+        WindowManager m = context.getWindowManager();
+        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
+        WindowManager.LayoutParams p = window.getAttributes(); // 获取对话框当前的参数值
+//        p.height = (int) (d.getHeight() * 0.5);
+        p.width = (int) (d.getWidth() * 0.8);
+        dialog.onWindowAttributesChanged(p);
+        window.setAttributes(p);
+        return dialog;
+    }
+
+    public static NoteTypeDialog getNoteTypeDialog(Activity context, NoteTypeDialog.OnNoteTypeSelectedListener listener){
+        NoteTypeDialog dialog = new NoteTypeDialog(context);
+        dialog.setOnNoteTypeSelectedListener(listener);
         Window window = dialog.getWindow();
         window.setGravity(Gravity.CENTER); // 此处可以设置dialog显示的位置
         dialog.setCancelable(true);

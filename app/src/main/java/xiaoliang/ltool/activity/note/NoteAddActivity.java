@@ -24,14 +24,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import xiaoliang.ltool.R;
+import xiaoliang.ltool.dialog.NoteTypeDialog;
+import xiaoliang.ltool.util.DialogUtil;
 import xiaoliang.ltool.util.OtherUtil;
+import xiaoliang.ltool.view.DotDrawable;
 import xiaoliang.ltool.view.note.NoteAddItem;
 
 /**
  * 添加一份笔记，并且也是回显笔记，修改笔记的页面
  * @author Liuj
  */
-public class NoteAddActivity extends AppCompatActivity implements View.OnClickListener,NoteAddItem.OnNoteAddItemClickListener {
+public class NoteAddActivity extends AppCompatActivity implements View.OnClickListener,NoteAddItem.OnNoteAddItemClickListener,NoteTypeDialog.OnNoteTypeSelectedListener {
 
     public static final String ARG_NOTE_ID = "ARG_NOTE_ID";
 
@@ -48,6 +51,10 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayout body;
     //6个按钮（此处获取仅仅是为了修改按钮颜色，点击事件的监听并不依靠对象）
     private ImageView checkListBtn,numberListBtn,textListBtn,moneyBtn,addressBtn,advanceBtn;
+    //笔记类型
+    private int noteTypeId = -1;
+    private ImageView noteTypeColor;
+    private DotDrawable dotDrawable;
     //回显/修改
     private int noteId = -1;
 
@@ -81,6 +88,8 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
         moneyBtn = (ImageView) findViewById(R.id.content_note_add_money_btn);
         addressBtn = (ImageView) findViewById(R.id.content_note_add_address_btn);
         advanceBtn = (ImageView) findViewById(R.id.content_note_add_time_btn);
+        noteTypeColor = (ImageView) findViewById(R.id.content_note_add_color);
+        noteTypeColor.setImageDrawable(dotDrawable = new DotDrawable(this));
         noteItems = new ArrayList<>();
         addressBtn.setImageDrawable(getDrawable(R.drawable.ic_edit_location,false));
         moneyBtn.setImageDrawable(getDrawable(R.drawable.ic_attach_money,false));
@@ -258,6 +267,9 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
                 addressEditText.requestFocus();
                 setItemType(NoteAddItem.ADDRESS);
                 break;
+            case R.id.content_note_add_color:
+                DialogUtil.getNoteTypeDialog(this,this);
+                break;
         }
     }
 
@@ -328,5 +340,11 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
         body.removeView(v);
         noteItems.remove(index);
         updateNumberList();
+    }
+
+    @Override
+    public void onNoteTypeSelected(int typeId, int color, String typeName) {
+        noteTypeId = typeId;
+        dotDrawable.setColor(color);
     }
 }

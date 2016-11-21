@@ -68,7 +68,7 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
     private static final int MY_REQUEST_CODE = 9999;
     private AppCompatSpinner openModel,resImg;
     private String[] modelNames = {"锁屏","二维码扫描","二维码生成","妹子图","天气","记事本","网页源码"};
-    private Class[] modelClass = {LockActivity.class,QRReadActivity.class,QRCreateActivity.class,MeizhiActivity.class,WeatherActivity.class, NoteActivity.class, WebCodeActivity.class};
+    private int[] modelIcons = {R.drawable.ic_shortcuts_lock,R.drawable.ic_shortcuts_qr,R.drawable.ic_shortcuts_qc,R.drawable.ic_shortcuts_mei,R.drawable.ic_shortcuts_weather,R.drawable.ic_shortcuts_note,R.drawable.ic_shortcuts_web};
     private String[] modelAction = {"xiaoliang.ltool.Lock","xiaoliang.ltool.QRRead","xiaoliang.ltool.QRCreate","xiaoliang.ltool.Meizhi","xiaoliang.ltool.Weather","xiaoliang.ltool.Note","xiaoliang.ltool.WebCode"};
     private ArrayList<AppInfo> appInfoList;
     private ArrayList<AppInfo> appImageList;
@@ -333,6 +333,14 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
         appInfo.appIcon = getResources().getDrawable(R.drawable.ic_smartisan);
         appInfo.intent = null;
         appImageList.add(appInfo); // 添加至列表中
+        for(int i = 0;i<modelNames.length;i++){
+            appInfo = new AppInfo();
+            appInfo.name = modelNames[i];
+            appInfo.pkgName = "默认图标";
+            appInfo.appIcon = getResources().getDrawable(modelIcons[i]);
+            appInfo.intent = null;
+            appImageList.add(appInfo); // 添加至列表中
+        }
     }
 
     private void queryAppInfo() {
@@ -348,7 +356,7 @@ public class CreateLockActivity extends AppCompatActivity implements Switch.OnCh
             AppInfo appInfo = new AppInfo();
             appInfo.name = modelNames[i];
             appInfo.pkgName = "本应用";
-            appInfo.appIcon = getResources().getDrawable(R.mipmap.ic_launcher);
+            appInfo.appIcon = getResources().getDrawable(modelIcons[i]);
             appInfo.intent = launchIntent;
             appInfoList.add(appInfo); // 添加至列表中
         }

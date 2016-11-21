@@ -13,7 +13,7 @@
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
     <shortcut
-        android:shortcutId="@string/shortcuts_id_qr"
+        android:shortcutId="qr_read"
         android:enabled="true"
         android:icon="@drawable/ic_shortcuts_qr"
         android:shortcutShortLabel="@string/shortcuts_qr_short"
@@ -24,7 +24,7 @@
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
     <shortcut
-        android:shortcutId="@string/shortcuts_id_qc"
+        android:shortcutId="qr_create"
         android:enabled="true"
         android:icon="@drawable/ic_shortcuts_qc"
         android:shortcutShortLabel="@string/shortcuts_qc_short"
@@ -35,7 +35,7 @@
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
     <shortcut
-        android:shortcutId="@string/shortcuts_id_web"
+        android:shortcutId="web"
         android:enabled="true"
         android:icon="@drawable/ic_shortcuts_web"
         android:shortcutShortLabel="@string/shortcuts_web_short"
@@ -46,7 +46,7 @@
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
     <shortcut
-        android:shortcutId="@string/shortcuts_id_mei"
+        android:shortcutId="meizhi"
         android:enabled="true"
         android:icon="@drawable/ic_shortcuts_mei"
         android:shortcutShortLabel="@string/shortcuts_mei_short"
@@ -57,7 +57,7 @@
         <categories android:name="android.shortcut.conversation"/>
     </shortcut>
     <shortcut
-        android:shortcutId="@string/shortcuts_id_weather"
+        android:shortcutId="weather"
         android:enabled="true"
         android:icon="@drawable/ic_shortcuts_weather"
         android:shortcutShortLabel="@string/shortcuts_weather_short"

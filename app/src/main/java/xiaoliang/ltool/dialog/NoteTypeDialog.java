@@ -28,6 +28,8 @@ import xiaoliang.ltool.bean.NoteTypeBean;
 import xiaoliang.ltool.util.DatabaseHelper;
 import xiaoliang.ltool.util.OtherUtil;
 import xiaoliang.ltool.util.TextToColor;
+import xiaoliang.ltool.util.ToastUtil;
+import xiaoliang.ltool.view.DotDrawable;
 
 /**
  * Created by liuj on 2016/11/14.
@@ -52,6 +54,8 @@ public class NoteTypeDialog extends Dialog implements
     private int color = Color.BLACK;
     private View addLayout;
     private ArrayList<NoteTypeBean> typeBeens;
+    private TypeAdapter adapter;
+    private OnNoteTypeSelectedListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,17 @@ public class NoteTypeDialog extends Dialog implements
         alphaBar = (SeekBar) findViewById(R.id.dialog_note_type_alpha);
         colorEditText = (TextInputEditText) findViewById(R.id.dialog_note_type_edit);
         addLayout = findViewById(R.id.dialog_note_type_addlayout);
+        findViewById(R.id.dialog_note_type_done).setOnClickListener(this);
+        findViewById(R.id.dialog_note_type_cancel).setOnClickListener(this);
+        redBar.setOnSeekBarChangeListener(this);
+        greenBar.setOnSeekBarChangeListener(this);
+        blueBar.setOnSeekBarChangeListener(this);
+        alphaBar.setOnSeekBarChangeListener(this);
+        colorEditText.addTextChangedListener(this);
+        adapter = new TypeAdapter(getContext());
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
+        addLayout.setVisibility(View.GONE);
         getDate();
     }
 
@@ -76,6 +91,7 @@ public class NoteTypeDialog extends Dialog implements
         typeBeens.clear();
         typeBeens.add(new NoteTypeBean(-1,Color.GRAY,"添加类型"));
         typeBeens.addAll(DatabaseHelper.selectNoteType(getContext()));
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -87,17 +103,43 @@ public class NoteTypeDialog extends Dialog implements
                     long l = DatabaseHelper.addNoteType(getContext(),color,name);
                     if(l>0){
                         addLayout.setVisibility(View.GONE);
+                        getDate();
+                    }else{
+                        ToastUtil.T(getContext(),"添加失败");
                     }
                 }else{
                     colorEditText.setError("请输入名称");
                 }
                 break;
+            case R.id.dialog_note_type_cancel:
+                addLayout.setVisibility(View.GONE);
+                break;
         }
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onBackPressed() {
+        if(addLayout.getVisibility()==View.VISIBLE){
+            addLayout.setVisibility(View.GONE);
+            return;
+        }
+        super.onBackPressed();
+    }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(position>0){
+            if(listener!=null){
+                listener.onNoteTypeSelected(typeBeens.get(position).id,typeBeens.get(position).color,typeBeens.get(position).typeName);
+            }
+            dismiss();
+        }else{
+            addLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setOnNoteTypeSelectedListener(OnNoteTypeSelectedListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -187,7 +229,7 @@ public class NoteTypeDialog extends Dialog implements
         public View getView(int position, View convertView, ViewGroup parent) {
             Holder holder;
             if(convertView==null){
-                convertView = inflater.inflate(R.layout.item_note_type,null);
+                convertView = inflater.inflate(R.layout.item_note_type,parent,false);
                 holder = new Holder(convertView);
                 convertView.setTag(holder);
             }else{
@@ -200,27 +242,25 @@ public class NoteTypeDialog extends Dialog implements
     private class Holder{
         private TextView name;
         private ImageView color;
+        private DotDrawable dotDrawable;
 
         public Holder(View item) {
             name = (TextView) item.findViewById(R.id.item_note_type_name);
             color = (ImageView) item.findViewById(R.id.item_note_type_img);
+            dotDrawable = new DotDrawable();
         }
 
         private void onBind(NoteTypeBean bean){
             if(bean.id<0){
-                if(Build.VERSION.SDK_INT>21){
-                    color.setImageResource(R.drawable.ic_add);
-                    color.setImageTintList(ColorStateList.valueOf(bean.color));
-                }else{
-                  color.setImageDrawable(OtherUtil.tintDrawable(getContext(),R.drawable.ic_add,bean.color));
-                }
+//                if(Build.VERSION.SDK_INT>21){
+//                    color.setImageResource(R.drawable.ic_add);
+//                    color.setImageTintList(ColorStateList.valueOf(bean.color));
+//                }else{
+//                }
+                color.setImageDrawable(OtherUtil.tintDrawable(getContext(),R.drawable.ic_add,bean.color));
             }else{
-                if(Build.VERSION.SDK_INT>21){
-                    color.setImageResource(R.drawable.ic_dot);
-                    color.setImageTintList(ColorStateList.valueOf(bean.color));
-                }else{
-                    color.setImageDrawable(OtherUtil.tintDrawable(getContext(),R.drawable.ic_dot,bean.color,true));
-                }
+                dotDrawable.setColor(bean.color);
+                color.setImageDrawable(dotDrawable);
             }
             name.setText(bean.typeName);
         }

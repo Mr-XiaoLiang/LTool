@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.util.SharedPreferencesUtils;
+import xiaoliang.ltool.util.ToastUtil;
 
 public class SettingActivity extends AppCompatActivity implements SwitchCompat.OnCheckedChangeListener,View.OnClickListener {
 
@@ -70,6 +71,7 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.N_MR1){
             findViewById(R.id.activity_setting_shortcut).setVisibility(View.GONE);
             findViewById(R.id.activity_setting_shortcut_title).setVisibility(View.GONE);
+            ToastUtil.T(this,"当前版本号为：API"+Build.VERSION.SDK_INT);
         }
     }
 

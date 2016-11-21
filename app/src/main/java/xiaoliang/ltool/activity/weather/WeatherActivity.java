@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import org.dom4j.DocumentException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.activity.LToolApplication;
@@ -47,6 +49,7 @@ public class WeatherActivity extends AppCompatActivity implements SwipeRefreshLa
     private LinearLayout dayLayout,exponentLayout;
     private LoadDialog loadDialog;
     private LGradualBGView bgView;
+    private View root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,7 @@ public class WeatherActivity extends AppCompatActivity implements SwipeRefreshLa
         setSupportActionBar(toolbar);
         if(getSupportActionBar()!=null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        root = findViewById(R.id.activity_weather_root);
         bgView = (LGradualBGView) findViewById(R.id.activity_weather_bg);
         tempView = (TextView) findViewById(R.id.activity_weather_temp);
         highAndLowView = (TextView) findViewById(R.id.activity_weather_highlow);
@@ -82,10 +86,18 @@ public class WeatherActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     private void setWeatherView(){
-        bgView.setTemperature(Integer.parseInt(weatherBean.getNowTemperature()));
-        bgView.setHours(Integer.parseInt(weatherBean.getUpdateTime().substring(0,2)));
-        tempView.setText(weatherBean.getNowTemperature());
-        highAndLowView.setText(weatherBean.getDayBeen(0).getQuickTemperature());
+        Calendar calendar = Calendar.getInstance();
+        bgView.setHours(calendar.get(Calendar.HOUR_OF_DAY));
+        if(weatherBean==null){
+            bgView.setTemperature(20);
+            root.setVisibility(View.INVISIBLE);
+            return;
+        }
+        root.setVisibility(View.VISIBLE);
+        if(weatherBean.getNowTemperature()!=null){
+            bgView.setTemperature(Integer.parseInt(weatherBean.getNowTemperature()));
+            tempView.setText(weatherBean.getNowTemperature());
+        }
         timeView.setText(weatherBean.getUpdateTime());
         windView.setText(weatherBean.getWind());
         windDirecView.setText(weatherBean.getWindDirection());
@@ -95,23 +107,26 @@ public class WeatherActivity extends AppCompatActivity implements SwipeRefreshLa
         majorView.setText(weatherBean.getMajorPollutants());
         msgView.setText(weatherBean.getMsg());
         toolbar.setTitle(weatherBean.getCity());
-        ArrayList<WeatherDayBean> dayBeanArrayList = weatherBean.getDayBeen();
-        ArrayList<WeatherExponentBean> exponentBeanArrayList = weatherBean.getExponentBeen();
-        dayLayout.removeAllViews();
-        exponentLayout.removeAllViews();
-        for(WeatherDayBean dayBean : dayBeanArrayList){
-            WeatherDayItem dayItem = new WeatherDayItem(this);
-            dayItem.setDayBean(dayBean);
-            dayLayout.addView(dayItem);
-        }
-        int index = 0;
-        while(index<exponentBeanArrayList.size()){
-            WeatherExponentItem exponentItem = new WeatherExponentItem(this);
-            if(exponentBeanArrayList.size()-index>1)
-                exponentItem.setBeans(exponentBeanArrayList.get(index++),exponentBeanArrayList.get(index++));
-            else
-                exponentItem.setBeans(exponentBeanArrayList.get(index++));
-            exponentLayout.addView(exponentItem);
+        if(weatherBean.getDayBeen()!=null&&weatherBean.getDayBeen().size()>0){
+            highAndLowView.setText(weatherBean.getDayBeen(0).getQuickTemperature());
+            ArrayList<WeatherDayBean> dayBeanArrayList = weatherBean.getDayBeen();
+            ArrayList<WeatherExponentBean> exponentBeanArrayList = weatherBean.getExponentBeen();
+            dayLayout.removeAllViews();
+            exponentLayout.removeAllViews();
+            for(WeatherDayBean dayBean : dayBeanArrayList){
+                WeatherDayItem dayItem = new WeatherDayItem(this);
+                dayItem.setDayBean(dayBean);
+                dayLayout.addView(dayItem);
+            }
+            int index = 0;
+            while(index<exponentBeanArrayList.size()){
+                WeatherExponentItem exponentItem = new WeatherExponentItem(this);
+                if(exponentBeanArrayList.size()-index>1)
+                    exponentItem.setBeans(exponentBeanArrayList.get(index++),exponentBeanArrayList.get(index++));
+                else
+                    exponentItem.setBeans(exponentBeanArrayList.get(index++));
+                exponentLayout.addView(exponentItem);
+            }
         }
     }
 

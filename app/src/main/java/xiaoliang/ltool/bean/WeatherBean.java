@@ -28,10 +28,14 @@ public class WeatherBean {
     }
 
     public String getAqi() {
+        if(aqi==null)
+            return "";
         return aqi;
     }
 
     public String getQuickAqi() {
+        if(quality==null)
+            return getAqi();
         return aqi+"["+quality+"]";
     }
 
@@ -40,6 +44,8 @@ public class WeatherBean {
     }
 
     public String getCity() {
+        if(city==null)
+            return "";
         return city;
     }
 
@@ -59,6 +65,8 @@ public class WeatherBean {
     }
 
     public String getHumidity() {
+        if(humidity==null)
+            return "";
         return humidity;
     }
 
@@ -70,6 +78,8 @@ public class WeatherBean {
         return dayBeen;
     }
     public WeatherDayBean getDayBeen(int index) {
+        if(dayBeen==null||dayBeen.size()<=index)
+            return null;
         return dayBeen.get(index);
     }
 
@@ -90,6 +100,8 @@ public class WeatherBean {
     }
 
     public String getMajorPollutants() {
+        if(majorPollutants==null)
+            return "";
         return majorPollutants;
     }
 
@@ -98,6 +110,8 @@ public class WeatherBean {
     }
 
     public String getNowTemperature() {
+        if(nowTemperature==null)
+            return "";
         return nowTemperature;
     }
 
@@ -106,6 +120,8 @@ public class WeatherBean {
     }
 
     public String getPm25() {
+        if(pm25==null)
+            return "";
         return pm25;
     }
 
@@ -114,6 +130,8 @@ public class WeatherBean {
     }
 
     public String getQuality() {
+        if(quality==null)
+            return "";
         return quality;
     }
 
@@ -122,6 +140,8 @@ public class WeatherBean {
     }
 
     public String getSuggest() {
+        if(suggest==null)
+            return "";
         return suggest;
     }
 
@@ -130,6 +150,8 @@ public class WeatherBean {
     }
 
     public String getUpdateTime() {
+        if(updateTime==null)
+            return "";
         return updateTime;
     }
 
@@ -138,6 +160,8 @@ public class WeatherBean {
     }
 
     public String getWind() {
+        if(wind==null)
+            return "";
         return wind;
     }
 
@@ -146,6 +170,8 @@ public class WeatherBean {
     }
 
     public String getWindDirection() {
+        if(windDirection==null)
+            return "";
         return windDirection;
     }
 
@@ -154,6 +180,8 @@ public class WeatherBean {
     }
 
     public String getMsg() {
+        if(msg==null)
+            return "";
         return msg;
     }
 

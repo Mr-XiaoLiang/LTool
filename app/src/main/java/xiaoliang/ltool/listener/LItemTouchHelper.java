@@ -30,13 +30,10 @@ public class LItemTouchHelper extends ItemTouchHelper {
     }
 
     public static LItemTouchHelper newInstance(RecyclerView recyclerView, boolean canDrag, boolean canSwipe, LItemTouchCallback.OnItemTouchCallbackListener onItemTouchCallbackListener) {
-        LItemTouchCallback cb = new LItemTouchCallback(onItemTouchCallbackListener);
-        cb.setListener(onItemTouchCallbackListener);
-        LItemTouchHelper helper = new LItemTouchHelper(cb);
-        helper.attachToRecyclerView(recyclerView);
+        LItemTouchHelper helper = new LItemTouchHelper(new LItemTouchCallback(onItemTouchCallbackListener));
         helper.setCanDrag(canDrag);
         helper.setCanSwipe(canSwipe);
-        helper.setCallback(cb);
+        helper.attachToRecyclerView(recyclerView);
         return helper;
     }
 
