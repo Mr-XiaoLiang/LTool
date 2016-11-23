@@ -18,10 +18,19 @@
     </LinearLayout>
     <TextView
         android:id="@+id/item_note_type_name"
-        android:layout_width="match_parent"
+        android:layout_width="0px"
+        android:layout_weight="1"
         android:gravity="center_vertical"
         android:layout_height="match_parent"
         android:text="NoteTyp类型"
         android:textSize="@dimen/item_name"
         android:textColor="@android:color/black"/>
+    <ImageView
+        android:id="@+id/item_note_type_cancel"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_cancel"
+        android:padding="@dimen/cardview_padding"
+        android:tint="@android:color/darker_gray"/>
 </LinearLayout>

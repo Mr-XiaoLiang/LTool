@@ -119,7 +119,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         qrCreate = (CardView) findViewById(R.id.content_main_qrcreate);
         meizi = (CardView) findViewById(R.id.content_main_meizhi);
         lock = (CardView) findViewById(R.id.content_main_lock);
-        findViewById(R.id.content_main_note).setOnClickListener(this);
+        View note = findViewById(R.id.content_main_note);
+        note.setOnClickListener(this);
+        note.setVisibility(View.GONE);
         handler = new MyHandler();
         qrCreate.setOnClickListener(this);
         qrRead.setOnClickListener(this);
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lock.setOnClickListener(this);
         headImg.setOnLongClickListener(this);
         showWeather = SharedPreferencesUtils.getWeatherShow(this);
+        lock.setOnLongClickListener(this);
     }
 
     @Override
@@ -314,6 +317,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
                 return true;
+            case R.id.content_main_lock:
+                findViewById(R.id.content_main_note).setVisibility(View.VISIBLE);
+                break;
         }
         return false;
     }

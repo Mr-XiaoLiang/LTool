@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/item_note_add_root">
+    android:layout_height="wrap_content"
+    android:id="@+id/item_note_add_root"
+    android:background="@android:color/white">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
+        android:paddingStart="@dimen/cardview_padding"
         android:paddingRight="@dimen/cardview_padding">
         <LinearLayout
             android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <ImageView
+                android:foreground="?attr/selectableItemBackground"
+                android:tint="@android:color/darker_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_move"
+                android:id="@+id/item_note_add_move"
+                android:paddingTop="4dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="7dp">
+            android:paddingLeft="2dp">
             <TextView
                 android:padding="5dp"
                 android:layout_width="wrap_content"
@@ -41,6 +55,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
             <ImageView
+                android:foreground="?attr/selectableItemBackground"
                 android:visibility="gone"
                 android:id="@+id/item_note_add_cancel"
                 android:layout_width="wrap_content"

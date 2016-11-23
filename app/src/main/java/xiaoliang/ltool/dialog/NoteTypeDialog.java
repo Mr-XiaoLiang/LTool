@@ -198,7 +198,7 @@ public class NoteTypeDialog extends Dialog implements
     public interface OnNoteTypeSelectedListener{
         void onNoteTypeSelected(int typeId,int color,String typeName);
     }
-    private class TypeAdapter extends BaseAdapter{
+    private class TypeAdapter extends BaseAdapter implements OnItemDeleteListener{
 
         private LayoutInflater inflater;
 
@@ -235,34 +235,54 @@ public class NoteTypeDialog extends Dialog implements
             }else{
                 holder = (Holder) convertView.getTag();
             }
-            holder.onBind(typeBeens.get(position));
+            holder.onBind(typeBeens.get(position),this);
             return convertView;
         }
+
+        @Override
+        public void onDelect(int id) {
+            DatabaseHelper.delNoteType(getContext(),id);
+            getDate();
+        }
     }
-    private class Holder{
+    private class Holder implements View.OnClickListener{
         private TextView name;
         private ImageView color;
         private DotDrawable dotDrawable;
+        private View cancel;
+        private OnItemDeleteListener listener;
+        private NoteTypeBean bean;
 
         public Holder(View item) {
             name = (TextView) item.findViewById(R.id.item_note_type_name);
             color = (ImageView) item.findViewById(R.id.item_note_type_img);
+            cancel = item.findViewById(R.id.item_note_type_cancel);
             dotDrawable = new DotDrawable();
+            cancel.setOnClickListener(this);
         }
 
-        private void onBind(NoteTypeBean bean){
+        private void onBind(NoteTypeBean bean,OnItemDeleteListener listener){
+            this.listener = listener;
+            this.bean = bean;
             if(bean.id<0){
-//                if(Build.VERSION.SDK_INT>21){
-//                    color.setImageResource(R.drawable.ic_add);
-//                    color.setImageTintList(ColorStateList.valueOf(bean.color));
-//                }else{
-//                }
                 color.setImageDrawable(OtherUtil.tintDrawable(getContext(),R.drawable.ic_add,bean.color));
+                cancel.setVisibility(View.GONE);
             }else{
                 dotDrawable.setColor(bean.color);
                 color.setImageDrawable(dotDrawable);
+                cancel.setVisibility(View.VISIBLE);
             }
             name.setText(bean.typeName);
         }
+
+        @Override
+        public void onClick(View view) {
+            if(view.getId()==cancel.getId()){
+                listener.onDelect(bean.id);
+            }
+        }
+    }
+    private interface OnItemDeleteListener{
+        void onDelect(int id);
     }
 }

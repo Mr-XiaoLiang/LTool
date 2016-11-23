@@ -5,6 +5,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 
 import java.util.Collections;
 import java.util.List;
@@ -92,6 +93,13 @@ public class LItemTouchCallback extends ItemTouchHelper.Callback {
             listener.onSwiped(viewHolder.getAdapterPosition());
         }
     }
+
+    public void onItemViewClick(RecyclerView.ViewHolder holder, View v){
+        if(listener!=null){
+            listener.onItemViewClick(holder,v);
+        }
+    }
+
     public interface OnItemTouchCallbackListener {
         /**
          * 当某个Item被滑动删除的时候
@@ -108,6 +116,8 @@ public class LItemTouchCallback extends ItemTouchHelper.Callback {
          * @return 开发者处理了操作应该返回true，开发者没有处理就返回false
          */
         boolean onMove(int srcPosition, int targetPosition);
+
+        void onItemViewClick(RecyclerView.ViewHolder holder, View v);
     }
 
     public static class DefaultOnItemTouchCallbackListener implements OnItemTouchCallbackListener{
@@ -141,6 +151,11 @@ public class LItemTouchCallback extends ItemTouchHelper.Callback {
                 }
             }
             return false;
+        }
+
+        @Override
+        public void onItemViewClick(RecyclerView.ViewHolder holder, View v) {
+
         }
     }
 

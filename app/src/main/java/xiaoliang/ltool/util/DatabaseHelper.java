@@ -190,7 +190,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * 根据ID查询某一个笔记
      */
-    public static NoteBean findBeanById(Context context,int id){
+    public static NoteBean findNoteById(Context context,int id){
         SQLiteDatabase sql = DB(context);
         NoteBean bean = new NoteBean();
         Cursor c = sql.rawQuery(DBConstant.SELECT_NOTE_BY_ID_SQL,new String[]{String.valueOf(id)});

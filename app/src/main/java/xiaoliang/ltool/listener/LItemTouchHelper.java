@@ -2,6 +2,9 @@ package xiaoliang.ltool.listener;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
+
+import xiaoliang.ltool.adapter.note.NoteHolder;
 
 /**
  * Created by liuj on 2016/11/19.
@@ -30,9 +33,11 @@ public class LItemTouchHelper extends ItemTouchHelper {
     }
 
     public static LItemTouchHelper newInstance(RecyclerView recyclerView, boolean canDrag, boolean canSwipe, LItemTouchCallback.OnItemTouchCallbackListener onItemTouchCallbackListener) {
-        LItemTouchHelper helper = new LItemTouchHelper(new LItemTouchCallback(onItemTouchCallbackListener));
+        LItemTouchCallback callback = new LItemTouchCallback(onItemTouchCallbackListener);
+        LItemTouchHelper helper = new LItemTouchHelper(callback);
         helper.setCanDrag(canDrag);
         helper.setCanSwipe(canSwipe);
+        helper.setCallback(callback);
         helper.attachToRecyclerView(recyclerView);
         return helper;
     }
@@ -46,7 +51,12 @@ public class LItemTouchHelper extends ItemTouchHelper {
         if(callback!=null)
             callback.setCanSwipe(canSwipe);
     }
-
+    public void onSwiped(NoteHolder holder){
+        callback.onSwiped(holder,0);
+    }
+    public void onItemViewClick(RecyclerView.ViewHolder holder, View v){
+        callback.onItemViewClick(holder,v);
+    }
     public void setCallback(LItemTouchCallback callback) {
         this.callback = callback;
     }
