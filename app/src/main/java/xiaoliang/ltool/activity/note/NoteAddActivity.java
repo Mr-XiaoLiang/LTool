@@ -1,5 +1,7 @@
 package xiaoliang.ltool.activity.note;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -13,9 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.TimePicker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 import xiaoliang.ltool.R;
@@ -49,6 +54,7 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<NoteAddBean> noteAddBeans;
     private NoteAddAdapter adapter;
     private int maxPosition = 0;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,20 +275,96 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onItemViewClick(RecyclerView.ViewHolder holder, View v) {
+        int year,month,day,hour,minute;
+        final int index = holder.getAdapterPosition();
         switch (v.getId()){
             case R.id.item_note_add_additem:
                 addItem(itemType,holder.getAdapterPosition());
                 break;
-
+            case R.id.item_note_add_start_date:
+                if(calendar==null)
+                    calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(noteAddBeans.get(index).startTime);
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+                new DatePickerDialog(this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                calendar.set(Calendar.YEAR,year);
+                                calendar.set(Calendar.MONTH,monthOfYear);
+                                calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                                noteAddBeans.get(index).startTime = calendar.getTimeInMillis();
+                                adapter.notifyItemChanged(index);
+                            }
+                        },year,month,day).show();
+                break;
+            case R.id.item_note_add_start_time:
+                if(calendar==null)
+                    calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(noteAddBeans.get(index).startTime);
+                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                minute = calendar.get(Calendar.MINUTE);
+                new TimePickerDialog(this,
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                                calendar.set(Calendar.MINUTE,minute);
+                                noteAddBeans.get(index).startTime = calendar.getTimeInMillis();
+                                adapter.notifyItemChanged(index);
+                            }
+                        },hour,minute,true).show();
+                break;
+            case R.id.item_note_add_end_date:
+                if(calendar==null)
+                    calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(noteAddBeans.get(index).endTime);
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+                new DatePickerDialog(this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                calendar.set(Calendar.YEAR,year);
+                                calendar.set(Calendar.MONTH,monthOfYear);
+                                calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                                noteAddBeans.get(index).endTime = calendar.getTimeInMillis();
+                                adapter.notifyItemChanged(index);
+                            }
+                        },year,month,day).show();
+                break;
+            case R.id.item_note_add_end_time:
+                if(calendar==null)
+                    calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(noteAddBeans.get(index).endTime);
+                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                minute = calendar.get(Calendar.MINUTE);
+                new TimePickerDialog(this,
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                                calendar.set(Calendar.MINUTE,minute);
+                                noteAddBeans.get(index).endTime = calendar.getTimeInMillis();
+                                adapter.notifyItemChanged(index);
+                            }
+                        },hour,minute,true).show();
+                break;
+            case R.id.item_note_add_advance_num:
+                break;
         }
     }
 
     private void addItem(int type,int addIndex){
+        NoteAddBean bean = new NoteAddBean(type);
         switch (type){
             case NoteAddBean.ADDRESS:
             case NoteAddBean.TIME:
+                bean.endTime = bean.startTime = System.currentTimeMillis();
             case NoteAddBean.MONEY:
-                NoteAddBean bean = new NoteAddBean(type);
                 if(!noteAddBeans.contains(bean)){//存在就不再添加了
                     noteAddBeans.add(bean);
                     adapter.notifyItemInserted(noteAddBeans.indexOf(bean));
@@ -291,7 +373,7 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
             case NoteAddBean.TEXT:
             case NoteAddBean.LIST:
             case NoteAddBean.TODO:
-                noteAddBeans.add(addIndex,new NoteAddBean(type));
+                noteAddBeans.add(addIndex,bean);
                 adapter.notifyItemInserted(addIndex);
                 maxPosition = ++addIndex;
                 onDataChange();
@@ -305,7 +387,7 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
      * 主要是为了编号item
      */
     private void onDataChange(){
-        int max = 1;
+        int max = 0;
         int index = 1;
         for(NoteAddBean bean:noteAddBeans){
             if(bean!=null&&bean.type==NoteAddBean.LIST){

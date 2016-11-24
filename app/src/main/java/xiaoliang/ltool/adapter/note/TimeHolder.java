@@ -21,13 +21,11 @@ import xiaoliang.ltool.listener.LItemTouchHelper;
  * 时间选择的item
  */
 
-public class TimeHolder extends NoteHolder implements View.OnClickListener,TextWatcher,
+public class TimeHolder extends NoteHolder implements View.OnClickListener,
         SwitchCompat.OnCheckedChangeListener,AppCompatSpinner.OnItemSelectedListener {
 
     private SwitchCompat oneDay,alertBtn;
-    private TextView startData,startTime,endData,endTime;
-    private TextInputEditText aheadTime;
-    private TextView aheadUnit;
+    private TextView startData,startTime,endData,endTime,aheadTime;
     private Calendar calendar;
     private NoteAddBean bean;
     private LItemTouchHelper helper;
@@ -41,8 +39,7 @@ public class TimeHolder extends NoteHolder implements View.OnClickListener,TextW
         startTime = (TextView) itemView.findViewById(R.id.item_note_add_start_time);
         endData = (TextView) itemView.findViewById(R.id.item_note_add_end_date);
         endTime = (TextView) itemView.findViewById(R.id.item_note_add_end_time);
-        aheadTime = (TextInputEditText) itemView.findViewById(R.id.item_note_add_advance_num);
-        aheadUnit = (TextView) itemView.findViewById(R.id.item_note_add_advance_unit);
+        aheadTime = (TextView) itemView.findViewById(R.id.item_note_add_advance_num);
         itemView.findViewById(R.id.item_note_add_cancel).setOnClickListener(this);
         oneDay.setOnCheckedChangeListener(this);
         alertBtn.setOnCheckedChangeListener(this);
@@ -50,22 +47,9 @@ public class TimeHolder extends NoteHolder implements View.OnClickListener,TextW
         startTime.setOnClickListener(this);
         endData.setOnClickListener(this);
         endTime.setOnClickListener(this);
-        aheadTime.addTextChangedListener(this);
+        aheadTime.setOnClickListener(this);
         calendar = Calendar.getInstance();
     }
-
-    @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-    @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        if(bean!=null){
-            bean.note = charSequence.toString();
-        }
-    }
-
-    @Override
-    public void afterTextChanged(Editable editable) {}
 
     @Override
     public void onClick(View view) {
@@ -75,9 +59,10 @@ public class TimeHolder extends NoteHolder implements View.OnClickListener,TextW
             case R.id.item_note_add_start_time:
             case R.id.item_note_add_end_date:
             case R.id.item_note_add_end_time:
+            case R.id.item_note_add_advance_num:
                 helper.onItemViewClick(this,view);
                 break;
-            case R.id.item_note_add_cancel:
+            case R.id.item_note_add_cancel://调用删除方法
                 helper.onSwiped(this);
                 break;
         }
@@ -90,13 +75,28 @@ public class TimeHolder extends NoteHolder implements View.OnClickListener,TextW
         oneDay.setChecked(bean.oneDay);
         alertBtn.setChecked(bean.alert);
         calendar.setTimeInMillis(bean.startTime);
-        startData.setText(calendar.get(Calendar.YEAR)+"年"+calendar.get(Calendar.MONTH)+"月"+calendar.get(Calendar.DAY_OF_MONTH)+"日");
-        startTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
+        startData.setText(getDateFormat(Calendar.YEAR)+"年"+getDateFormat(Calendar.MONTH)+"月"+getDateFormat(Calendar.DAY_OF_MONTH)+"日");
+        startTime.setText(getDateFormat(Calendar.HOUR_OF_DAY)+":"+getDateFormat(Calendar.MINUTE));
         calendar.setTimeInMillis(bean.endTime);
-        endData.setText(calendar.get(Calendar.YEAR)+"年"+calendar.get(Calendar.MONTH)+"月"+calendar.get(Calendar.DAY_OF_MONTH)+"日");
-        endTime.setText(calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE));
-        aheadTime.setText(String.valueOf(bean.advance));
-        aheadUnit.setText(aheadUnitName[bean.advanceUnit]);
+        endData.setText(getDateFormat(Calendar.YEAR)+"年"+getDateFormat(Calendar.MONTH)+"月"+getDateFormat(Calendar.DAY_OF_MONTH)+"日");
+        endTime.setText(getDateFormat(Calendar.HOUR_OF_DAY)+":"+getDateFormat(Calendar.MINUTE));
+        aheadTime.setText(String.valueOf(bean.advance)+aheadUnitName[bean.advanceUnit]);
+    }
+
+    private String getDateFormat(int type){
+        String out;
+        switch (type){
+            case Calendar.MONTH:
+                out = calendar.get(type)+1+"";
+                break;
+            default:
+                out = calendar.get(type)+"";
+                break;
+        }
+        if(out.length()<2){
+            out = "0"+out;
+        }
+        return out;
     }
 
     @Override
