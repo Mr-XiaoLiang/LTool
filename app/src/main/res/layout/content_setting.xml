@@ -119,6 +119,48 @@
                 android:textSize="14sp"
                 android:text="修改快捷方式显示顺序及内容(Android 7.1以上可用)"/>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="记事本"
+            android:layout_marginTop="@dimen/setting_item_padding"
+            android:paddingLeft="@dimen/setting_item_padding"
+            android:paddingTop="@dimen/setting_item_padding"
+            android:background="@android:color/white"/>
+        <LinearLayout
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="onClick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/setting_item_padding"
+            android:background="@android:color/white">
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    android:text="关闭页面时保存"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:text="笔记详细页面，点击返回时，保存笔记的最后状态"/>
+            </LinearLayout>
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/activity_setting_note_autosave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -228,7 +270,7 @@
                     android:text="部分地区可能无法获取天气信息"/>
             </LinearLayout>
             <android.support.v7.widget.SwitchCompat
-                android:id="@+id/activity_setting_meizhi_weather"
+                android:id="@+id/activity_setting_weather"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

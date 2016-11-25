@@ -109,7 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param bean bean
      * @return id
      */
-    public static long addNote(Context context, NoteBean bean){
+    public static int addNote(Context context, NoteBean bean){
         SQLiteDatabase sql = DB(context);
         ContentValues values = new ContentValues();
         values.put(DBConstant.NT_title,bean.title);
@@ -123,7 +123,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(DBConstant.NT_noteType,bean.noteType);
         values.put(DBConstant.NT_money,bean.money);
         values.put(DBConstant.NT_income,bean.income);
-        return sql.insert(DBConstant.NOTE_TABLE,null,values);
+        sql.insert(DBConstant.NOTE_TABLE,null,values);
+        Cursor cursor = sql.rawQuery(DBConstant.SELECT_LAST_NOTE_ID,null);
+        int id = 0;
+        if(cursor.moveToFirst())
+            id = cursor.getInt(0);
+        return id;
     }
 
     /**

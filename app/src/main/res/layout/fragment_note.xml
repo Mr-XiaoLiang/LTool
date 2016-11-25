@@ -3,8 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="xiaoliang.ltool.fragment.note.NoteFragment">
-    <TextView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/fragment_note_swiperefreshlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_note_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

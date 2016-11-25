@@ -350,4 +350,18 @@ public class SharedPreferencesUtils {
         return mShareConfig.getBoolean("WeatherShow",true);
     }
 
+    public static void setNoteAutoSave(Context context,boolean show){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE );
+        Editor conEdit = mShareConfig.edit();
+        conEdit.putBoolean("NoteAutoSave", show);
+        conEdit.commit();
+    }
+
+    public static boolean getNoteAutoSave(Context context){
+        SharedPreferences mShareConfig =
+                context.getSharedPreferences(USER, Context.MODE_PRIVATE);
+        return mShareConfig.getBoolean("NoteAutoSave",true);
+    }
+
 }

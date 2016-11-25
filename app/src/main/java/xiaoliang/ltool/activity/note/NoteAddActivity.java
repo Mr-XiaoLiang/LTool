@@ -7,11 +7,14 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,10 +29,14 @@ import java.util.Collections;
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.adapter.NoteAddAdapter;
 import xiaoliang.ltool.bean.NoteAddBean;
+import xiaoliang.ltool.dialog.AdvanceNumDialog;
+import xiaoliang.ltool.dialog.LoadDialog;
 import xiaoliang.ltool.dialog.NoteTypeDialog;
 import xiaoliang.ltool.listener.LItemTouchCallback;
 import xiaoliang.ltool.listener.LItemTouchHelper;
+import xiaoliang.ltool.util.DatabaseHelper;
 import xiaoliang.ltool.util.DialogUtil;
+import xiaoliang.ltool.util.NoteUtil;
 import xiaoliang.ltool.util.OtherUtil;
 import xiaoliang.ltool.view.DotDrawable;
 
@@ -37,16 +44,20 @@ import xiaoliang.ltool.view.DotDrawable;
  * 添加一份笔记，并且也是回显笔记，修改笔记的页面
  * @author Liuj
  */
-public class NoteAddActivity extends AppCompatActivity implements View.OnClickListener,NoteTypeDialog.OnNoteTypeSelectedListener,LItemTouchCallback.OnItemTouchCallbackListener{
+public class NoteAddActivity extends AppCompatActivity implements
+        View.OnClickListener,NoteTypeDialog.OnNoteTypeSelectedListener,
+        LItemTouchCallback.OnItemTouchCallbackListener,
+        NoteUtil.GetNoteDetailCallback,NoteUtil.SaveNoteDetailCallback{
 
     public static final String ARG_NOTE_ID = "ARG_NOTE_ID";
 
     private int itemType = -1;
+    private TextInputEditText titleEdit;
     //6个按钮（此处获取仅仅是为了修改按钮颜色，点击事件的监听并不依靠对象）
     private ImageView checkListBtn,numberListBtn,textListBtn,moneyBtn,addressBtn,advanceBtn;
     //笔记类型
     private int noteTypeId = -1;
-    private ImageView noteTypeColor;
+//    private ImageView noteTypeColor;
     private DotDrawable dotDrawable;
     //回显/修改
     private int noteId = -1;
@@ -55,6 +66,8 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
     private NoteAddAdapter adapter;
     private int maxPosition = 0;
     private Calendar calendar;
+    private LoadDialog dialog;
+    private boolean isDestroy = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +87,8 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
         moneyBtn = (ImageView) findViewById(R.id.content_note_add_money_btn);
         addressBtn = (ImageView) findViewById(R.id.content_note_add_address_btn);
         advanceBtn = (ImageView) findViewById(R.id.content_note_add_time_btn);
-        noteTypeColor = (ImageView) findViewById(R.id.content_note_add_color);
+        titleEdit = (TextInputEditText) findViewById(R.id.content_note_add_title);
+        ImageView noteTypeColor = (ImageView) findViewById(R.id.content_note_add_color);
         recyclerView = (RecyclerView) findViewById(R.id.content_note_add_recyclerview);
         noteTypeColor.setImageDrawable(dotDrawable = new DotDrawable(this));
         textListBtn.setImageDrawable(getDrawable(R.drawable.ic_subject,false));
@@ -100,19 +114,24 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
             noteAddBeans.add(new NoteAddBean(NoteAddBean.ADDITEM));
             adapter.notifyDataSetChanged();//通知适配器数据变化
         }else{
-            //TODO 获取数据库数据
+            getNote();
         }
     }
 
     @Override
     protected void onDestroy() {
-        //TODO 提交数据
-        super.onDestroy();
+        if(!isDestroy){
+            isDestroy = true;
+            saveNote();
+        }else{
+            super.onDestroy();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_note_add, menu);
+        menu.findItem(R.id.menu_note_add_share).setVisible(false);
         return true;
     }
     @Override
@@ -121,11 +140,16 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.menu_note_add_delete:
+                DatabaseHelper.deleteNote(this,noteId);
+                isDestroy = true;
+                finish();
+                break;
             case R.id.menu_note_add_share:
                 //TODO 分享
                 break;
             case R.id.menu_note_add_done:
-                //TODO 提交
+                saveNote();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -354,6 +378,17 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
                         },hour,minute,true).show();
                 break;
             case R.id.item_note_add_advance_num:
+                DialogUtil.getAdvanceNumDialog(
+                        this, noteAddBeans.get(index).advance,
+                        noteAddBeans.get(index).advanceUnit,
+                        new AdvanceNumDialog.OnAdvanceNumChangeListener() {
+                    @Override
+                    public void onAdvanceNumChange(long num, int unit) {
+                        noteAddBeans.get(index).advance = num;
+                        noteAddBeans.get(index).advanceUnit = unit;
+                        adapter.notifyItemChanged(index);
+                    }
+                });
                 break;
         }
     }
@@ -404,4 +439,66 @@ public class NoteAddActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void getNote(){
+        dialog = DialogUtil.getLoadDialog(this);
+        NoteUtil.getNoteDetail(this,noteId,this);
+    }
+
+    private void saveNote(){
+        String title = titleEdit.getText().toString().trim();
+        if(TextUtils.isEmpty(title)){
+            titleEdit.setError("请输入标题");
+            titleEdit.requestFocus();
+            return;
+        }else{
+            titleEdit.setError(null);
+        }
+        if(noteTypeId<0){
+            Snackbar.make(recyclerView,"请选择标签类型",Snackbar.LENGTH_SHORT)
+                    .setAction("选择", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            DialogUtil.getNoteTypeDialog(NoteAddActivity.this,NoteAddActivity.this);
+                        }
+                    }).show();
+            return;
+        }
+        dialog = DialogUtil.getLoadDialog(this);
+        NoteUtil.saveNoteDetail(this,noteId,title,noteTypeId,noteAddBeans,this);
+    }
+
+    @Override
+    public void onGetNoteCallback(int id, String title, int typeId, int typeColor, ArrayList<NoteAddBean> beans) {
+        if(dialog!=null)
+            dialog.dismiss();
+        this.noteId = id;
+        this.noteTypeId = typeId;
+        dotDrawable.setColor(typeColor);
+        titleEdit.setText(title);
+        noteAddBeans = beans;
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSaveNoteCallback(int i) {
+        if(dialog!=null)
+            dialog.dismiss();
+        String toast;
+        if(noteId>0){
+            if(i>0)
+                toast = "数据已更新";
+            else
+                toast = "数据更新失败";
+        }else{
+            noteId = i;
+            if(i>0)
+                toast = "笔记已保存";
+            else
+                toast = "笔记保存失败";
+        }
+        Snackbar.make(recyclerView,toast,Snackbar.LENGTH_SHORT).show();
+        if(isDestroy){
+            finish();
+        }
+    }
 }

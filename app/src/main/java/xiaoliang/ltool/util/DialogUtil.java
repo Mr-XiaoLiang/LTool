@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.bean.CityBean;
+import xiaoliang.ltool.dialog.AdvanceNumDialog;
 import xiaoliang.ltool.dialog.CityDialog;
 import xiaoliang.ltool.dialog.ColorsDialog;
 import xiaoliang.ltool.dialog.LoadDialog;
@@ -98,6 +99,23 @@ public class DialogUtil {
         WindowManager.LayoutParams p = window.getAttributes(); // 获取对话框当前的参数值
         p.height = (int) (d.getHeight() * 0.5);
         p.width = (int) (d.getWidth() * 0.9);
+        dialog.onWindowAttributesChanged(p);
+        window.setAttributes(p);
+        return dialog;
+    }
+
+    public static AdvanceNumDialog getAdvanceNumDialog(Activity context, long num, int unit,AdvanceNumDialog.OnAdvanceNumChangeListener listener){
+        AdvanceNumDialog dialog = AdvanceNumDialog.newInstance(context,num,unit,listener);
+        Window window = dialog.getWindow();
+        window.setGravity(Gravity.CENTER); // 此处可以设置dialog显示的位置
+        window.setWindowAnimations(R.style.dialogstyle_vertical); // 添加动画
+        dialog.setCancelable(true);
+        dialog.show();
+        WindowManager m = context.getWindowManager();
+        Display d = m.getDefaultDisplay(); // 获取屏幕宽、高用
+        WindowManager.LayoutParams p = window.getAttributes(); // 获取对话框当前的参数值
+//        p.height = (int) (d.getHeight() * 0.5);
+        p.width = (int) (d.getWidth() * 0.8);
         dialog.onWindowAttributesChanged(p);
         window.setAttributes(p);
         return dialog;

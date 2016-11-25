@@ -18,7 +18,7 @@ import xiaoliang.ltool.util.ToastUtil;
 
 public class SettingActivity extends AppCompatActivity implements SwitchCompat.OnCheckedChangeListener,View.OnClickListener {
 
-    private SwitchCompat  onlyWifiSwitch, dayBgSwitch, meizhiSwitch, meizhiOnceSwitch,weatherSwitch;
+    private SwitchCompat  onlyWifiSwitch, dayBgSwitch, meizhiSwitch, meizhiOnceSwitch,weatherSwitch,noteAutoSaveSwitch;
     private View updateBtn, aboutBtn;
     private TextView version;
 //    private static final int CHECK_UPDATE = 200;
@@ -51,13 +51,15 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
         updateBtn = findViewById(R.id.activity_setting_update);
         aboutBtn = findViewById(R.id.activity_setting_about);
         version = (TextView) findViewById(R.id.activity_setting_version);
-        weatherSwitch = (SwitchCompat) findViewById(R.id.activity_setting_meizhi_weather);
+        weatherSwitch = (SwitchCompat) findViewById(R.id.activity_setting_weather);
+        noteAutoSaveSwitch = (SwitchCompat) findViewById(R.id.activity_setting_note_autosave);
 
         onlyWifiSwitch.setOnCheckedChangeListener(this);
         dayBgSwitch.setOnCheckedChangeListener(this);
         meizhiOnceSwitch.setOnCheckedChangeListener(this);
         meizhiSwitch.setOnCheckedChangeListener(this);
         weatherSwitch.setOnCheckedChangeListener(this);
+        noteAutoSaveSwitch.setOnCheckedChangeListener(this);
         updateBtn.setOnClickListener(this);
         aboutBtn.setOnClickListener(this);
 
@@ -66,6 +68,7 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
         meizhiSwitch.setChecked(SharedPreferencesUtils.getShowMeizhi(this));
         meizhiOnceSwitch.setChecked(SharedPreferencesUtils.getShowMeizhiOnce(this));
         weatherSwitch.setChecked(SharedPreferencesUtils.getWeatherShow(this));
+        noteAutoSaveSwitch.setChecked(SharedPreferencesUtils.getNoteAutoSave(this));
 //        ver = OtherUtil.getVersion(this);
 //        version.setText("V"+ ver);
         if(Build.VERSION.SDK_INT<Build.VERSION_CODES.N_MR1){
@@ -112,8 +115,11 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
                 if (b) {
                     meizhiSwitch.setChecked(true);
                 }
-            case R.id.activity_setting_meizhi_weather:
+            case R.id.activity_setting_weather:
                 SharedPreferencesUtils.setWeatherShow(this,b);
+                break;
+            case R.id.activity_setting_note_autosave:
+                SharedPreferencesUtils.setNoteAutoSave(this,b);
                 break;
         }
     }

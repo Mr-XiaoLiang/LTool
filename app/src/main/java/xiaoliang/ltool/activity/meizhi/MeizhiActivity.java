@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,7 @@ import xiaoliang.ltool.bean.MeizhiBeanArray;
 import xiaoliang.ltool.constant.MeizhiType;
 import xiaoliang.ltool.dialog.LoadDialog;
 import xiaoliang.ltool.fragment.meizhi.MeizhiFragment;
+import xiaoliang.ltool.listener.ScrollViewFloatBtnBehavior;
 import xiaoliang.ltool.util.DialogUtil;
 
 public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.OnFragmentInteractionListener,View.OnClickListener {
@@ -132,9 +134,9 @@ public class MeizhiActivity extends AppCompatActivity implements MeizhiFragment.
     @Override
     public void onScrollStateChanged(boolean show) {
         if(show){
-            toTop.setVisibility(View.VISIBLE);
+            toTop.show();
         }else{
-            toTop.setVisibility(View.GONE);
+            toTop.hide();
         }
     }
 

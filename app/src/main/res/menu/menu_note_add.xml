@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="xiaoliang.ltool.MainActivity">
     <item
+        android:id="@+id/menu_note_add_delete"
+        android:title="@string/menu_note_add_delete_str"
+        android:icon="@drawable/ic_delete"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menu_note_add_share"
         android:title="@string/menu_note_add_share_str"
         android:icon="@drawable/ic_share"

@@ -5,20 +5,17 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
 import xiaoliang.ltool.R;
-import xiaoliang.ltool.fragment.note.CalendarFragment;
 import xiaoliang.ltool.fragment.note.NoteFragment;
 import xiaoliang.ltool.fragment.note.NoteInterface;
 import xiaoliang.ltool.listener.OnNoteFragmentListener;
@@ -28,7 +25,8 @@ import xiaoliang.ltool.listener.OnNoteFragmentListener;
  */
 public class NoteActivity extends AppCompatActivity implements View.OnClickListener,OnNoteFragmentListener{
 
-    private NoteInterface[] noteFragments;
+    private NoteFragment[] noteFragments;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +36,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         if(getSupportActionBar()!=null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_note_fab);
+        fab = (FloatingActionButton) findViewById(R.id.activity_note_fab);
         fab.setOnClickListener(this);
         init();
     }
@@ -46,9 +44,9 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     private void init(){
         TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_note_tablayout);
         ViewPager viewPager = (ViewPager) findViewById(R.id.activity_note_viewpager);
-        noteFragments = new NoteInterface[2];
+        noteFragments = new NoteFragment[2];
         noteFragments[0] = NoteFragment.newInstance();
-        noteFragments[1] = CalendarFragment.newInstance();
+        noteFragments[1] = NoteFragment.newInstance();
         viewPager.setAdapter(new NotePageAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(0);
         tabLayout.setupWithViewPager(viewPager);
@@ -60,6 +58,15 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onNoteClick(int noteId) {
 
+    }
+
+    @Override
+    public void OnScrollChangeListener(boolean isScroll) {
+        if(isScroll){
+            fab.hide();
+        }else{
+            fab.show();
+        }
     }
 
     private class NotePageAdapter extends FragmentStatePagerAdapter {

@@ -99,7 +99,7 @@ public class DBConstant {
             " left join "+NOTE_TYPE_TABLE+
             " on "+ NOTE_TABLE+"."+NT_id+" = "+
             NOTE_TYPE_TABLE+"."+NTT_id+" where "+
-            NT_startTime+" < 0";
+            NT_startTime+" <= 0";
 
     /**
      * 查询笔记表SQL
@@ -148,4 +148,7 @@ public class DBConstant {
             NTT_color+", " +
             NTT_typeName+" " +
             "from "+NOTE_TYPE_TABLE;
+
+    public static final String SELECT_LAST_NOTE_ID = "select last_insert_rowid() from "+DBConstant.NOTE_TABLE;
+
 }

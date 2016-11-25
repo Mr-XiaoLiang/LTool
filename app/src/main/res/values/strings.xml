@@ -69,4 +69,5 @@
     <string name="action_qr_read">xiaoliang.ltool.QRRead</string>
     <string name="action_qr_create">xiaoliang.ltool.QRCreate</string>
     <string name="action_meizhi">xiaoliang.ltool.Meizhi</string>
+    <string name="menu_note_add_delete_str">删除</string>
 </resources>

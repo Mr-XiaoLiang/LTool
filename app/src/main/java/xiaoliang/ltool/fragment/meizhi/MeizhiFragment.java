@@ -163,7 +163,7 @@ public class MeizhiFragment extends Fragment implements SwipeRefreshLayout.OnRef
         @Override
         public void onScroll(boolean down, int newState) {
             if (mListener != null) {
-                mListener.onScrollStateChanged(down);
+                mListener.onScrollStateChanged(newState==RecyclerView.SCROLL_STATE_IDLE);
             }
         }
 

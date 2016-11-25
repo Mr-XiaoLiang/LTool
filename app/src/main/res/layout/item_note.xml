@@ -71,6 +71,7 @@
                             android:gravity="right"
                             android:textSize="20sp"
                             android:ellipsize="end"
+                            android:text="50"
                             android:textColor="@android:color/holo_red_light"
                             android:textStyle="bold"/>
                     </LinearLayout>
