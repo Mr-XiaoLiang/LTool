@@ -45,8 +45,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_note_tablayout);
         ViewPager viewPager = (ViewPager) findViewById(R.id.activity_note_viewpager);
         noteFragments = new NoteFragment[2];
-        noteFragments[0] = NoteFragment.newInstance();
-        noteFragments[1] = NoteFragment.newInstance();
+        noteFragments[0] = NoteFragment.newInstance(NoteFragment.TYPE_NOTE);
+        noteFragments[1] = NoteFragment.newInstance(NoteFragment.TYPE_CALENDAR);
         viewPager.setAdapter(new NotePageAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(0);
         tabLayout.setupWithViewPager(viewPager);
@@ -57,11 +57,13 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onNoteClick(int noteId) {
-
+        Intent intent = new Intent(this,NoteAddActivity.class);
+        intent.putExtra(NoteAddActivity.ARG_NOTE_ID,noteId);
+        startActivity(intent);
     }
 
     @Override
-    public void OnScrollChangeListener(boolean isScroll) {
+    public void OnScrollChange(boolean isScroll) {
         if(isScroll){
             fab.hide();
         }else{

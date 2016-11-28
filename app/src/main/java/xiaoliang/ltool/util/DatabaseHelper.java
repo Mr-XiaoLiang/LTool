@@ -33,7 +33,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if(oldVersion==1){
+            switch (newVersion){
+                case 2:
+                    db.execSQL("DROP TABLE "+DBConstant.NOTE_TABLE);
+                    db.execSQL(DBConstant.CREATE_NOTE_TABLE_SQL);
+                    break;
+            }
+        }
     }
     private static synchronized DatabaseHelper getHelper(Context context){
         if(databaseHelper == null){
@@ -121,8 +128,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(DBConstant.NT_advance,bean.advance+"");
         values.put(DBConstant.NT_address,bean.address);
         values.put(DBConstant.NT_noteType,bean.noteType);
-        values.put(DBConstant.NT_money,bean.money);
-        values.put(DBConstant.NT_income,bean.income);
+        values.put(DBConstant.NT_money,String.valueOf(bean.money));
+        values.put(DBConstant.NT_income,b2i(bean.income));
+        values.put(DBConstant.NT_createTime,System.currentTimeMillis()+"");
         sql.insert(DBConstant.NOTE_TABLE,null,values);
         Cursor cursor = sql.rawQuery(DBConstant.SELECT_LAST_NOTE_ID,null);
         int id = 0;
@@ -149,8 +157,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(DBConstant.NT_advance,bean.advance+"");
         values.put(DBConstant.NT_address,bean.address);
         values.put(DBConstant.NT_noteType,bean.noteType);
-        values.put(DBConstant.NT_money,bean.money);
-        values.put(DBConstant.NT_income,bean.income);
+        values.put(DBConstant.NT_money,String.valueOf(bean.money));
+        values.put(DBConstant.NT_createTime,System.currentTimeMillis()+"");
+        values.put(DBConstant.NT_income,b2i(bean.income));
         return sql.update(DBConstant.NOTE_TABLE,values,DBConstant.NT_id+" = ?",new String[]{String.valueOf(bean.id)});
     }
 
@@ -211,7 +220,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             bean.endTime = Long.valueOf(c.getString(c.getColumnIndex(DBConstant.NT_endTime)));
             bean.income = i2b(c.getInt(c.getColumnIndex(DBConstant.NT_income)));
             bean.startTime = Long.valueOf(c.getString(c.getColumnIndex(DBConstant.NT_startTime)));
+            bean.createTime = Long.valueOf(c.getString(c.getColumnIndex(DBConstant.NT_createTime)));
             bean.oneDay = i2b(c.getInt(c.getColumnIndex(DBConstant.NT_oneDay)));
+            bean.money = c.getFloat(c.getColumnIndex(DBConstant.NT_money));
+            bean.income = i2b(c.getInt(c.getColumnIndex(DBConstant.NT_income)));
         }
         c.close();
         return bean;
@@ -235,8 +247,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             bean.advance = c.getInt(c.getColumnIndex(DBConstant.NT_advance));
             bean.alert = i2b(c.getInt(c.getColumnIndex(DBConstant.NT_alert)));
             bean.endTime = Long.valueOf(c.getString(c.getColumnIndex(DBConstant.NT_endTime)));
+            bean.money = c.getFloat(c.getColumnIndex(DBConstant.NT_money));
             bean.income = i2b(c.getInt(c.getColumnIndex(DBConstant.NT_income)));
             bean.startTime = Long.valueOf(c.getString(c.getColumnIndex(DBConstant.NT_startTime)));
+            bean.createTime = Long.valueOf(c.getString(c.getColumnIndex(DBConstant.NT_createTime)));
             bean.oneDay = i2b(c.getInt(c.getColumnIndex(DBConstant.NT_oneDay)));
             list.add(bean);
         }

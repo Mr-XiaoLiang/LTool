@@ -22,7 +22,7 @@ import xiaoliang.ltool.listener.LItemTouchHelper;
  */
 
 public class TimeHolder extends NoteHolder implements View.OnClickListener,
-        SwitchCompat.OnCheckedChangeListener,AppCompatSpinner.OnItemSelectedListener {
+        SwitchCompat.OnCheckedChangeListener{
 
     private SwitchCompat oneDay,alertBtn;
     private TextView startData,startTime,endData,endTime,aheadTime;
@@ -116,15 +116,5 @@ public class TimeHolder extends NoteHolder implements View.OnClickListener,
                     bean.alert = b;
                 break;
         }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 }

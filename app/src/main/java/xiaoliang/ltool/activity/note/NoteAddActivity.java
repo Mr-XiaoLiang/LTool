@@ -119,16 +119,6 @@ public class NoteAddActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onDestroy() {
-        if(!isDestroy){
-            isDestroy = true;
-            saveNote();
-        }else{
-            super.onDestroy();
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_note_add, menu);
         menu.findItem(R.id.menu_note_add_share).setVisible(false);
@@ -138,11 +128,10 @@ public class NoteAddActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 return true;
             case R.id.menu_note_add_delete:
                 DatabaseHelper.deleteNote(this,noteId);
-                isDestroy = true;
                 finish();
                 break;
             case R.id.menu_note_add_share:
@@ -180,6 +169,13 @@ public class NoteAddActivity extends AppCompatActivity implements
                 DialogUtil.getNoteTypeDialog(this,this);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+//        isDestroy = true;
+//        saveNote();
+        super.onBackPressed();
     }
 
     private void setItemType(int type){
@@ -320,6 +316,8 @@ public class NoteAddActivity extends AppCompatActivity implements
                                 calendar.set(Calendar.MONTH,monthOfYear);
                                 calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                                 noteAddBeans.get(index).startTime = calendar.getTimeInMillis();
+                                if(noteAddBeans.get(index).startTime>noteAddBeans.get(index).endTime)
+                                    noteAddBeans.get(index).endTime = noteAddBeans.get(index).startTime;
                                 adapter.notifyItemChanged(index);
                             }
                         },year,month,day).show();
@@ -337,6 +335,8 @@ public class NoteAddActivity extends AppCompatActivity implements
                                 calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
                                 calendar.set(Calendar.MINUTE,minute);
                                 noteAddBeans.get(index).startTime = calendar.getTimeInMillis();
+                                if(noteAddBeans.get(index).startTime>noteAddBeans.get(index).endTime)
+                                    noteAddBeans.get(index).endTime = noteAddBeans.get(index).startTime;
                                 adapter.notifyItemChanged(index);
                             }
                         },hour,minute,true).show();
@@ -356,6 +356,8 @@ public class NoteAddActivity extends AppCompatActivity implements
                                 calendar.set(Calendar.MONTH,monthOfYear);
                                 calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
                                 noteAddBeans.get(index).endTime = calendar.getTimeInMillis();
+                                if(noteAddBeans.get(index).startTime>noteAddBeans.get(index).endTime)
+                                    noteAddBeans.get(index).startTime = noteAddBeans.get(index).endTime;
                                 adapter.notifyItemChanged(index);
                             }
                         },year,month,day).show();
@@ -373,6 +375,8 @@ public class NoteAddActivity extends AppCompatActivity implements
                                 calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
                                 calendar.set(Calendar.MINUTE,minute);
                                 noteAddBeans.get(index).endTime = calendar.getTimeInMillis();
+                                if(noteAddBeans.get(index).startTime>noteAddBeans.get(index).endTime)
+                                    noteAddBeans.get(index).startTime = noteAddBeans.get(index).endTime;
                                 adapter.notifyItemChanged(index);
                             }
                         },hour,minute,true).show();
@@ -475,8 +479,19 @@ public class NoteAddActivity extends AppCompatActivity implements
         this.noteTypeId = typeId;
         dotDrawable.setColor(typeColor);
         titleEdit.setText(title);
-        noteAddBeans = beans;
+        noteAddBeans.clear();
+        noteAddBeans.addAll(beans);
+        if(noteAddBeans.contains(new NoteAddBean(NoteAddBean.MONEY))){
+            moneyBtn.callOnClick();
+        }
+        if(noteAddBeans.contains(new NoteAddBean(NoteAddBean.ADDRESS))){
+            addressBtn.callOnClick();
+        }
+        if(noteAddBeans.contains(new NoteAddBean(NoteAddBean.TIME))){
+            advanceBtn.callOnClick();
+        }
         adapter.notifyDataSetChanged();
+        onDataChange();
     }
 
     @Override

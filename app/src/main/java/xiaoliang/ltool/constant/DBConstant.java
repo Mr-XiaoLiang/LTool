@@ -14,7 +14,7 @@ public class DBConstant {
     /**
      * 数据库版本
      */
-    public static final int version = 1;
+    public static final int version = 2;
     /**
      * 笔记类型表结构：
      * id int PRIMARY KEY
@@ -52,6 +52,7 @@ public class DBConstant {
     public static final String NT_income = "income";
     public static final String NT_title = "title";
     public static final String NT_note = "note";
+    public static final String NT_createTime = "createTime";
     public static final String NT_noteType = "noteType";
     /**
      * 创建笔记表的SQL
@@ -68,6 +69,7 @@ public class DBConstant {
             NT_income+" int, " +
             NT_title+" varchar, " +
             NT_note+" varchar, " +
+            NT_createTime+" varchar, " +
             NT_noteType+" int " +
             ");";
     /**
@@ -94,12 +96,13 @@ public class DBConstant {
             NT_title+", " +
             NT_note+", " +
             NT_noteType+", " +
+            NT_createTime+", " +
             NTT_color+
             " from "+NOTE_TABLE+
             " left join "+NOTE_TYPE_TABLE+
-            " on "+ NOTE_TABLE+"."+NT_id+" = "+
+            " on "+ NOTE_TABLE+"."+NT_noteType+" = "+
             NOTE_TYPE_TABLE+"."+NTT_id+" where "+
-            NT_startTime+" <= 0";
+            NT_startTime+" <= 0 order by "+NT_createTime+" desc";
 
     /**
      * 查询笔记表SQL
@@ -117,12 +120,13 @@ public class DBConstant {
             NT_title+", " +
             NT_note+", " +
             NT_noteType+", " +
+            NT_createTime+", " +
             NTT_color+
             " from "+NOTE_TABLE+
             " left join "+NOTE_TYPE_TABLE+
-            " on "+ NOTE_TABLE+"."+NT_id+" = "+
+            " on "+ NOTE_TABLE+"."+NT_noteType+" = "+
             NOTE_TYPE_TABLE+"."+NTT_id+" where "+
-            NT_startTime+" > 0";
+            NT_startTime+" > 0 order by "+NT_startTime+" desc";
 
     public static final String SELECT_NOTE_BY_ID_SQL = "select " +
             NOTE_TABLE+"."+NT_id+", " +
@@ -137,12 +141,13 @@ public class DBConstant {
             NT_title+", " +
             NT_note+", " +
             NT_noteType+", " +
+            NT_createTime+", " +
             NTT_color+
             " from "+NOTE_TABLE+
             " left join "+NOTE_TYPE_TABLE+
-            " on "+ NOTE_TABLE+"."+NT_id+" = "+
+            " on "+ NOTE_TABLE+"."+NT_noteType+" = "+
             NOTE_TYPE_TABLE+"."+NTT_id+" where "+
-            NT_id+" = ?";
+            NOTE_TABLE+"."+NT_id+" = ?";
     public static final String SELECT_NOTE_TYPE_SQL = "select " +
             NTT_id+", " +
             NTT_color+", " +

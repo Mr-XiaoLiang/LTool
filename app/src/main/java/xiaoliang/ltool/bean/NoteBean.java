@@ -17,6 +17,7 @@ public class NoteBean implements Serializable {
     public boolean income = false;//是否是收入
     public long startTime;//开始时间
     public long endTime;//结束时间
+    public long createTime;//创建时间
     public long advance;//提前时间
     public int noteType;//颜色ID
     public int color;//颜色色值
@@ -25,10 +26,10 @@ public class NoteBean implements Serializable {
     public String address;//地址
 
     public NoteBean() {
-        this(-1,"","",0,false,-1,-1,-1,-1,Color.BLACK,false,false,"");
+        this(-1,"","",0,false,-1,-1,-1,-1,Color.BLACK,false,false,"",0);
     }
 
-    public NoteBean(int id,String title, String note, float money, boolean income, long startTime, long endTime, long advance, int noteType, int color, boolean alert, boolean oneDay, String address) {
+    public NoteBean(int id,String title, String note, float money, boolean income, long startTime, long endTime, long advance, int noteType, int color, boolean alert, boolean oneDay, String address,long createTime) {
         this.id = id;
         this.title = title;
         this.note = note;
@@ -42,5 +43,6 @@ public class NoteBean implements Serializable {
         this.alert = alert;
         this.oneDay = oneDay;
         this.address = address;
+        this.createTime = createTime;
     }
 }

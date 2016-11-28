@@ -9,5 +9,5 @@ import android.view.View;
 
 public interface OnNoteFragmentListener {
     void onNoteClick(int noteId);
-    void OnScrollChangeListener(boolean isScroll);
+    void OnScrollChange(boolean isScroll);
 }

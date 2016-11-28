@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 import xiaoliang.ltool.bean.NoteAddBean;
 import xiaoliang.ltool.bean.NoteBean;
+import xiaoliang.ltool.bean.NoteListBean;
+import xiaoliang.ltool.fragment.note.NoteFragment;
 
 /**
  * Created by liuj on 2016/11/25.
@@ -76,7 +78,7 @@ public class NoteUtil {
                 b.note = bean.address;
                 beans.add(b);
             }
-            if(bean.startTime!=0||bean.startTime!=bean.endTime){
+            if(bean.startTime>0||bean.startTime!=bean.endTime){
                 b = new NoteAddBean(NoteAddBean.TIME);
                 int[] ad = decodingAdvanceTime(bean.advance);
                 b.advance = ad[0];
@@ -89,7 +91,7 @@ public class NoteUtil {
             }
             if(bean.money!=0){
                 b = new NoteAddBean(NoteAddBean.MONEY);
-                b.note = bean.money+"";
+                b.note = String.valueOf(bean.money);
                 b.income = bean.income;
                 beans.add(b);
             }
@@ -123,7 +125,10 @@ public class NoteUtil {
 
     private static int[] decodingAdvanceTime(long advance){
         int[] time = new int[2];
-        if(advance%UNIT_WEEK==0){
+        if(advance==0){
+            time[0] = 0;
+            time[1] = NoteAddBean.ADVANCE_UNIT_MINUTE;
+        }else if(advance%UNIT_WEEK==0){
             time[0] = (int) (advance/UNIT_WEEK);
             time[1] = NoteAddBean.ADVANCE_UNIT_WEEK;
         }else if(advance%UNIT_DAY==0){
@@ -161,7 +166,7 @@ public class NoteUtil {
         }
     }
 
-    public static class SzveNoteDetailRunnable implements Runnable{
+    public static class SaveNoteDetailRunnable implements Runnable{
         private Context context;
         private int id;
         private String title;
@@ -169,7 +174,7 @@ public class NoteUtil {
         private ArrayList<NoteAddBean> beans;
         private SaveNoteDetailCallback callback;
 
-        public SzveNoteDetailRunnable(Context context, int id, String title, int typeId, ArrayList<NoteAddBean> beans, SaveNoteDetailCallback callback) {
+        public SaveNoteDetailRunnable(Context context, int id, String title, int typeId, ArrayList<NoteAddBean> beans, SaveNoteDetailCallback callback) {
             this.context = context;
             this.id = id;
             this.title = title;
@@ -215,7 +220,97 @@ public class NoteUtil {
      * 储存笔记
      */
     public static void saveNoteDetail(Context context, int id, String title, int typeId, ArrayList<NoteAddBean> beans, SaveNoteDetailCallback callback){
-        HttpUtil.getThread(new SzveNoteDetailRunnable(context,id,title,typeId,beans,callback));
+        HttpUtil.getThread(new SaveNoteDetailRunnable(context,id,title,typeId,beans,callback));
+    }
+
+
+    public static class GetNoteListRunnable implements Runnable{
+
+        private Context context;
+        private int type;
+        private GetNoteListCallback callback;
+
+        public GetNoteListRunnable(Context context, int type, GetNoteListCallback callback) {
+            this.context = context;
+            this.type = type;
+            this.callback = callback;
+        }
+
+        @Override
+        public void run() {
+            if(callback!=null)
+                callback.onGetNoteListCallback(getNoteList(context,type));
+        }
+    }
+
+    public interface GetNoteListCallback{
+        void onGetNoteListCallback(ArrayList<NoteListBean> beans);
+    }
+
+    /**
+     * 获取笔记列表
+     * @param context
+     * @param type
+     * @return
+     */
+    public static ArrayList<NoteListBean> getNoteList(Context context, int type){
+        ArrayList<NoteListBean> list = new ArrayList<>();
+        ArrayList<NoteBean> notes = null;
+        switch (type){
+            case NoteFragment.TYPE_NOTE:
+                notes = DatabaseHelper.selectNote(context);
+                break;
+            case NoteFragment.TYPE_CALENDAR:
+                notes = DatabaseHelper.selectCalendar(context);
+                break;
+        }
+        if(notes==null)
+            return list;
+        for(NoteBean b:notes){
+            NoteListBean bean = new NoteListBean(type);
+            bean.name = b.title;
+            bean.msg = getNoteSynopsis(b.note);
+            bean.money = String.valueOf(b.money);
+            switch (type){
+                case NoteFragment.TYPE_NOTE:
+                    bean.time = b.createTime;
+                    break;
+                case NoteFragment.TYPE_CALENDAR:
+                    bean.time = b.startTime;
+                    break;
+            }
+
+            bean.id = b.id;
+            bean.typeColor = b.color;
+            bean.holderType = type;
+            bean.itemType = 0;
+            list.add(bean);
+        }
+        return  list;
+    }
+
+    private static String getNoteSynopsis(String json){
+        String out = "";
+        try{
+            JSONArray array = new JSONArray(json);
+            for(int i = 0;i<array.length()&&i<5;i++){//最多拿前5条记录
+                out += array.getJSONObject(i).getString(BEAN_NOTE);
+                out += ";";
+            }
+        }catch (Exception e){
+            Log.e("getNoteSynopsis",e.getMessage());
+        }
+        return out;
+    }
+
+    /**
+     * 异步线程获取笔记列表
+     * @param context
+     * @param type
+     * @param callback
+     */
+    public static void getNoteListOnBackground(Context context, int type, GetNoteListCallback callback){
+        HttpUtil.getThread(new GetNoteListRunnable(context,type,callback));
     }
 
 }

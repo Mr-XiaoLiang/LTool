@@ -1,95 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:id="@+id/item_note_add_root"
-    android:background="@android:color/white">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
-        android:paddingTop="5dp"
         android:paddingLeft="@dimen/cardview_padding"
-        android:paddingRight="@dimen/cardview_padding">
+        android:paddingRight="@dimen/cardview_padding"
+        android:paddingTop="5dp">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_attach_money"
-                android:tint="@android:color/darker_gray"/>
+                android:tint="@android:color/darker_gray" />
         </LinearLayout>
-        <LinearLayout
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:hint="@string/add_note_money"
+            android:id="@+id/item_note_add_text_hint">
+
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/item_note_add_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="@string/add_note_money"
-                android:textColorHint="@color/edit_hint_color"
-                android:inputType="numberDecimal"/>
-        </LinearLayout>
+                android:inputType="numberDecimal"
+                android:textColorHint="@color/edit_hint_color" />
+        </android.support.design.widget.TextInputLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
             <ImageView
-                android:foreground="?attr/selectableItemBackground"
                 android:id="@+id/item_note_add_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_cancel"
+                android:foreground="?attr/selectableItemBackground"
                 android:padding="5dp"
-                android:tint="@android:color/darker_gray"/>
+                android:src="@drawable/ic_cancel"
+                android:tint="@android:color/darker_gray" />
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/cardview_padding"
         android:paddingRight="@dimen/cardview_padding">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_marginLeft="24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="类型:"/>
+                android:layout_marginLeft="24dp"
+                android:text="类型:"
+                android:textSize="18sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal">
+
             <RadioGroup
                 android:id="@+id/item_note_add_income"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <RadioButton
                     android:id="@+id/item_note_add_income_in"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="收入"
-                    android:checked="true"/>
+                    android:checked="true"
+                    android:text="收入" />
+
                 <RadioButton
                     android:id="@+id/item_note_add_income_out"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="支出"/>
+                    android:text="支出" />
             </RadioGroup>
         </LinearLayout>
     </LinearLayout>
