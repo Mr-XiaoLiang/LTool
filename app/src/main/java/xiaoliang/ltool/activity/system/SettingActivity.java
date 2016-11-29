@@ -71,11 +71,11 @@ public class SettingActivity extends AppCompatActivity implements SwitchCompat.O
         noteAutoSaveSwitch.setChecked(SharedPreferencesUtils.getNoteAutoSave(this));
 //        ver = OtherUtil.getVersion(this);
 //        version.setText("V"+ ver);
-        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.N_MR1){
-            findViewById(R.id.activity_setting_shortcut).setVisibility(View.GONE);
-            findViewById(R.id.activity_setting_shortcut_title).setVisibility(View.GONE);
-            ToastUtil.T(this,"当前版本号为：API"+Build.VERSION.SDK_INT);
-        }
+//        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.N_MR1){
+//            findViewById(R.id.activity_setting_shortcut).setVisibility(View.GONE);
+//            findViewById(R.id.activity_setting_shortcut_title).setVisibility(View.GONE);
+//            ToastUtil.T(this,"当前版本号为：API"+Build.VERSION.SDK_INT);
+//        }
     }
 
 

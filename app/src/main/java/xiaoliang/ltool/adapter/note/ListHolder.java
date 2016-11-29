@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,7 +23,7 @@ import xiaoliang.ltool.listener.LItemTouchHelper;
  * 列表Item的Holder
  */
 
-public class ListHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,View.OnClickListener {
+public class ListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     private TextView dataView,dayView,timeView;
     private CardView cardView;
@@ -54,7 +53,6 @@ public class ListHolder extends RecyclerView.ViewHolder implements View.OnLongCl
         colorDrawable = new ColorDrawable();
         typeColorView.setImageDrawable(colorDrawable);
         lastCalendar = Calendar.getInstance();
-        itemView.setOnLongClickListener(this);
         cardView.setOnClickListener(this);
     }
     public void onBind(NoteListBean bean, LItemTouchHelper helper) {
@@ -127,16 +125,8 @@ public class ListHolder extends RecyclerView.ViewHolder implements View.OnLongCl
 
     @Override
     public void onClick(View view) {
-        if(helper!=null)
-            helper.onItemViewClick(this,view);
-    }
-
-    @Override
-    public boolean onLongClick(View view) {
         if(helper!=null){
-            helper.startSwipe(this);
-            return true;
+            helper.onItemViewClick(ListHolder.this,view);
         }
-        return false;
     }
 }

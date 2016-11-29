@@ -200,7 +200,6 @@ public class NoteFragment extends NoteInterface implements
         long now = System.currentTimeMillis();
         for(int i = 0;i<beans.size();i++){
             long time = Math.abs(beans.get(i).time-now);
-            Log.d("selectedToToday","time:"+time+",gap:"+gap+",index:"+index);
             if(gap>time){
                 gap = time;
                 index = i;

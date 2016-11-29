@@ -19,6 +19,8 @@ import xiaoliang.ltool.R;
 import xiaoliang.ltool.fragment.note.NoteFragment;
 import xiaoliang.ltool.fragment.note.NoteInterface;
 import xiaoliang.ltool.listener.OnNoteFragmentListener;
+import xiaoliang.ltool.view.NoScrollViewPager;
+import xiaoliang.ltool.view.ZoomPageTransformer;
 
 /**
  * 记事本主页
@@ -43,7 +45,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
 
     private void init(){
         TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_note_tablayout);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.activity_note_viewpager);
+        NoScrollViewPager viewPager = (NoScrollViewPager) findViewById(R.id.activity_note_viewpager);
+        viewPager.setNoScroll(false);
         noteFragments = new NoteFragment[2];
         noteFragments[0] = NoteFragment.newInstance(NoteFragment.TYPE_NOTE);
         noteFragments[1] = NoteFragment.newInstance(NoteFragment.TYPE_CALENDAR);

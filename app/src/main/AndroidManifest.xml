@@ -119,8 +119,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
         </activity>
         <activity
             android:name=".activity.system.AboutActivity"
@@ -155,6 +153,16 @@
 
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".activity.lock.LockBroadcastReceiver"
+            android:description="@string/shortcuts_lock_long"
+            android:label="@string/shortcuts_lock_long">
+            <intent-filter>
+                <action android:name="xiaoliang.ltool.LockBR" />
+                <!-- 必须加上这个，否则无法直接使用自定的action -->
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 
@@ -201,7 +209,11 @@
         <activity
             android:name=".activity.system.ShortcutManagerActivity"
             android:label="@string/title_activity_shortcut_manager"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.translation.TranslationActivity"
+            android:label="@string/title_activity_translation"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

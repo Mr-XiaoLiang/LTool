@@ -8,9 +8,9 @@ android {
     defaultConfig {
         applicationId "xiaoliang.ltool"
         minSdkVersion 17
-        targetSdkVersion 24
-        versionCode 12
-        versionName "2.2.0 alpha"
+        targetSdkVersion 25
+        versionCode 13
+        versionName "2.3.0 Bate"
     }
     buildTypes {
         release {

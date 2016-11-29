@@ -45,6 +45,7 @@ import xiaoliang.ltool.activity.note.NoteActivity;
 import xiaoliang.ltool.activity.qr.QRCreateActivity;
 import xiaoliang.ltool.activity.qr.QRReadActivity;
 import xiaoliang.ltool.activity.system.SettingActivity;
+import xiaoliang.ltool.activity.translation.TranslationActivity;
 import xiaoliang.ltool.activity.weather.WeatherActivity;
 import xiaoliang.ltool.activity.webcode.WebCodeActivity;
 import xiaoliang.ltool.bean.WeatherBean;
@@ -121,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lock = (CardView) findViewById(R.id.content_main_lock);
         View note = findViewById(R.id.content_main_note);
         note.setOnClickListener(this);
-        note.setVisibility(View.GONE);
         handler = new MyHandler();
         qrCreate.setOnClickListener(this);
         qrRead.setOnClickListener(this);
@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         lock.setOnClickListener(this);
         headImg.setOnLongClickListener(this);
         showWeather = SharedPreferencesUtils.getWeatherShow(this);
-        lock.setOnLongClickListener(this);
     }
 
     @Override
@@ -297,6 +296,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.content_main_webcode:
                 startActivity(new Intent(this,WebCodeActivity.class));
                 break;
+            case R.id.content_main_translation:
+                startActivity(new Intent(this,TranslationActivity.class));
+                break;
         }
     }
 
@@ -317,9 +319,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
                 return true;
-            case R.id.content_main_lock:
-                findViewById(R.id.content_main_note).setVisibility(View.VISIBLE);
-                break;
         }
         return false;
     }

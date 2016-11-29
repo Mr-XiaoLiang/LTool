@@ -87,6 +87,7 @@ public class NoteAddActivity extends AppCompatActivity implements
         moneyBtn = (ImageView) findViewById(R.id.content_note_add_money_btn);
         addressBtn = (ImageView) findViewById(R.id.content_note_add_address_btn);
         advanceBtn = (ImageView) findViewById(R.id.content_note_add_time_btn);
+        advanceBtn.setVisibility(View.GONE);
         titleEdit = (TextInputEditText) findViewById(R.id.content_note_add_title);
         ImageView noteTypeColor = (ImageView) findViewById(R.id.content_note_add_color);
         recyclerView = (RecyclerView) findViewById(R.id.content_note_add_recyclerview);
