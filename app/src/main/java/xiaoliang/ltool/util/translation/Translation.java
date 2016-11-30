@@ -2,10 +2,12 @@ package xiaoliang.ltool.util.translation;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import java.util.List;
 
 import xiaoliang.ltool.bean.StringNameValueBean;
+import xiaoliang.ltool.bean.TranslationLanguageBean;
 import xiaoliang.ltool.util.HttpTaskRunnable;
 import xiaoliang.ltool.util.HttpUtil;
 import xiaoliang.ltool.util.RequestParameters;
@@ -93,6 +95,11 @@ public class Translation {
         void setFrom(String from);
         String getURL();
         String decode(String str);
+        List<TranslationLanguageBean> getFromLanguage();
+        List<TranslationLanguageBean> getToLanguage();
+        void setFromLanguage(String id);
+        void setToLanguage(String id);
+        int maxFromLength();
     }
 
     public interface TranslationCallback{

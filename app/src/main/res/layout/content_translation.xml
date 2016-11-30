@@ -17,11 +17,13 @@
         android:layout_marginLeft="@dimen/cardview_margin"
         android:layout_marginRight="@dimen/cardview_margin">
         <android.support.v7.widget.AppCompatSpinner
-            android:id="@+id/from_language_spinner"
+            android:id="@+id/content_translation_from_language_spinner"
             android:layout_width="0px"
             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
             android:layout_weight="1"/>
         <ImageView
+            android:id="@+id/content_translation_exchange"
             android:onClick="onClick"
             android:foreground="?attr/selectableItemBackground"
             android:padding="@dimen/cardview_padding"
@@ -30,10 +32,14 @@
             android:src="@drawable/ic_swap_horiz"
             android:tint="@android:color/darker_gray"/>
         <android.support.v7.widget.AppCompatSpinner
+            android:background="@android:color/transparent"
+            android:id="@+id/content_translation_to_language_spinner"
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
         <android.support.v7.widget.AppCompatSpinner
+            android:background="@android:color/transparent"
+            android:id="@+id/content_translation_source"
             android:layout_marginLeft="@dimen/cardview_margin"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -51,6 +57,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <android.support.design.widget.TextInputEditText
+                android:id="@+id/content_translation_from"
                 android:layout_width="match_parent"
                 android:layout_height="0px"
                 android:layout_weight="1"
@@ -62,6 +69,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
+                    android:id="@+id/content_translation_from_length"
                     android:gravity="bottom"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -73,6 +81,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"/>
                 <TextView
+                    android:id="@+id/content_translation_from_copy"
                     android:onClick="onClick"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -80,6 +89,7 @@
                     android:padding="@dimen/cardview_padding"
                     android:foreground="?attr/selectableItemBackground"/>
                 <TextView
+                    android:id="@+id/content_translation_from_all"
                     android:onClick="onClick"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -87,6 +97,7 @@
                     android:padding="@dimen/cardview_padding"
                     android:foreground="?attr/selectableItemBackground"/>
                 <TextView
+                    android:id="@+id/content_translation_from_paste"
                     android:onClick="onClick"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -100,7 +111,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center">
+        <Space
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
         <android.support.v7.widget.CardView
+            android:id="@+id/content_translation_execute"
             android:onClick="onClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -117,6 +132,10 @@
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"/>
         </android.support.v7.widget.CardView>
+        <xiaoliang.ltool.view.LLoadView
+            android:id="@+id/content_translation_load"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
     </LinearLayout>
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -130,6 +149,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <android.support.design.widget.TextInputEditText
+                android:id="@+id/content_translation_to"
                 android:layout_width="match_parent"
                 android:layout_height="0px"
                 android:layout_weight="1"
@@ -141,6 +161,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
+                    android:id="@+id/content_translation_to_length"
                     android:gravity="bottom"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -152,6 +173,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"/>
                 <TextView
+                    android:id="@+id/content_translation_to_copy"
                     android:onClick="onClick"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -159,6 +181,7 @@
                     android:padding="@dimen/cardview_padding"
                     android:foreground="?attr/selectableItemBackground"/>
                 <TextView
+                    android:id="@+id/content_translation_to_all"
                     android:onClick="onClick"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -166,6 +189,7 @@
                     android:padding="@dimen/cardview_padding"
                     android:foreground="?attr/selectableItemBackground"/>
                 <TextView
+                    android:id="@+id/content_translation_to_paste"
                     android:onClick="onClick"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

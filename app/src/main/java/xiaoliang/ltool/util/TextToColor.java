@@ -67,4 +67,5 @@ public class TextToColor {
         }
         return md5str;
     }
+
 }

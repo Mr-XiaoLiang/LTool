@@ -341,6 +341,7 @@ public class LLoadView extends View {
 	 */
 	public void stop(boolean stop) {
 		this.stop = stop;
+		index = 0;
 		invalidate();
 	}
 
