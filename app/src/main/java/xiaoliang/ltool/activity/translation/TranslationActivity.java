@@ -30,8 +30,11 @@ import java.util.ArrayList;
 import xiaoliang.ltool.R;
 import xiaoliang.ltool.adapter.LanguageSpinnerAdapter;
 import xiaoliang.ltool.bean.TranslationLanguageBean;
+import xiaoliang.ltool.util.ClipboardUtil;
 import xiaoliang.ltool.util.translation.BaiduTranslationRequest;
+import xiaoliang.ltool.util.translation.KingsoftTranslationRequest;
 import xiaoliang.ltool.util.translation.Translation;
+import xiaoliang.ltool.util.translation.YoudaoTranslationRequest;
 import xiaoliang.ltool.view.LLoadView;
 
 public class TranslationActivity extends AppCompatActivity implements
@@ -55,6 +58,7 @@ public class TranslationActivity extends AppCompatActivity implements
     private Translation.TranslationRequest thisRequest;
     private LLoadView lLoadView;
     private boolean onLoad = false;
+    private ClipboardUtil clipboardUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +89,15 @@ public class TranslationActivity extends AppCompatActivity implements
         sourceSpinner.setAdapter(new SourceAdapter(this));
         translationRequests = new Translation.TranslationRequest[sourceIcons.length];
         translationRequests[0] = new BaiduTranslationRequest();
-
+        translationRequests[1] = new YoudaoTranslationRequest();
+        translationRequests[2] = new KingsoftTranslationRequest();
         translation = new Translation();
         translation.setCallback(this);
         fromLanguageBeans = new ArrayList<>();
         toLanguageBeans = new ArrayList<>();
         fromLanguageSpinner.setAdapter(fromLanguageAdapter = new LanguageSpinnerAdapter(fromLanguageBeans,this));
         toLanguageSpinner.setAdapter(toLanguageAdapter = new LanguageSpinnerAdapter(toLanguageBeans,this));
+        clipboardUtil = new ClipboardUtil(this);
         setRequest(0);
     }
 
@@ -131,21 +137,42 @@ public class TranslationActivity extends AppCompatActivity implements
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.content_translation_exchange:
+                int fl = fromLanguageSpinner.getSelectedItemPosition();
+                fromLanguageSpinner.setSelection(toLanguageSpinner.getSelectedItemPosition(),true);
+                toLanguageSpinner.setSelection(fl,true);
                 break;
             case R.id.content_translation_from_copy:
+                int fstart = fromEditText.getSelectionStart();
+                int fend = fromEditText.getSelectionEnd();
+                if(fstart==fend||fstart<0||fend<0||fend<fstart)
+                    return;
+                clipboardUtil.putText(fromEditText.getText().subSequence(fstart, fend).toString());
+                Snackbar.make(fromEditText,"已复制",Snackbar.LENGTH_SHORT).show();
                 break;
             case R.id.content_translation_from_all:
+                fromEditText.requestFocus();
+                fromEditText.selectAll();
                 break;
             case R.id.content_translation_from_paste:
+                fromEditText.append(clipboardUtil.getString());
+                break;
+            case R.id.content_translation_from_clean:
+                fromEditText.setText("");
                 break;
             case R.id.content_translation_execute:
                 execute();
                 break;
             case R.id.content_translation_to_copy:
+                int tstart = toEditText.getSelectionStart();
+                int tend = toEditText.getSelectionEnd();
+                if(tstart==tend||tstart<0||tend<0||tend<tstart)
+                    return;
+                clipboardUtil.putText(toEditText.getText().subSequence(tstart, tend).toString());
+                Snackbar.make(toEditText,"已复制",Snackbar.LENGTH_SHORT).show();
                 break;
             case R.id.content_translation_to_all:
-                break;
-            case R.id.content_translation_to_paste:
+                toEditText.requestFocus();
+                toEditText.selectAll();
                 break;
         }
     }

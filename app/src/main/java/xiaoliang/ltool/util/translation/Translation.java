@@ -69,6 +69,7 @@ public class Translation {
             Message message = handler.obtainMessage(ERROR);
             message.obj = msg;
             handler.sendMessage(message);
+            Log.e("TranslationNetWorkCall",msg);
         }
 
         @Override

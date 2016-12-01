@@ -34,7 +34,7 @@ public class BaiduTranslationRequest implements Translation.TranslationRequest {
     private static final int VISIT_ERR = 54003;//访问频率过快
     private static final int LANGUAGE_ERR = 58001;//译文语言不支持
     private static final int BALANCE_ERR = 54004;//余额不足
-    private static final int LONG_QUERY_ERR = 54005;//长query请求频繁
+    private static final int LONG_QUERY_ERR = 54005;//长query请求异常
     private ArrayList<TranslationLanguageBean> languageBeens;
     private String from;
     private Random random;
@@ -57,6 +57,22 @@ public class BaiduTranslationRequest implements Translation.TranslationRequest {
 
     @Override
     public List<StringNameValueBean> getParameters() {
+        //放弃post方式，改用get
+//        StringBuilder url = new StringBuilder();
+//        List<StringNameValueBean> beans = getPar();
+//        for(StringNameValueBean bean:beans){
+//            url.append(bean.getName());
+//            url.append("=");
+//            url.append(bean.getValue());
+//            url.append("&");
+//        }
+//        String out = url.toString().substring(0,url.length()-1);
+//        Log.d("getURL",out);
+//        return beans;
+        return null;
+    }
+
+    private List<StringNameValueBean> getPar(){
         if(parameters==null){
             parameters = new ArrayList<>();
         }
@@ -64,11 +80,10 @@ public class BaiduTranslationRequest implements Translation.TranslationRequest {
         parameters.add(new StringNameValueBean("from",fromLanguage));
         parameters.add(new StringNameValueBean("to",toLanguage));
         parameters.add(new StringNameValueBean("appid",appid));
-        String query = HttpUtil.URLEncoder(from);
-        parameters.add(new StringNameValueBean("q",query));
+        parameters.add(new StringNameValueBean("q",HttpUtil.URLEncoder(from)));
         int salt = getSalt();
         parameters.add(new StringNameValueBean("salt",salt+""));
-        parameters.add(new StringNameValueBean("sign",getSign(query,salt)));
+        parameters.add(new StringNameValueBean("sign",getSign(from,salt)));
         return parameters;
     }
 
@@ -79,11 +94,18 @@ public class BaiduTranslationRequest implements Translation.TranslationRequest {
 
     @Override
     public String getURL() {
-//        String query = HttpUtil.URLEncoder(from);
-//        int salt = getSalt();
-//        String sign = getSign(query,salt);
-//        String url =  URL+"?q="+query+"&from="+fromLanguage+"&to="+toLanguage+"&appid="+TranslationConstant.BAIDU_APPID+"&salt="+salt+"&sign="+sign;
-        return URL;
+        StringBuilder url = new StringBuilder(URL+"?");
+        List<StringNameValueBean> beans = getPar();
+        for(StringNameValueBean bean:beans){
+            url.append(bean.getName());
+            url.append("=");
+            url.append(bean.getValue());
+            url.append("&");
+        }
+        String out = url.toString().substring(0,url.length()-1);
+//        Log.d("getURL",out);
+        return out;
+//        return URL;
     }
 
     @Override
@@ -96,12 +118,7 @@ public class BaiduTranslationRequest implements Translation.TranslationRequest {
                 if(array.length()<1){
                     out = "服务器未返回结果";
                 }else if(array.length()<2){
-//                    out = array.getJSONObject(0).getString("dst");
-//                    out += "\n";
-//                    out += object.getString("from");
-//                    out += "\n";
-//                    out += object.getString("to");
-                    out = str;
+                    out = array.getJSONObject(0).getString("dst");
                 }else{
                     for(int i = 0;i<array.length();i++){
                         out += array.getJSONObject(i).getString("src");
@@ -194,7 +211,7 @@ public class BaiduTranslationRequest implements Translation.TranslationRequest {
     private int getSalt(){
         if(random==null)
             random = new Random();
-        return random.nextInt();
+        return Math.abs(random.nextInt());
     }
 
     public void setAppid(String appid) {

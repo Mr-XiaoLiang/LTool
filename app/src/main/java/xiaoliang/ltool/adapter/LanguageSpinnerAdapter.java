@@ -64,7 +64,7 @@ public class LanguageSpinnerAdapter extends BaseAdapter {
             textView = (TextView) itemView.findViewById(R.id.item_simple_spinner_text_text);
         }
         public void onBind(TranslationLanguageBean bean){
-            textView.setText(bean.name+"/"+bean.id);
+            textView.setText(bean.name);
         }
     }
 }
