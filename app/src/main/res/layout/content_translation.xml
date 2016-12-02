@@ -74,8 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="@dimen/item_detail"
-                    android:textColor="@android:color/darker_gray"
-                    android:text="0/2000"/>
+                    android:textColor="@android:color/darker_gray"/>
                 <Space
                     android:layout_width="0px"
                     android:layout_weight="1"
@@ -177,8 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="@dimen/item_detail"
-                    android:textColor="@android:color/darker_gray"
-                    android:text="0/2000"/>
+                    android:textColor="@android:color/darker_gray"/>
                 <Space
                     android:layout_width="0px"
                     android:layout_weight="1"
